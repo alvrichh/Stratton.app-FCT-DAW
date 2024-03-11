@@ -41,6 +41,7 @@ Simplifica la configuración para conectarse con servicios de autenticación ext
 - Spring Boot DevTools (opcional, pero útil para desarrollo):
 Proporciona herramientas para reiniciar automáticamente la aplicación durante el desarrollo.
 Facilita la recarga en caliente de cambios en el código.
+![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/d7f7e791-db1d-44a3-9f43-d87c1953a5a3)
 ## @TODO
 - Separación de Responsabilidades:
     * Angular se encargará de la interfaz de usuario (UI) y la interacción con el usuario.

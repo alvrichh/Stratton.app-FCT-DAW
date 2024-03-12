@@ -1,24 +1,27 @@
 # Stratton.app-FCT-DAW
-Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos del proyecto final de base de datos del año anterior, ampliándolo con las tecnologías que hemos aprendido este año, utilizando para la seguridad security springboot, y para el frontend angular / react.
+Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos del proyecto final de base de datos del año anterior, ampliándolo con las tecnologías que hemos aprendido este año, utilizando para la seguridad security springboot, y para el frontend angular 17.
+## Motivación:
+La principal motivación del proyecto es poder gestionar mis propios clientes o los clientes de una determinada asesoría energética como a sus empleados, para mejorar la gestión de los equipos comerciales y la organización de los clientes, pudiéndolos clasificar de manera clara y concisa. 
 ## Requisitos Funcionales:
-- RF-1: El sistema debe permitir registrar a los clientes recopilando sus datos.
+Nota:(*) los requisitos marcados con ✔ son los que por el momento serán esenciales en el desarrollo del proyecto
+- RF-1: El sistema debe permitir registrar a los clientes recopilando sus datos.✔
 - RF-2: El sistema debe conocer a qué comercializadora pertenece cada cliente y cuál es el nombre de su oferta (idPlan).
-- RF-3: La información de los clientes se basará en sus números de teléfono, que serán únicos para la identificación de la información.
-- RF-4: Las ubicaciones completas, como comunidad autónoma, provincia y municipio, se determinarán mediante el código postal (ZIP).
+- RF-3: La información de los clientes se basará en sus números de teléfono, que serán únicos para la identificación de la información.✔
+- RF-4: Las ubicaciones completas, como comunidad autónoma, provincia y municipio, se determinarán mediante el código postal (ZIP).✔
 - RF-5: Cada cliente debe tener uno o más CUPS_luz como puntos de suministro, junto con su UBICACION.
-- RF-6: El sistema debe permitir que los empleados estén asociados a una asesoría.
-- RF-7: El sistema debe permitir que los clientes tengan información bancaria asociada.
+- RF-6: El sistema debe permitir que los empleados estén asociados a una asesoría.✔
+- RF-7: El sistema debe permitir que los clientes tengan información bancaria asociada.✔
 - RF-8: El sistema debe permitir que los clientes tengan múltiples CUPS_gas como puntos de suministro.
-- RF-9: El sistema debe permitir que los empleados estén asociados a un cliente en particular.
-- RF-10: El sistema debe permitir la gestión de contratos de clientes, incluyendo la fecha de inicio y finalización del contrato, así como el estado del mismo (activo, inactivo, cancelado, etc.).
+- RF-9: El sistema debe permitir que los clientes estén asociados a un empleado en particular.
+- RF-10: El sistema debe permitir la gestión de contratos de clientes, incluyendo la fecha de inicio y finalización del contrato, así como el estado del mismo (activo, inactivo, cancelado, etc.).✔
 ## Reglas de Negocio:
-- RN-1: El titular del contrato debe ser mayor de edad.
-- RN-2: Los números de teléfono deben tener un formato válido.
+- RN-1: El titular del contrato debe ser mayor de edad.✔
+- RN-2: Los números de teléfono deben tener un formato válido.✔
 - RN-3: Los puntos de suministro de energía deben estar asociados a una ubicación válida.
 - RN-4: Los puntos de suministro de gas deben estar asociados a una ubicación válida.
-- RN-5: Los empleados asignados a clientes deben tener un código válido.
-- RN-6: La asignación de empleados a clientes debe ser coherente.   
-- RN-7: Los números de cuenta bancaria (CCC) deben tener un formato válido.
+- RN-5: Los clientes asignados a empleados deben tener un código válido.✔
+- RN-6: La asignación de clientes a empleados debe ser coherente.✔
+- RN-7: Los números de cuenta bancaria (CCC) deben tener un formato válido.✔
 
 ## Dependencias Springboot:
 - Spring Boot Starter Web:

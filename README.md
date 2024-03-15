@@ -14,6 +14,7 @@ Nota:(*) los requisitos marcados con ✔ son los que por el momento serán esenc
 - RF-8: El sistema debe permitir que los clientes tengan múltiples CUPS_gas como puntos de suministro.
 - RF-9: El sistema debe permitir que los clientes estén asociados a un empleado en particular.
 - RF-10: El sistema debe permitir la gestión de contratos de clientes, incluyendo la fecha de inicio y finalización del contrato, así como el estado del mismo (activo, inactivo, cancelado, etc.).✔
+- RF-11: El sistema debe diferenciar ROLES de usuario para realizar determinadas acciones, ROL EMPLEADO y ROL JEFE.✔
 ## Reglas de Negocio:
 - RN-1: El titular del contrato debe ser mayor de edad.✔
 - RN-2: Los números de teléfono deben tener un formato válido.✔

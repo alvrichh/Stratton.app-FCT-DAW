@@ -1,5 +1,11 @@
 # Stratton.app-FCT-DAW
-Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos del proyecto final de base de datos del año anterior, ampliándolo con las tecnologías que hemos aprendido este año, utilizando para la seguridad security springboot, y para el frontend angular 17.
+Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos del proyecto final de base de datos del año anterior, ampliándolo con las tecnologías que hemos aprendido este año, utilizando para la seguridad security springboot, y para el frontend angular 17
+
+### Enlaces de interés:
+<a href="https://www.figma.com/file/abBcwX662jrvwuJvsCnbFK/Stratton.app?type=design&node-id=0%3A1&mode=design&t=w5RrKRyjNq5V1P3H-1">
+<img  height="70" src="https://cdn.sanity.io/images/599r6htc/localized/46a76c802176eb17b04e12108de7e7e0f3736dc6-1024x1024.png?w=804&h=804&q=75&fit=max&auto=format" alt="octocat" style="margin-right: 2rem;" /> 
+</a>
+
 ## Motivación:
 La principal motivación del proyecto es poder gestionar mis propios clientes o los clientes de una determinada asesoría energética como a sus empleados, para mejorar la gestión de los equipos comerciales y la organización de los clientes, pudiéndolos clasificar de manera clara y concisa. 
 ## Requisitos Funcionales:

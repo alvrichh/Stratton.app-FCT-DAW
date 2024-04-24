@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SWSSecurityContext;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.StrattonApp.Backend.service.JwtService;
+import com.StrattonApp.Backend.service.ServicioEmpleado;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -62,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (StringUtils.isNotEmpty(userEmail)
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.userDetailsService()
+            UserDetails userDetails = ServicioEmpleado.userDetailsService()
                     .loadUserByUsername(userEmail);
 
             if (jwtService.isTokenValid(jwt, userDetails)) {

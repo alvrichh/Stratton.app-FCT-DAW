@@ -49,13 +49,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(request ->
                 request
                     .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-                    // API CRUD USERS
+                    // API CRUD EMPLEADO
                     .requestMatchers(HttpMethod.GET, "/api/v1/users/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/users/**").hasAuthority("ROLE_ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAuthority("ROLE_ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasAuthority("ROLE_ADMIN")
                     
-                    // API CRUD PRODUCTOS
+                    // API CRUD CLIENTE
                     .requestMatchers(HttpMethod.GET, "/api/v1/productos/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/productos/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/v1/productos/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")

@@ -30,6 +30,10 @@ Nota:(*) los requisitos marcados con ✔ son los que por el momento serán esenc
 - RN-6: La asignación de clientes a empleados debe ser coherente.✔
 - RN-7: Los números de cuenta bancaria (CCC) deben tener un formato válido.✔
 
+## Casos de uso
+![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/751bfc3b-9e41-4d14-8f70-0cd2828b5ae1)
+
+
 ## Dependencias Springboot:
 - Spring Boot Starter Web:
 Esta dependencia proporciona las funcionalidades básicas para crear aplicaciones web con Spring Boot.

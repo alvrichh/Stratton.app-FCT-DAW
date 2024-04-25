@@ -1,11 +1,15 @@
 package com.StrattonApp.Backend.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
+@Table(name = "Empleado")
 @Entity
 public class Empleado {
 
@@ -19,6 +23,11 @@ public class Empleado {
     private String ocm;
 
     private String pass;
+
+    private Role role;
+    
+	@OneToOne(mappedBy = "empleado", cascade = CascadeType.ALL)
+	private Persona persona;
 
 	public Long getIdAgent() {
 		return idAgent;
@@ -50,6 +59,21 @@ public class Empleado {
 
 	public void setPass(String pass) {
 		this.pass = pass;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+	public Persona getPersona() {
+		return persona;
+	}
+
+	public void setPersona(Persona persona) {
+		this.persona = persona;
 	}
 
 }

@@ -8,6 +8,10 @@ Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos d
 
 ## Motivación:
 La principal motivación del proyecto es poder gestionar mis propios clientes o los clientes de una determinada asesoría energética como a sus empleados, para mejorar la gestión de los equipos comerciales y la organización de los clientes, pudiéndolos clasificar de manera clara y concisa. 
+
+## Casos de uso
+![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/751bfc3b-9e41-4d14-8f70-0cd2828b5ae1)
+
 ## Requisitos Funcionales:
 Nota:(*) los requisitos marcados con ✔ son los que por el momento serán esenciales en el desarrollo del proyecto
 - RF-1: El sistema debe permitir registrar a los clientes recopilando sus datos.✔

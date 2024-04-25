@@ -25,6 +25,9 @@ public class Cliente {
     private String direccion;
 
     private Date fechaNacimiento;
+    
+    private String CCC;
+    
 
     // Relación con Asesoría (muchos clientes pueden estar asociados a una asesoría)
     @ManyToOne
@@ -105,6 +108,14 @@ public class Cliente {
 
 	public void setContratos(List<Contrato> contratos) {
 		this.contratos = contratos;
+	}
+
+	public String getCCC() {
+		return CCC;
+	}
+
+	public void setCCC(String cCC) {
+		CCC = cCC;
 	}
 
     

@@ -1,43 +1,37 @@
 package com.StrattonApp.Backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+import com.StrattonApp.Backend.DTO.EmpleadoDTO;
 import com.StrattonApp.Backend.entities.Empleado;
-import com.StrattonApp.Backend.repository.EmpleadoRepositorio;
 
-@Service
-public class ServicioEmpleado {
-
-	@Autowired
-	private EmpleadoRepositorio empleadoRepositorio;
-
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	public ServicioEmpleado(EmpleadoRepositorio empleadoRepositorio) {
-		this.empleadoRepositorio = empleadoRepositorio;
-	}
-	public Iterable<Empleado> listarTodosLosEmpleados(){
-		return empleadoRepositorio.findAll();
-	}
-	public Empleado guardarEmpleado(Empleado empleado) {
-		empleado.setPass(passwordEncoder.encode(empleado.getPass()));
-
-		// Establecer la relación bidireccional
-		if (empleado.getPersona() != null) {
-			empleado.getPersona().setPersona(empleado);
-		}
-		return empleadoRepositorio.save(empleado);
-	}
-	public Empleado obtenerEmpleadoPorId(Long id) {
-		return empleadoRepositorio.findById(id).orElseThrow(() ->
-		new IllegalArgumentException("Empleado no encontrado con id: "+ id));
-	}
-	public void eliminarEmpleado(Long id) {
-		empleadoRepositorio.deleteById(id);
-	}
-
+/**
+ * Interfaz que define operaciones relacionadas con usuarios en el sistema.
+ */
+public interface ServicioEmpleado {
+    
+    /**
+     * Obtiene un servicio de detalles de usuario para la autenticación.
+     *
+     * @return Un servicio de detalles de usuario.
+     */
+     UserDetailsService userDetailsService();
+    
+    /**
+     * Obtiene una lista de todos los usuarios en el sistema.
+     *
+     * @return Lista de objetos UsuarioDTO que representan a todos los usuarios.
+     */
+    List<EmpleadoDTO> getAllUsers();
+    
+    /**
+     * Obtiene un usuario por su ID.
+     *
+     * @param userId El ID del usuario a buscar.
+     * @return Lista de usuarios encontrados (puede contener uno o ningún usuario).
+     */
+    List<Empleado> getUserById(Long userId);
 }

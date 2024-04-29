@@ -1,5 +1,4 @@
 package com.StrattonApp.Backend.service.impl;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,7 +10,6 @@ import com.StrattonApp.Backend.DTO.EmpleadoDTO;
 import com.StrattonApp.Backend.entities.Empleado;
 import com.StrattonApp.Backend.repository.EmpleadoRepository;
 import com.StrattonApp.Backend.service.ServicioEmpleado;
-
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,10 +40,18 @@ public class ServicioEmpleadoImpl implements ServicioEmpleado {
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * Obtiene un empleado por su ID.
+     *
+     * @param userId ID del empleado a obtener.
+     * @return Lista que contiene el empleado si se encuentra, o una lista vacía si no.
+     */
 	@Override
-	public List<Empleado> getUserById(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public List<Empleado> getUserById(Long id) {
+        Optional<Empleado> optionalEmpl = empleadoRepository.findById(id);
+
+        // Verifica si el usuario existe y retorna una lista con ese usuario o una lista vacía si no se encuentra
+        return optionalEmpl.map(List::of).orElse(List.of());
+    }
+	
 }

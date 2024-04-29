@@ -17,16 +17,16 @@ public class Cliente {
 
     private String apellidos;
 
+    private String DNI;
+
     @NotBlank(message = "El correo del cliente no puede estar vacío.")
     private String correo;
 
-    private String DNI;
-
     private String direccion;
 
-    private Date fechaNacimiento;
+    private Integer telefono;
     
-    private String CCC;
+    private String IBAN;
     
 
     // Relación con Asesoría (muchos clientes pueden estar asociados a una asesoría)
@@ -36,7 +36,7 @@ public class Cliente {
 
     // Relación con Contrato (un cliente puede tener varios contratos)
     @OneToMany(mappedBy = "cliente")
-    private List<Contrato> contratos;
+    private List<Suministro> suministros;
 
 	public Long getIdCliente() {
 		return idCliente;
@@ -86,14 +86,6 @@ public class Cliente {
 		this.direccion = direccion;
 	}
 
-	public Date getFechaNacimiento() {
-		return fechaNacimiento;
-	}
-
-	public void setFechaNacimiento(Date fechaNacimiento) {
-		this.fechaNacimiento = fechaNacimiento;
-	}
-
 	public Asesoria getAsesoria() {
 		return asesoria;
 	}
@@ -102,21 +94,26 @@ public class Cliente {
 		this.asesoria = asesoria;
 	}
 
-	public List<Contrato> getContratos() {
-		return contratos;
+	public List<Suministro> getSuministros() {
+		return suministros;
 	}
 
-	public void setContratos(List<Contrato> contratos) {
-		this.contratos = contratos;
+	public void setSuministros(List<Suministro> suministros) {
+		this.suministros = suministros;
+	}
+	public Integer getTelefono() {
+		return telefono;
 	}
 
-	public String getCCC() {
-		return CCC;
+	public void setTelefono(Integer telefono) {
+		this.telefono = telefono;
 	}
 
-	public void setCCC(String cCC) {
-		CCC = cCC;
+	public String getIBAN() {
+		return IBAN;
 	}
 
-    
+	public void setIBAN(String iBAN) {
+		IBAN = iBAN;
+	}    
 }

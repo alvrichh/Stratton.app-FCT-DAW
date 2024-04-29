@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Álvaro Rodríguez Molina">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title th:text="#{titulo.libros}">Libros</title>
+</head>
+<header th:replace="~{fragmentos :: header}"></header>
+
+<body class="bg-light">
+    <select onchange="location = this.value;">
+        <option value="" disabled selected>Seleccionar idioma</option>
+        <option value="/?lang=en">Inglés</option>
+        <option value="/?lang=es">Español</option>
+    </select>
+
+
+    <div class="container">
+        <h2 class="mt-4 mb-4" th:text="#{titulo.libros}">LIBROS</h2>
+
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th th:text="#{libro.titulo}">Titulo</th>
+                    <th th:text="#{libro.autor}">Autor</th>
+                    <th th:text="#{libro.isbn}">ISBN</th>
+                    <th th:text="#{libro.publicadoEn}">Año</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr th:each="libro : ${libros}">
+                    <td th:text="${libro.titulo}"></td>
+                    <td th:text="${libro.autor}"></td>
+                    <td th:text="${libro.isbn}"></td>
+                    <td th:text="${libro.publicadoEn}"></td>
+                    <td>
+                        <!-- Editar el libro -->
+                        <a class="btn btn-warning btn-sm" th:href="@{/libro/editar/{id}(id=${libro.id})}">Editar</a>
+                        <!-- Eliminar libro -->
+                        <a class="btn btn-danger btn-sm" th:href="@{/libro/eliminar/{id}(id=${libro.id})}"
+                            th:onclick="'return confirm(\'' + '¿Estás seguro de que quieres eliminar este libro?' + '\')'">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button class="btn btn-primary">
+            <a class="text-white" th:href="@{/libro/nuevo}" th:text="#{boton.nuevo}">Nuevo Libro</a>
+        </button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.9/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

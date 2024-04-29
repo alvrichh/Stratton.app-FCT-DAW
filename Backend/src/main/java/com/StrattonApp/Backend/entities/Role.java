@@ -1,6 +1,7 @@
 package com.StrattonApp.Backend.entities;
 
 public enum Role {
-	ROLE_EMPL,
-	ROLE_BOSS
+	ROLE_USER,
+	ROLE_ADMIN,
+	ROLE_MANAGER
 }

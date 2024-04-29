@@ -18,7 +18,7 @@ public class Comercializadora {
 
     // Relación con Contratos (una comercializadora puede ofrecer varios contratos)
     @OneToMany(mappedBy = "comercializadora")
-    private List<Contrato> contratos;
+    private List<Suministro> suministros;
 
 	public Long getIdComercializadora() {
 		return idComercializadora;
@@ -44,12 +44,12 @@ public class Comercializadora {
 		this.plan = plan;
 	}
 
-	public List<Contrato> getContratos() {
-		return contratos;
+	public List<Suministro> getContratos() {
+		return suministros;
 	}
 
-	public void setContratos(List<Contrato> contratos) {
-		this.contratos = contratos;
+	public void setContratos(List<Suministro> contratos) {
+		this.suministros = contratos;
 	}
 
 }

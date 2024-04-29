@@ -21,9 +21,9 @@ public interface ServicioEmpleado {
      UserDetailsService userDetailsService();
     
     /**
-     * Obtiene una lista de todos los usuarios en el sistema.
+     * Obtiene una lista de todos los usuarios)empleados en el sistema.
      *
-     * @return Lista de objetos UsuarioDTO que representan a todos los usuarios.
+     * @return Lista de objetos EmpleadoDTO que representan a todos los usuarios.
      */
     List<EmpleadoDTO> getAllUsers();
     
@@ -33,5 +33,5 @@ public interface ServicioEmpleado {
      * @param userId El ID del usuario a buscar.
      * @return Lista de usuarios encontrados (puede contener uno o ningún usuario).
      */
-    List<Empleado> getUserById(Long userId);
+    List<Empleado> getUserById(Long id);
 }

@@ -35,11 +35,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * Representa a un usuario en el sistema.
+ * Representa a un empleado en el sistema.
  */
-@Table(name = "usuarios")
+@Table(name = "empleados")
 @Entity
-public class Empleado implements UserDetails {
+public class Empleado  implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -147,10 +147,6 @@ public class Empleado implements UserDetails {
     public String getPassword() {
         return password;
     }
-
-    // Métodos setter añadidos
-    // ...
-
     /**
      * Obtiene el ID del usuario.
      *

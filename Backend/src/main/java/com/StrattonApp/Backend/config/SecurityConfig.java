@@ -22,8 +22,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.StrattonApp.Backend.service.ServicioEmpleado;
+
 /**
- * Configuración de seguridad para la aplicación.
+ * Configuración de seguridad para la aplicación con JWT
  */
 @Configuration
 @EnableWebSecurity
@@ -33,7 +35,7 @@ public class SecurityConfig {
     JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-  //  UsuarioService userService;
+    ServicioEmpleado servicioempleado;
 
     /**
      * Configura la cadena de filtros de seguridad.
@@ -48,18 +50,18 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/admin/**").permitAll()
                     // API CRUD EMPLEADO
-                    .requestMatchers(HttpMethod.GET, "/api/v1/users/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/v1/users/**").hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/api/v1/users/**").hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/api/v1/users/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/admin/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/admin/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/admin/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/admin/**").hasAuthority("ROLE_ADMIN")
                     
                     // API CRUD CLIENTE
-                    .requestMatchers(HttpMethod.GET, "/api/v1/productos/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/v1/productos/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/api/v1/productos/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/api/v1/productos/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/strattonapp/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/strattonapp/cliente/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/strattonapp/cliente/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/strattonapp/cliente/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
                     
                     .anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
@@ -88,7 +90,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-       // authProvider.setUserDetailsService(userService.userDetailsService());
+        authProvider.setUserDetailsService(servicioempleado.userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

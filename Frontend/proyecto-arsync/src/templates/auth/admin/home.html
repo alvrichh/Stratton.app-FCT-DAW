@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Página de Administrador</title>
+    <!-- Incluir Bootstrap CSS desde CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Bienvenido, <span th:text="${session.username}">Nombre de Usuario</span>!</h1>
+        <p>Esta página es solo para administradores.</p>
+        <!-- Fragmento de cierre de sesión -->
+        <div th:replace="~{fragments/logout-fragment :: logout-link}"></div>
+    </div>
+
+    <!-- Opcional: Incluir JavaScript de Bootstrap y sus dependencias -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+</body>
+</html>

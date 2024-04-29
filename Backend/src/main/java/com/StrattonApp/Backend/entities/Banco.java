@@ -19,7 +19,7 @@ public class Banco {
 
     // Relación con Contratos (un banco puede estar asociado a varios contratos)
     @OneToMany(mappedBy = "banco")
-    private List<Contrato> contratos;
+    private List<Suministro> contratos;
 
 	public Long getIdBanco() {
 		return idBanco;
@@ -37,11 +37,11 @@ public class Banco {
 		this.nombre = nombre;
 	}
 
-	public List<Contrato> getContratos() {
+	public List<Suministro> getContratos() {
 		return contratos;
 	}
 
-	public void setContratos(List<Contrato> contratos) {
+	public void setContratos(List<Suministro> contratos) {
 		this.contratos = contratos;
 	}
 

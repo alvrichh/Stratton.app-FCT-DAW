@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard de Clientes</title>
+</head>
+<body>
+    <h1>Dashboard de Clientes</h1>
+    
+    <!-- Lista de clientes -->
+    <h2>Lista de Clientes</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Compañía Contratada</th>
+                <th>Fecha de Subida del Contrato</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Iterar sobre la lista de clientes y mostrar cada uno -->
+            <tr th:each="cliente : ${clientes}">
+                <td th:text="${cliente.nombre}"></td>
+                <td th:text="${cliente.companiaContratada}"></td>
+                <td th:text="${#dates.format(cliente.fechaSubidaContrato, 'dd-MM-yyyy')}"></td>
+                <td>
+                    <!-- Botones para visualizar, editar y eliminar el cliente -->
+                    <a th:href="@{'/clientes/' + ${cliente.idCliente}}">Visualizar</a>
+                    <a th:href="@{'/clientes/' + ${cliente.idCliente} + '/editar'}">Editar</a>
+                    <form th:action="@{'/clientes/' + ${cliente.idCliente}}" method="post">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

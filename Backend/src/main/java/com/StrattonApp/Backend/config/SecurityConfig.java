@@ -52,16 +52,16 @@ public class SecurityConfig {
                 request
                     .requestMatchers(HttpMethod.POST, "/admin/**").permitAll()
                     // API CRUD EMPLEADO
-                    .requestMatchers(HttpMethod.GET, "/admin/**").hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.POST, "/admin/**").hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/admin/**").hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/admin/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/admin/**").hasAuthority("ADMIN")
                     
                     // API CRUD CLIENTE
                     .requestMatchers(HttpMethod.GET, "/strattonapp/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/strattonapp/cliente/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/strattonapp/cliente/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/strattonapp/cliente/**").hasAnyAuthority("ROLE_MANAGER", "ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/strattonapp/cliente/**").hasAnyAuthority("MANAGER", "ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/strattonapp/cliente/**").hasAnyAuthority("MANAGER", "ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/strattonapp/cliente/**").hasAnyAuthority("ROLE_MANAGER", "ADMIN")
                     
                     .anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

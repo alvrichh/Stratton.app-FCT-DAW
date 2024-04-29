@@ -16,6 +16,9 @@ public class Asesoria {
 
     private int valoracion;
 
+    private String nombre;
+    
+    private String descripcion;
     // Relación con Clientes (una asesoría puede tener varios clientes)
     @OneToMany(mappedBy = "asesoria")
     private List<Cliente> clientes;
@@ -51,6 +54,23 @@ public class Asesoria {
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;
 	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
 
     
 

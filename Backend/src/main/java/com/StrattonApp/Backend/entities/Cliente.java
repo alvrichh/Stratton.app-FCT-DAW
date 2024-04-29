@@ -31,7 +31,7 @@ public class Cliente {
 
     // Relación con Asesoría (muchos clientes pueden estar asociados a una asesoría)
     @ManyToOne
-    @JoinColumn(name = "id_asesoria")
+    @JoinColumn(name = "idAsesoria")
     private Asesoria asesoria;
 
     // Relación con Contrato (un cliente puede tener varios contratos)

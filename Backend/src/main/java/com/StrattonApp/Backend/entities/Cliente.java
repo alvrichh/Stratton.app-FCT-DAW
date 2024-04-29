@@ -28,15 +28,7 @@ public class Cliente {
     
     private String IBAN;
     
-
-    // Relación con Asesoría (muchos clientes pueden estar asociados a una asesoría)
-    @ManyToOne
-    @JoinColumn(name = "idAsesoria")
-    private Asesoria asesoria;
-
     // Relación con Contrato (un cliente puede tener varios contratos)
-    @OneToMany(mappedBy = "cliente")
-    private List<Suministro> suministros;
 
 	public Long getIdCliente() {
 		return idCliente;
@@ -86,21 +78,6 @@ public class Cliente {
 		this.direccion = direccion;
 	}
 
-	public Asesoria getAsesoria() {
-		return asesoria;
-	}
-
-	public void setAsesoria(Asesoria asesoria) {
-		this.asesoria = asesoria;
-	}
-
-	public List<Suministro> getSuministros() {
-		return suministros;
-	}
-
-	public void setSuministros(List<Suministro> suministros) {
-		this.suministros = suministros;
-	}
 	public Integer getTelefono() {
 		return telefono;
 	}

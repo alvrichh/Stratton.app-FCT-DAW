@@ -31,8 +31,8 @@ import com.StrattonApp.Backend.service.ServicioEmpleado;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    JwtAuthenticationFilter jwtAuthenticationFilter;
+  //  @Autowired
+   // JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
     ServicioEmpleado servicioempleado;
@@ -66,8 +66,8 @@ public class SecurityConfig {
                     .anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
             .cors(Customizer.withDefaults())
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .authenticationProvider(authenticationProvider());
+           // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

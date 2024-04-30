@@ -3,8 +3,17 @@ Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos d
 
 ### Enlaces de interés:
 <a href="https://www.figma.com/file/abBcwX662jrvwuJvsCnbFK/Stratton.app?type=design&node-id=0%3A1&mode=design&t=w5RrKRyjNq5V1P3H-1">
-<img  height="70" src="https://cdn.sanity.io/images/599r6htc/localized/46a76c802176eb17b04e12108de7e7e0f3736dc6-1024x1024.png?w=804&h=804&q=75&fit=max&auto=format" alt="octocat" style="margin-right: 2rem;" /> 
+<img  height="70" src="https://static-00.iconduck.com/assets.00/apps-figma-icon-1024x1024-cb4t8vyj.png" alt="octocat" style="margin-right: 2rem;"/> 
 </a>
+
+<a href="https://marvelapp.com/prototype/a63i5gf">
+<img  height="70" src="https://cdn.icon-icons.com/icons2/2429/PNG/512/marvel_logo_icon_147266.png" alt="octocat" style="margin-right: 2rem;"/> 
+</a>
+
+<a href="https://www.postman.com/alvrich">
+<img  height="70" src="https://static-00.iconduck.com/assets.00/postman-icon-497x512-beb7sy75.png" alt="octocat" style="margin-right: 2rem;"/> 
+</a>
+
 
 ## Motivación:
 La principal motivación del proyecto es poder gestionar mis propios clientes o los clientes de una determinada asesoría energética como a sus empleados, para mejorar la gestión de los equipos comerciales y la organización de los clientes, pudiéndolos clasificar de manera clara y concisa. 

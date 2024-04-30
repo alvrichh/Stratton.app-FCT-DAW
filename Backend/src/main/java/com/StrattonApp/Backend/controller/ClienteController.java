@@ -8,13 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.StrattonApp.Backend.DTO.ClienteDTO;
+import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.service.ClienteService;
 
 @Controller
 public class ClienteController {
 	
     @Autowired
-    private ClienteService clienteService; // Asumiendo que tienes un servicio para manejar los clientes
+    private ClienteService clienteService; //servicio para manejar los clientes
 
     @GetMapping("/dashboard")
     public String mostrarDashboard(Model model) {
@@ -29,7 +30,7 @@ public class ClienteController {
 }
 
     @GetMapping("/nuevo-cliente")
-    public String mostrarFormularioNuevoCliente() {
+    public String mostrarFormularioNuevoCliente(Model model) {
         return "formulario-nuevo-cliente"; // nombre de la plantilla HTML del formulario
     }
 

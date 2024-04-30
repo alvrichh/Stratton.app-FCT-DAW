@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -72,7 +74,23 @@ public class Empleado  implements UserDetails {
     @Column(name = "RolesUsuario")
     private Set<Role> roles = new HashSet<>();
 
-    /**
+    @ManyToOne
+    @JoinColumn(name = "id_asesoria")
+    private Asesoria asesoria;
+
+    public Asesoria getAsesoria() {
+		return asesoria;
+	}
+
+	public void setAsesoria(Asesoria asesoria) {
+		this.asesoria = asesoria;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
      * Devuelve una colección de roles asignados al usuario.
      *
      * @return Colección de roles.

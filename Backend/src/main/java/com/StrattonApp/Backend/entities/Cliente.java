@@ -26,6 +26,7 @@ public class Cliente {
 
     private Integer telefono;
     
+    @NotBlank(message = "El IBAN del cliente no puede estar vacío.")
     private String IBAN;
     
 

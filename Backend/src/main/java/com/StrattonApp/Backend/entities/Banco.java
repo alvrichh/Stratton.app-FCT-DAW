@@ -4,7 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
+/*
 @Entity
 public class Banco {
 
@@ -46,4 +46,4 @@ public class Banco {
 	}
 
     
-}
+}*/

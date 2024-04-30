@@ -47,8 +47,8 @@ public class ServicioEmpleadoImpl implements ServicioEmpleado {
      * @return Lista que contiene el empleado si se encuentra, o una lista vacía si no.
      */
 	@Override
-	public List<Empleado> getUserById(Long id) {
-        Optional<Empleado> optionalEmpl = empleadoRepository.findById(id);
+	public List<Empleado> getUserById(Long userid) {
+        Optional<Empleado> optionalEmpl = empleadoRepository.findById(userid);
 
         // Verifica si el usuario existe y retorna una lista con ese usuario o una lista vacía si no se encuentra
         return optionalEmpl.map(List::of).orElse(List.of());

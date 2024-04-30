@@ -22,6 +22,12 @@ public class Asesoria {
     // Relación con Clientes (una asesoría puede tener varios clientes)
     @OneToMany(mappedBy = "asesoria")
     private List<Cliente> clientes;
+    
+    // Relación con Clientes (una asesoría puede tener varios empleados)
+    @OneToMany(mappedBy = "asesoria")
+    private List<Empleado> empleados;
+
+
 
 	public Long getIdAsesoria() {
 		return idAsesoria;
@@ -72,6 +78,12 @@ public class Asesoria {
 	}
 
 
-    
+	public List<Empleado> getEmpleados() {
+		return empleados;
+	}
+
+	public void setEmpleados(List<Empleado> empleados) {
+		this.empleados = empleados;
+	}
 
 }

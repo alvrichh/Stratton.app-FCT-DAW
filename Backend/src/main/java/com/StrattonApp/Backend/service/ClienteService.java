@@ -16,6 +16,12 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository; // Asumiendo que tienes un repositorio para manejar los clientes
 
+    private ClienteDTO mapToDTO(Cliente cliente) {
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setId(cliente.getIdCliente());
+        return clienteDTO;
+    }
+    
     public List<ClienteDTO> obtenerClientesDTO() {
         List<Cliente> clientes = clienteRepository.findAll();
         // Convertir objetos Cliente en objetos ClienteDTO
@@ -23,10 +29,6 @@ public class ClienteService {
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
-
-    private ClienteDTO mapToDTO(Cliente cliente) {
-        ClienteDTO clienteDTO = new ClienteDTO();
-        clienteDTO.setNombre(cliente.getNombre());
-        return clienteDTO;
-    }
+    
+  
 }

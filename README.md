@@ -18,6 +18,9 @@ Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos d
 ## Motivación:
 La principal motivación del proyecto es poder gestionar mis propios clientes o los clientes de una determinada asesoría energética como a sus empleados, para mejorar la gestión de los equipos comerciales y la organización de los clientes, pudiéndolos clasificar de manera clara y concisa. 
 
+## ARQUITECTURA
+![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/5ef284ac-e66f-4159-acb7-bc72c404f6b5)
+
 ## Casos de uso
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/751bfc3b-9e41-4d14-8f70-0cd2828b5ae1)
 

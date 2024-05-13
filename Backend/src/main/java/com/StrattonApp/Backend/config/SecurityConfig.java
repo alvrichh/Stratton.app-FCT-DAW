@@ -22,7 +22,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.StrattonApp.Backend.service.ServicioEmpleado;
+import com.StrattonApp.Backend.service.EmpleadoService;
+
 
 /**
  * Configuración de seguridad para la aplicación con JWT
@@ -35,7 +36,7 @@ public class SecurityConfig {
     JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    ServicioEmpleado servicioempleado;
+    EmpleadoService servicioempleado;
 
     /**
      * Configura la cadena de filtros de seguridad.
@@ -50,18 +51,18 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(request ->
                 request
-                    .requestMatchers(HttpMethod.POST, "/admin/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
                     // API CRUD EMPLEADO
-                    .requestMatchers(HttpMethod.GET, "/admin/**").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.POST, "/admin/**").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/admin/**").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/v1/admin/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasAuthority("ADMIN")
                     
                     // API CRUD CLIENTE
                     .requestMatchers(HttpMethod.GET, "/strattonapp/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/strattonapp/cliente/**").hasAnyAuthority("MANAGER", "ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/strattonapp/cliente/**").hasAnyAuthority("MANAGER", "ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/strattonapp/cliente/**").hasAnyAuthority("ROLE_MANAGER", "ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/strattonapp/cliente/**").hasAnyAuthority("MANAGER", "ADMIN")
                     
                     .anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
@@ -118,4 +119,16 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
+    /*
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080")); // Permitir solicitudes desde localhost en el puerto 8080
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // Permitir estos métodos HTTP
+        configuration.setAllowCredentials(true); // Permitir credenciales (por ejemplo, cookies)
+        configuration.addAllowedHeader("*"); // Permitir todos los encabezados
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;*/
 }

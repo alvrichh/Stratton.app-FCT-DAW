@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 import com.StrattonApp.Backend.DTO.EmpleadoDTO;
 import com.StrattonApp.Backend.entities.Empleado;
 import com.StrattonApp.Backend.repository.EmpleadoRepository;
-import com.StrattonApp.Backend.service.ServicioEmpleado;
+import com.StrattonApp.Backend.service.EmpleadoService;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Service
-public class ServicioEmpleadoImpl implements ServicioEmpleado {
+public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Autowired
     private EmpleadoRepository empleadoRepository;

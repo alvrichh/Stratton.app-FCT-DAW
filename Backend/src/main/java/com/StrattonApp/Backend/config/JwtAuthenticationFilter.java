@@ -14,8 +14,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.StrattonApp.Backend.service.EmpleadoService;
 import com.StrattonApp.Backend.service.JwtService;
-import com.StrattonApp.Backend.service.ServicioEmpleado;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private ServicioEmpleado userService;
+    private EmpleadoService userService;
 
     /**
      * Filtra las solicitudes para verificar y establecer la autenticación del usuario mediante JWT.

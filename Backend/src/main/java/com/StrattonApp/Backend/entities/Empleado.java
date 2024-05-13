@@ -105,8 +105,30 @@ public class Empleado  implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toList());
     }
+    
 
-    /**
+	public Empleado(Long id, @NotBlank(message = "El nombre no puede estar en blanco") String firstName,
+			@NotBlank(message = "El apellido no puede estar en blanco") String lastName,
+			@NotBlank(message = "El nombre de usuario no puede estar en blanco") @Size(min = 3, max = 20, message = "El nombre de usuario debe tener entre 3 y 20 caracteres") String username,
+			@NotBlank(message = "El correo electrónico no puede estar en blanco") @Email(message = "El formato del correo electrónico no es válido") String email,
+			@NotBlank(message = "La contraseña no puede estar en blanco") @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres") String password,
+			Set<Role> roles, Asesoria asesoria) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+		this.asesoria = asesoria;
+	}
+	
+
+	public Empleado() {
+	}
+
+	/**
      * Obtiene el nombre de usuario del usuario.
      *
      * @return Nombre de usuario.

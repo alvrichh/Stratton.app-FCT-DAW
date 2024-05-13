@@ -1,4 +1,4 @@
-package com.StrattonApp.Backend.DTO;
+package com.StrattonApp.Backend.DTO.response;
 
 
 

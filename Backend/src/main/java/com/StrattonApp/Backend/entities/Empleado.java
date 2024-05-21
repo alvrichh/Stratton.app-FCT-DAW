@@ -49,19 +49,21 @@ public class Empleado  implements UserDetails {
     private Long id;
 
     @NotBlank(message = "El nombre no puede estar en blanco")
+    @Column(name= "Nombre", length = 60, nullable= true)
     private String firstName;
 
     @NotBlank(message = "El apellido no puede estar en blanco")
+    @Column(name= "Apellidos", length = 60, nullable= true)
     private String lastName;
 
     @NotBlank(message = "El nombre de usuario no puede estar en blanco")
     @Size(min = 3, max = 20, message = "El nombre de usuario debe tener entre 3 y 20 caracteres")
-    @Column(unique = true)
+    @Column(name= "Usuario", unique = true)
     private String username;
 
     @NotBlank(message = "El correo electrónico no puede estar en blanco")
     @Email(message = "El formato del correo electrónico no es válido")
-    @Column(unique = true)
+    @Column(name = "correo",unique = true)
     private String email;
 
     @NotBlank(message = "La contraseña no puede estar en blanco")

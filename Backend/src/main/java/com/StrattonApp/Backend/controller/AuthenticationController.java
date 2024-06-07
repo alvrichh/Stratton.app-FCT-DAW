@@ -29,7 +29,7 @@ public class AuthenticationController {
      * @param request Datos de registro del empleado.
      * @return ResponseEntity con la respuesta de autenticación JWT.
      */
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
         return ResponseEntity.ok(authenticationService.signup(request));
     }
@@ -40,7 +40,7 @@ public class AuthenticationController {
      * @param request Datos de inicio de sesión.
      * @return ResponseEntity con la respuesta de autenticación JWT.
      */
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
         return ResponseEntity.ok(authenticationService.signin(request));
     }

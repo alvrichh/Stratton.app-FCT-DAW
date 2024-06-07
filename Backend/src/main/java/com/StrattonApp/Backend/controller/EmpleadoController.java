@@ -45,9 +45,9 @@ public class EmpleadoController {
     // Obtener un empleado por usuario
     @GetMapping("/{usuario}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Empleado> obtenerEmpleadoPorUsuario(@PathVariable String usuario) {
-        Empleado empleado = empleadoRepositorio.findByUsername(usuario)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el usuario: " + usuario));
+    public ResponseEntity<Empleado> obtenerEmpleadoPorUsuario(@PathVariable String username) {
+        Empleado empleado = empleadoRepositorio.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el usuario: " + username));
         return ResponseEntity.ok(empleado);
     }
 

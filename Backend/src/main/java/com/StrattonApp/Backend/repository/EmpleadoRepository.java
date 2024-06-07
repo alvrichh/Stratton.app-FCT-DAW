@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import com.StrattonApp.Backend.DTO.EmpleadoDTO;
 import com.StrattonApp.Backend.entities.Empleado;
 
 @Repository

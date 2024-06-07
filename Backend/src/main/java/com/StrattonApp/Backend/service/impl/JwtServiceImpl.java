@@ -1,5 +1,6 @@
 package com.StrattonApp.Backend.service.impl;
 
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -95,7 +96,7 @@ public class JwtServiceImpl implements JwtService {
     // Extrae todas las claims del token.
     // Aquí se extrae y se procesa el conjunto completo de claims del JWT.
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
+        return Jwts.parser()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)

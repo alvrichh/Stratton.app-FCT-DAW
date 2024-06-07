@@ -27,9 +27,9 @@ public class Cliente {
     @Column(name= "dni", length = 10, nullable= false)
     private String DNI;
 
-    @NotBlank(message = "El correo del cliente no puede estar vacío.")
-    @Column(name= "correo", length = 60, nullable= false)
-    private String correo;
+    @NotBlank(message = "El email del cliente no puede estar vacío.")
+    @Column(name= "email", length = 60, nullable= false)
+    private String email;
 
     @NotBlank(message = "La dirección del cliente no puede estar vacío.")
     @Column(name= "direccion", length = 60, nullable= false)
@@ -52,31 +52,35 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente")
     private List<Suministro> suministros;
 
+    @ManyToOne
+    @JoinColumn(name = "idComercializadora")
+    private Comercializadora comercializadora;
+
     
     @ManyToOne
     @JoinColumn(name = "empleado")
     private Empleado empleado;
-    
-    
-    public Cliente(Long idCliente, @NotBlank(message = "El nombre del cliente no puede estar vacío.") String nombre,
+
+	public Cliente(Long idCliente, @NotBlank(message = "El nombre del cliente no puede estar vacío.") String nombre,
 			@NotBlank(message = "El apellido no puede estar en blanco") String apellidos,
 			@NotBlank(message = "El dni no puede estar en blanco") String dNI,
-			@NotBlank(message = "El correo del cliente no puede estar vacío.") String correo,
+			@NotBlank(message = "El email del cliente no puede estar vacío.") String email,
 			@NotBlank(message = "La dirección del cliente no puede estar vacío.") String direccion,
 			@NotNull(message = "El telefono del cliente no puede estar vacío.") Integer telefono,
 			@NotBlank(message = "El IBAN del cliente no puede estar vacío.") String iBAN, Asesoria asesoria,
-			List<Suministro> suministros, Empleado empleado) {
+			List<Suministro> suministros, Comercializadora comercializadora, Empleado empleado) {
 		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		DNI = dNI;
-		this.correo = correo;
+		this.email = email;
 		this.direccion = direccion;
 		this.telefono = telefono;
 		IBAN = iBAN;
 		this.asesoria = asesoria;
 		this.suministros = suministros;
+		this.comercializadora = comercializadora;
 		this.empleado = empleado;
 	}
 
@@ -124,12 +128,12 @@ public class Cliente {
         this.DNI = DNI;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 
@@ -171,6 +175,14 @@ public class Cliente {
     public void setIBAN(String IBAN) {
         this.IBAN = IBAN;
     }
+
+	public Comercializadora getComercializadora() {
+		return comercializadora;
+	}
+
+	public void setComercializadora(Comercializadora comercializadora) {
+		this.comercializadora = comercializadora;
+	}
 
 
 }

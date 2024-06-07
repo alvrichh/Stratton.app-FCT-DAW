@@ -22,6 +22,8 @@ public class InicializarDatos implements CommandLineRunner {
     private final AsesoriaRepository asesoriaRepository;
     private final ClienteRepository clienteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Asesoria asesoria1 = new Asesoria();
+
 
     public InicializarDatos(EmpleadoRepository empleadoRepository, AsesoriaRepository asesoriaRepository, ClienteRepository clienteRepository, PasswordEncoder passwordEncoder) {
         this.empleadoRepository = empleadoRepository;
@@ -57,17 +59,18 @@ public class InicializarDatos implements CommandLineRunner {
 
             // Crear dos empleados de ejemplo
             Empleado admin = new Empleado();
-            admin.setFirstName("Admin");
-            admin.setLastName("Admin");
+            admin.setNombre("Admin");
+            admin.setApellidos("Admin");
             admin.setUsername("admin");
             admin.setEmail("admin@example.com");
             admin.setPassword(passwordEncoder.encode("admin"));
             admin.setRoles(rolesAdmin);
+            admin.setAsesoria(asesoria1);
             empleadoRepository.save(admin);
 
             Empleado usuario = new Empleado();
-            usuario.setFirstName("Usuario");
-            usuario.setLastName("Usuario");
+            usuario.setNombre("Usuario");
+            usuario.setApellidos("Usuario");
             usuario.setUsername("usuario");
             usuario.setEmail("usuario@example.com");
             usuario.setPassword(passwordEncoder.encode("usuario"));
@@ -80,7 +83,6 @@ public class InicializarDatos implements CommandLineRunner {
         // Verificar si ya existen asesorías
         if (asesoriaRepository.count() == 0) {
             // Crear asesorías de ejemplo
-            Asesoria asesoria1 = new Asesoria();
             asesoria1.setNombre("Asesoría 1");
             asesoria1.setDescripcion("Descripción de la asesoría 1");
             asesoriaRepository.save(asesoria1);
@@ -99,13 +101,14 @@ public class InicializarDatos implements CommandLineRunner {
             Empleado admin = empleadoRepository.findByUsername("admin").orElse(null);
             Empleado usuario = empleadoRepository.findByUsername("usuario").orElse(null);
 
+            
             if (admin != null && usuario != null) {
                 // Crear clientes y asociarlos a los empleados
                 Cliente cliente1 = new Cliente();
                 cliente1.setNombre("Cliente1");
                 cliente1.setApellidos("Apellido1");
                 cliente1.setDNI("12345678A");
-                cliente1.setCorreo("cliente1@example.com");
+                cliente1.setEmail("cliente1@example.com");
                 cliente1.setDireccion("Direccion 1");
                 cliente1.setTelefono(123456789);
                 cliente1.setIBAN("ES1234567890123456789012");
@@ -116,7 +119,7 @@ public class InicializarDatos implements CommandLineRunner {
                 cliente2.setNombre("Cliente2");
                 cliente2.setApellidos("Apellido2");
                 cliente2.setDNI("87654321B");
-                cliente2.setCorreo("cliente2@example.com");
+                cliente2.setEmail("cliente2@example.com");
                 cliente2.setDireccion("Direccion 2");
                 cliente2.setTelefono(987654321);
                 cliente2.setIBAN("ES2109876543210987654321");

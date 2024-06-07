@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ClienteService {
 
     @Autowired
-    private ClienteRepository clienteRepository; // Asumiendo que tienes un repositorio para manejar los clientes
+    private ClienteRepository clienteRepository; 
 
     private ClienteDTO mapToDTO(Cliente cliente) {
         ClienteDTO clienteDTO = new ClienteDTO();

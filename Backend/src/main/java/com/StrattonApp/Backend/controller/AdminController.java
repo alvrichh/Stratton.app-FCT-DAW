@@ -41,8 +41,8 @@ public class AdminController {
     public Empleado updateEmployee(@PathVariable Long id, @RequestBody Empleado updatedEmployee) {
         return empleadoRepository.findById(id)
                 .map(employee -> {
-                    employee.setFirstName(updatedEmployee.getFirstName());
-                    employee.setLastName(updatedEmployee.getLastName());
+                    employee.setNombre(updatedEmployee.getNombre());
+                    employee.setApellidos(updatedEmployee.getApellidos());
                     // Actualiza otros campos según sea necesario
                     return empleadoRepository.save(employee);
                 })

@@ -36,7 +36,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     @Override
     public List<EmpleadoDTO> getAllUsers() {
         return empleadoRepository.findAll().stream()
-                .map(empleado -> new EmpleadoDTO(empleado.getFirstName(), empleado.getLastName(), empleado.getEmail(), empleado.getUsername(), empleado.getRoles().toString()))
+                .map(empleado -> new EmpleadoDTO(empleado.getNombre(), empleado.getApellidos(), empleado.getEmail(), empleado.getUsername(), empleado.getRoles().toString()))
                 .collect(Collectors.toList());
     }
 

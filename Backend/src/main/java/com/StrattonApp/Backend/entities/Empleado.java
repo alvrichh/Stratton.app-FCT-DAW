@@ -52,11 +52,11 @@ public class Empleado implements UserDetails {
 
     @NotBlank(message = "El nombre no puede estar en blanco")
     @Column(name= "Nombre", length = 60, nullable= true)
-    private String firstName;
+    private String nombre;
 
     @NotBlank(message = "El apellido no puede estar en blanco")
     @Column(name= "Apellidos", length = 60, nullable= true)
-    private String lastName;
+    private String apellidos;
 
     @NotBlank(message = "El nombre de usuario no puede estar en blanco")
     @Size(min = 3, max = 20, message = "El nombre de usuario debe tener entre 3 y 20 caracteres")
@@ -79,12 +79,12 @@ public class Empleado implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "id_asesoria")
+    @JoinColumn(name = "idAsesoria")
     private Asesoria asesoria;
 
-    @OneToMany
-    private List<Cliente> clientes;
-
+    @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Cliente> clientes = new HashSet<>();
+    
 	public Asesoria getAsesoria() {
 		return asesoria;
 	}
@@ -114,18 +114,16 @@ public class Empleado implements UserDetails {
     }
     
 
-
-
-	public Empleado(Long id, @NotBlank(message = "El nombre no puede estar en blanco") String firstName,
-			@NotBlank(message = "El apellido no puede estar en blanco") String lastName,
+	public Empleado(Long id, @NotBlank(message = "El nombre no puede estar en blanco") String nombre,
+			@NotBlank(message = "El apellido no puede estar en blanco") String apellidos,
 			@NotBlank(message = "El nombre de usuario no puede estar en blanco") @Size(min = 3, max = 20, message = "El nombre de usuario debe tener entre 3 y 20 caracteres") String username,
 			@NotBlank(message = "El correo electrónico no puede estar en blanco") @Email(message = "El formato del correo electrónico no es válido") String email,
 			@NotBlank(message = "La contraseña no puede estar en blanco") @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres") String password,
-			Set<Role> roles, Asesoria asesoria, List<Cliente> clientes) {
+			Set<Role> roles, Asesoria asesoria, Set<Cliente> clientes) {
 		super();
 		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -210,8 +208,8 @@ public class Empleado implements UserDetails {
      *
      * @return Primer nombre del usuario.
      */
-    public String getFirstName() {
-        return firstName;
+    public String getNombre() {
+        return nombre;
     }
 
     /**
@@ -219,8 +217,8 @@ public class Empleado implements UserDetails {
      *
      * @return Apellido del usuario.
      */
-    public String getLastName() {
-        return lastName;
+    public String getApellidos() {
+        return apellidos;
     }
 
     /**
@@ -234,12 +232,12 @@ public class Empleado implements UserDetails {
 
 
     // Métodos setter añadidos
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
     
 	public void setUsername(String username) {
@@ -261,6 +259,14 @@ public class Empleado implements UserDetails {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+	public Set<Cliente> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(Set<Cliente> clientes) {
+		this.clientes = clientes;
+	}
 
     
 }

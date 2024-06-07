@@ -1,0 +1,43 @@
+<div class="col-md-6 offset-md-3 mt-4">
+    <h3 class="text-center">Registro de Cliente</h3>
+    <form (ngSubmit)="onSubmit()" #clienteForm="ngForm">
+        <div class="form-group">
+            <label>Nombre:</label>
+            <input type="text" class="form-control" id="nombre" [(ngModel)]="cliente.nombre" name="nombreCompleto" required>
+        </div>
+        <div class="form-group">
+            <label>Apellidos:</label>
+            <input type="text" class="form-control" id="apellidos" [(ngModel)]="cliente.apellidos" name="nombreCompleto" required>
+        </div>
+        <div class="form-group">
+            <label>DNI:</label>
+            <input type="text" class="form-control" id="dni" [(ngModel)]="cliente.dni" name="dni" required>
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" class="form-control" id="email" [(ngModel)]="cliente.email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label>Comercializadora:</label>
+            <select class="form-control" id="comercializadora" [(ngModel)]="cliente.comercializadora" name="comercializadora" required>
+                <option value="Endesa">Endesa</option>
+                <option value="Iberdrola">Iberdrola</option>
+                <option value="Naturgy">Naturgy</option>
+            </select>
+            <div class="mt-2">
+                <img *ngIf="cliente.comercializadora === 'Endesa'" src="assets/endesa.png" alt="Endesa" class="img-thumbnail" width="50">
+                <img *ngIf="cliente.comercializadora === 'Iberdrola'" src="assets/iberdrola.png" alt="Iberdrola" class="img-thumbnail" width="50">
+                <img *ngIf="cliente.comercializadora === 'Naturgy'" src="assets/naturgy.png" alt="Naturgy" class="img-thumbnail" width="50">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Teléfono:</label>
+            <input type="text" class="form-control" id="telefono" [(ngModel)]="cliente.telefono" name="telefono" required>
+        </div>
+        <div class="form-group">
+            <label>Número CUPS:</label>
+            <input type="text" class="form-control" id="numeroCUPS" [(ngModel)]="cliente.numeroCUPS" name="numeroCUPS" required>
+        </div>
+        <button type="submit" class="btn btn-success" [disabled]="!clienteForm.valid">Registrar Cliente</button>
+    </form>
+</div>

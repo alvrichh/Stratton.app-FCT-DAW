@@ -1,0 +1,71 @@
+<div class="col-md-6 offset-md-3">
+    <h3 class="text-center">Modificar empleado</h3>
+    <form (ngSubmit)="onSubmit()" #empleadoForm = "ngForm">
+      <div class="form-group">
+        <label>Nombre: </label>
+        <input type="text" 
+               class="form-control"
+               id="nombre"
+               [(ngModel)]="empleado.nombre"
+               name="nombre"
+               required
+               minlength="4"
+               maxlength="10"
+               placeholder="Nombre del empleado"
+               #nombre="ngModel">
+        <div class="alert alert-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf= "nombre.errors && nombre.errors['required']">
+            Escriba el nombre del empleado, por favor.
+          </div>
+          <div *ngIf= "nombre.errors && nombre.errors['minlength']">
+            El nombre debe tener al menos 4 caracteres.
+          </div>
+          <div *ngIf= "nombre.errors && nombre.errors['maxlength']">
+            El nombre no puede tener más de 10 caracteres.
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Apellido: </label>
+        <input type="text" 
+               class="form-control"
+               id="apellido"
+               [(ngModel)]="empleado.apellido"
+               name="apellido"
+               required
+               placeholder="Apellido del empleado"
+               #apellido="ngModel">
+        <div class= "alert alert-danger" *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
+          <div *ngIf="apellido.errors && apellido.errors['required']">
+            Escriba el apellido del empleado, por favor.
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email: </label>
+        <input type="email" 
+               class="form-control"
+               id="email"
+               [(ngModel)]="empleado.email"
+               name="email"
+               required
+               placeholder="Email del empleado"
+               #email="ngModel"
+               pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}">
+               <div class="alert alert-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+          <div *ngIf= "email.errors && email.errors['required']">
+            Escriba el email del empleado, por favor.
+          </div>
+          <div *ngIf= "email.errors && email.errors['email']">
+            El email no es válido.
+          </div>
+          <div *ngIf= "email.errors && email.errors['pattern']">
+            El email debe tener formato de de correo electrónico.
+          </div>
+        </div>
+      </div>
+  
+      <button class="btn btn-success" [disabled]= "!empleadoForm.valid">Guardar</button>
+    </form>
+  </div>
+  

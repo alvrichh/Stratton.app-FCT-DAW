@@ -1,0 +1,57 @@
+/*import "~@angular/material/prebuilt-themes/indigo-pink.css";
+*/
+.profile-image{
+    width: 100px;
+    border-radius: 100%;
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #343a40; /* Color de fondo oscuro */
+  color: white;
+  text-align: center;
+  padding: 20px 0; /* Añade espacio alrededor del contenido */
+}
+/* Botón de LinkeIn */
+.libutton {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: rgb(0, 128, 255); 
+    color: #ffffff; 
+    border: 2px solid #24292e;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .libutton:hover{
+    background-color: #ffffff; /* Color de fondo al pasar el mouse */
+    color: rgb(0, 128, 255); /* Color del texto al pasar el mouse */
+  }
+  /* Botón de GitHub */
+.github-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    background-color: black; /* Color de fondo de GitHub */
+    color: #ffffff; /* Color del texto */
+    border: 2px solid #24292e; /* Color del borde */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .github-button:hover {
+    background-color: #ffffff; /* Color de fondo al pasar el mouse */
+    color: #24292e; /* Color del texto al pasar el mouse */
+  }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+

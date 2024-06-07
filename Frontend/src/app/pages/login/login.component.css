@@ -1,0 +1,22 @@
+.card {
+    background-color: #343a40;
+    color: white;
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 250px;
+}
+.card:hover {
+    box-shadow: 0 0 15px rgba(255, 0, 150, 0.5), 0 0 25px rgba(0, 255, 150, 0.5), 0 0 35px rgba(0, 150, 255, 0.5);
+}
+.form-control {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.form-control:focus {
+    border: 2px solid transparent;
+    background-image: linear-gradient(white, white), linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+.card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+}

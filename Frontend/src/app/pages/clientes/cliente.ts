@@ -1,5 +1,6 @@
 // cliente.ts
-import { Empleado } from './empleado';
+
+import { Empleado } from "../empleados/empleado";
 
 export class Cliente {
   id: number;

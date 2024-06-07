@@ -64,7 +64,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/strattonapp/cliente/**").hasAnyAuthority("MANAGER", "ROLE_ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/strattonapp/cliente/**").hasAnyAuthority("MANAGER", "ADMIN")
                     
-                    .anyRequest().authenticated())
+                    .anyRequest().permitAll())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
             .cors(Customizer.withDefaults())
             .authenticationProvider(authenticationProvider())

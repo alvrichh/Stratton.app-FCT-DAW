@@ -7,12 +7,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,7 +43,7 @@ import jakarta.validation.constraints.Size;
  */
 @Table(name = "empleados")
 @Entity
-public class Empleado  implements UserDetails {
+public class Empleado implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -80,7 +82,10 @@ public class Empleado  implements UserDetails {
     @JoinColumn(name = "id_asesoria")
     private Asesoria asesoria;
 
-    public Asesoria getAsesoria() {
+    @OneToMany
+    private List<Cliente> clientes;
+
+	public Asesoria getAsesoria() {
 		return asesoria;
 	}
 
@@ -109,12 +114,14 @@ public class Empleado  implements UserDetails {
     }
     
 
+
+
 	public Empleado(Long id, @NotBlank(message = "El nombre no puede estar en blanco") String firstName,
 			@NotBlank(message = "El apellido no puede estar en blanco") String lastName,
 			@NotBlank(message = "El nombre de usuario no puede estar en blanco") @Size(min = 3, max = 20, message = "El nombre de usuario debe tener entre 3 y 20 caracteres") String username,
 			@NotBlank(message = "El correo electrónico no puede estar en blanco") @Email(message = "El formato del correo electrónico no es válido") String email,
 			@NotBlank(message = "La contraseña no puede estar en blanco") @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres") String password,
-			Set<Role> roles, Asesoria asesoria) {
+			Set<Role> roles, Asesoria asesoria, List<Cliente> clientes) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -124,8 +131,8 @@ public class Empleado  implements UserDetails {
 		this.password = password;
 		this.roles = roles;
 		this.asesoria = asesoria;
+		this.clientes = clientes;
 	}
-	
 
 	public Empleado() {
 	}

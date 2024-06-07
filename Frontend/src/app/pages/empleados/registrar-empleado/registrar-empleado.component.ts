@@ -16,9 +16,9 @@ export class RegistrarEmpleadoComponent implements OnInit{
 
 
   empleado: Empleado = new Empleado();
-usuario: any;
-rolesDisponibles: string[] = ["ADMIN", "USER"];  // Correcta definición del array de roles
-constructor(private empleadoServicio:EmpleadoService, private router:Router){}
+  username: any;
+  rolesDisponibles: string[] = ["ADMIN", "USER"];  // Correcta definición del array de roles
+  constructor(private empleadoServicio:EmpleadoService, private router:Router){}
 
   ngOnInit(): void {
     console.log(this.empleado)

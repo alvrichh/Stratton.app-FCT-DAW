@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Empleado } from '../empleado';
 import { ActivatedRoute } from '@angular/router';
 import { EmpleadoService } from '../empleado.service';
 import swal from 'sweetalert2';
+import { Empleado } from '../empleado';
 
 @Component({
   selector: 'app-detalles-empleado',

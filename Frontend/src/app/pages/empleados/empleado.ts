@@ -1,9 +1,9 @@
 export class Empleado {
     id:number;
     nombre:string;
-    apellido:string;
+    apellidos:string;
     email:string;
-    usuario:string;
+    username:string;
     password:string;
     roles: string[]; // Asumiendo que los roles se manejarán como una lista de strings
 }

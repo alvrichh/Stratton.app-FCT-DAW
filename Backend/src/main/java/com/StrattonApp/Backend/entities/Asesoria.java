@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Asesoria {
 
@@ -25,6 +27,7 @@ public class Asesoria {
     
     // Relación con Clientes (una asesoría puede tener varios empleados)
     @OneToMany(mappedBy = "asesoria")
+    @JsonIgnore
     private List<Empleado> empleados;
 
 

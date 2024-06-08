@@ -2,8 +2,6 @@ package com.StrattonApp.Backend.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +14,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,10 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.StrattonApp.Backend.service.EmpleadoService;
-import com.example.EduvibeBackend.service.impl.UserService;
-import com.StrattonApp.Backend.DTO.EmpleadoDTO;
 import com.StrattonApp.Backend.config.AuthEntryPoint;
-import com.StrattonApp.Backend.entities.Empleado;
 
 /**
  * Configuración de seguridad para la aplicación con JWT
@@ -50,11 +44,9 @@ public class SecurityConfig {
 	@Autowired
 	RequestFilter requestFilter;
 	
-	@Bean
-	EmpleadoService userDetailsService() {
-		return new EmpleadoService();
-	
-	}
+    @Autowired
+    EmpleadoService userService;
+
 	/**
 	 * Configura la cadena de filtros de seguridad.
 	 *

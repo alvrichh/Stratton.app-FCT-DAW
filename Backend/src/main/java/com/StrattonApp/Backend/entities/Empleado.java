@@ -44,9 +44,13 @@ import jakarta.validation.constraints.Size;
 @Table(name = "empleados")
 @Entity
 public class Empleado implements UserDetails {
-    private static final long serialVersionUID = 1L;
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

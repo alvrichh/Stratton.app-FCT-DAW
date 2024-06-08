@@ -131,6 +131,17 @@ public class Empleado implements UserDetails {
 		this.asesoria = asesoria;
 		this.clientes = clientes;
 	}
+	public Empleado(Long id, String nombre, String apellidos, String email, String username, String password,
+			Set<Role> roles) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.roles = roles;
+	}
 
 	public Empleado() {
 	}

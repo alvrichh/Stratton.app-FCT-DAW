@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import swal from 'sweetalert2';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth.service';
+import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-signin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RegisterComponent, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -22,7 +23,7 @@ export class LoginComponent {
 
   login() {
     console.log("Intentando iniciar sesión con:", this.username, this.password);
-    this.authService.login(this.username, this.password).subscribe({
+    this.authService.register(this.username, this.password).subscribe({
       next: (response: any) => {
         const token = response.token; // Extrae el token de la respuesta
         this.authService.saveToken(token); // Guarda el token en el localStorage usando el servicio AuthService

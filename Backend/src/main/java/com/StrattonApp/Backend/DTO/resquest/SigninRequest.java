@@ -1,8 +1,11 @@
 package com.StrattonApp.Backend.DTO.resquest;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 /**
  * Clase que representa la solicitud de inicio de sesión de un usuario.
  */
+@CrossOrigin // Permite el acceso CORS de cualquier origen a todos los endpoints en este controlador
 public class SigninRequest {
 
     /**

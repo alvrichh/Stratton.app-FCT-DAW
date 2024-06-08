@@ -51,13 +51,13 @@ public class EmpleadoController {
         return ResponseEntity.ok(empleado);
     }
 
-    @GetMapping("/{id}")
+ /*   @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Empleado> obtenerEmpleadoPorId(@PathVariable Long id) {
         Empleado empleado = empleadoRepositorio.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el usuario: " + id));
         return ResponseEntity.ok(empleado);
-    }
+    }*/
     // Actualizar empleado
     @PutMapping("/{usuario}")
     @PreAuthorize("hasRole('ADMIN')")

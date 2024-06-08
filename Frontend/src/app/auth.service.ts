@@ -16,6 +16,11 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/login`, body);
   }
 
+  register(username: string, password: string) {
+    const body = { username, password };
+    return this.http.post(`${this.apiUrl}/register`, body);
+  }
+
   saveToken(token: string) {
     localStorage.setItem('token', token);
   }

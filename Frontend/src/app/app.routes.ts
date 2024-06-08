@@ -6,12 +6,14 @@ import { ActualizarEmpleadoComponent } from './pages/empleados/actualizar-emplea
 import { DetallesEmpleadoComponent } from './pages/empleados/detalles-empleado/detalles-empleado.component';
 import { RegistrarClienteComponent } from './pages/clientes/registrar-cliente/registrar-cliente.component';
 import { ListaClientesComponent } from './pages/clientes/lista-clientes/lista-clientes.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 export const routes: Routes = [
     // Redirecciona al componente
     { path: 'empleados', component: ListaEmpleadosComponent, data: { role: 'ADMIN' } },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent},
     { path: 'registrar-empleado', component: RegistrarEmpleadoComponent },
     { path: 'actualizar-empleado/:id', component: ActualizarEmpleadoComponent },
     { path: 'detalles-empleado/:id', component: DetallesEmpleadoComponent },

@@ -4,7 +4,7 @@
             <img src="assets/images/arsyncbw.png" alt="ARSync" class="img-fluid mb-4" style="max-width: 75%;">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="text-center">Iniciar Sesión</h4>
+                    <h1 class="text-center">Login</h1>
                 </div>
                 <div class="card-body">
                     <form>
@@ -19,7 +19,12 @@
                         <button type="submit" class="btn btn-primary btn-block" (click)="login()">Iniciar Sesión</button>
                     </form>
                     <p *ngIf="token" class="mt-3">Token generado: {{ token }}</p>
-                </div>
+                    <br>
+                    <p>No tienes cuenta? 
+                        <a class="mt-1"     [routerLink]="['/register']" routerLinkActive="router-link-active" 
+                        >Registrarse</a>
+                    </p>
+                  </div>
             </div>
         </div>
     </div>  

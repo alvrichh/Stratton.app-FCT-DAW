@@ -13,9 +13,7 @@
 .form-control:focus {
     border: 2px solid transparent;
     background-image: linear-gradient(white, white), linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 10px rgba(255, 234, 0, 0.5);
 }
 .card-header {
     border-bottom: 1px solid rgba(255, 255, 255, .1);

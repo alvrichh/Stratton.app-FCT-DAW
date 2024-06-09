@@ -6,15 +6,20 @@ import { ListaEmpleadosComponent } from './pages/empleados/lista-empleados/lista
 import { PerfilEmpleadoComponent } from './pages/empleados/perfil-empleado/perfil-empleado.component';
 import { ListaClientesComponent } from './pages/clientes/lista-clientes/lista-clientes.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { HeaderComponent } from './layout/header/header.component';
+//servicio
+import { CargarScriptsService } from './cargar-scripts.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ListaEmpleadosComponent, CommonModule, RouterOutlet, RouterLink, FormsModule, ListaClientesComponent, PerfilEmpleadoComponent, RegisterComponent],
+  imports: [ListaEmpleadosComponent, CommonModule, RouterOutlet, RouterLink, FormsModule, ListaClientesComponent, PerfilEmpleadoComponent, RegisterComponent, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'Sistema de gestión de empleados';
   token: any;
+
 }

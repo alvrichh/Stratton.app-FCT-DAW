@@ -185,18 +185,19 @@ public class Cliente {
 		this.comercializadora = comercializadora;
 	}
 
-	// añadidos posteriormente
-	public String getCompaniaContratada() {
+    public String getCups() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCups'");
+    }
+
+    public String getCompaniaContratada() {
 		return "Compañia actual";
-	}
+    }
 
-	public Date getFechaSubidaContrato() {
-		return new Date();
-	}
-
-	public String getCups() {
-		return ((Cliente) getSuministros()).getCups();
-	}
+    public Date getFechaSubidaContrato() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getFechaSubidaContrato'");
+    }
 
 
 }

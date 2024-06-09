@@ -7,6 +7,7 @@ import { DetallesEmpleadoComponent } from './pages/empleados/detalles-empleado/d
 import { RegistrarClienteComponent } from './pages/clientes/registrar-cliente/registrar-cliente.component';
 import { ListaClientesComponent } from './pages/clientes/lista-clientes/lista-clientes.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { FeedbackComponent } from './feedback/feedback.component';
 
 export const routes: Routes = [
     // Redirecciona al componente
@@ -19,4 +20,5 @@ export const routes: Routes = [
     { path: 'detalles-empleado/:id', component: DetallesEmpleadoComponent },
     { path: 'registrar-cliente', component: RegistrarClienteComponent },
     { path: 'clientes', component: ListaClientesComponent }, // Agrega la ruta para ListaClientesComponent
+    { path: 'feedback', component: FeedbackComponent }
 ];

@@ -5,7 +5,10 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
+//servicio
+import { CargarScriptsService } from './cargar-scripts.service';
+
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideHttpClient(withFetch()), provideAnimationsAsync()],
+  providers: [provideRouter(routes), provideHttpClient(withFetch()), provideAnimationsAsync(), provideAnimationsAsync(), CargarScriptsService],
   
 };

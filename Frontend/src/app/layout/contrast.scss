@@ -1,0 +1,148 @@
+body {
+    background-color: #fff;
+    color: #333;
+    min-width: 310px;
+
+    &.high-contrast {
+        background-color: #000000;
+        color: #fff;
+
+        path {
+            fill: #333;
+            /* Cambia el color de relleno del path del SVG a azul */
+        }
+
+        .toast {
+            background-color: #333;
+        }
+
+        g {
+            fill: #333;
+
+        }
+        #linechart{
+            color: white;
+        }
+        .lead {
+            color: #ffffff;
+        }
+        .form-text{
+            color: #ffffff;
+        }
+        .modal-content {
+            background-color: #333;
+
+        }
+
+        .card {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .nav-link {
+            color: #000000;
+
+            &:hover {
+                color: rgb(4, 0, 255);
+            }
+        }
+
+        .btn-outline-light {
+            border-color: #000000;
+            color: #000000;
+        }
+
+        .btn-outline-light:hover {
+            border-color: #ffffff;
+            color: #ffffff;
+            background-color: #000000;
+        }
+  
+        a{
+            color: #ffffff;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+
+            .wrapper {
+                color: #333;
+            }
+        }
+
+        .breadcrumb-item {
+            color: #fff;
+        }
+
+        header {
+            background-color: #ffcc00;
+
+            #lineizq,
+            #linedrch {
+                background-color: #ffcc00;
+            }
+        }
+
+        button[class=btn-close] {
+            color: #fff;
+
+        }
+
+        aside,
+        .offcanvas,
+        .offcanvas-body,
+        .accordion,
+        .accordion-item {
+            background-color: #333;
+            color: #fff;
+
+
+            .accordion-button {
+                background-color: #555; // Cambia el color de fondo según tus preferencias
+
+                a {
+                    color: #ffffff;
+                    text-decoration: none;
+                    font-weight: bold;
+
+                }
+
+                i {
+                    color: #fff;
+                }
+            }
+
+            ul li a {
+                color: #fcff69;
+            }
+        }
+    }
+
+    aside,
+    .offcanvas,
+    .offcanvas-body,
+    .accordion,
+    .accordion-item {
+        background-color: #fff;
+        color: #333;
+
+
+        .accordion-button {
+
+            a {
+                color: #333;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+            i {
+                color: #333;
+            }
+        }
+
+        ul li a {
+            color: blueviolet; // Azul oscuro, puedes ajustar el color según tus preferencias
+
+        }
+    }
+}

@@ -1,4 +1,5 @@
 package com.StrattonApp.Backend.service.impl;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.StrattonApp.Backend.DTO.EmpleadoDTO;
+import com.StrattonApp.Backend.DTO.ClienteDTO;
 import com.StrattonApp.Backend.entities.Empleado;
+import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.repository.EmpleadoRepository;
+import com.StrattonApp.Backend.repository.ClienteRepository;
 import com.StrattonApp.Backend.service.EmpleadoService;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +25,9 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     @Override
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
@@ -32,26 +39,31 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         };
     }
 
-
     @Override
     public List<EmpleadoDTO> getAllUsers() {
         return empleadoRepository.findAll().stream()
-                .map(empleado -> new EmpleadoDTO(empleado.getNombre(), empleado.getApellidos(), empleado.getEmail(), empleado.getUsername(), empleado.getRoles().toString()))
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Obtiene un empleado por su ID.
-     *
-     * @param userId ID del empleado a obtener.
-     * @return Lista que contiene el empleado si se encuentra, o una lista vacía si no.
-     */
-	@Override
-	public List<Empleado> getUserById(Long userid) {
-        Optional<Empleado> optionalEmpl = empleadoRepository.findById(userid);
+   
+    private EmpleadoDTO convertToDTO(Empleado empleado) {
+        List<ClienteDTO> clienteDTOs = empleado.getClientes().stream()
+                .map(cliente -> new ClienteDTO(cliente.getIdCliente(), cliente.getDNI(), cliente.getNombre(), null, cliente.getApellidos(), null, null, null, null, null, null, null, null, cliente.getFechaSubidaContrato()))
+                .collect(Collectors.toList());
+        return new EmpleadoDTO(empleado.getNombre(), empleado.getApellidos(), empleado.getEmail(), empleado.getUsername(), empleado.getRoles().toString(), clienteDTOs);
+    }
 
-        // Verifica si el usuario existe y retorna una lista con ese usuario o una lista vacía si no se encuentra
+    @Override
+    public List<Empleado> getUserById(Long userId) {
+        Optional<Empleado> optionalEmpl = empleadoRepository.findById(userId);
         return optionalEmpl.map(List::of).orElse(List.of());
     }
-	
+
+    @Override
+    public ClienteDTO getClienteDetallesById(Long clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+        return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), cliente.getCompaniaContratada(), cliente.getFechaSubidaContrato(), cliente.getNombre(), cliente.getApellidos(), cliente.getDNI());
+    }
 }

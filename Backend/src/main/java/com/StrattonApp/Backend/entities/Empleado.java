@@ -283,6 +283,11 @@ public class Empleado implements UserDetails {
 		this.clientes = clientes;
 	}
 
+    public Object getIdEmpleado() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getIdEmpleado'");
+    }
+
     
 }
 

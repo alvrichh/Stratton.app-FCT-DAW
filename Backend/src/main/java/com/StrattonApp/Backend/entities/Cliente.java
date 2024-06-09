@@ -185,5 +185,18 @@ public class Cliente {
 		this.comercializadora = comercializadora;
 	}
 
+	// añadidos posteriormente
+	public String getCompaniaContratada() {
+		return "Compañia actual";
+	}
+
+	public Date getFechaSubidaContrato() {
+		return new Date();
+	}
+
+	public String getCups() {
+		return ((Cliente) getSuministros()).getCups();
+	}
+
 
 }

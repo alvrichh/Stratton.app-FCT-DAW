@@ -1,10 +1,12 @@
 package com.StrattonApp.Backend.DTO;
 
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * DTO (Objeto de Transferencia de Datos) que representa la información de un usuario para la respuesta.
  */
-public class EmpleadoDTO {
+public class EmpleadoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,20 +36,27 @@ public class EmpleadoDTO {
     private String rol;
 
     /**
-     * Constructor para crear un nuevo UsuarioDTO con la información proporcionada.
+     * Lista de clientes asociados al empleado.
+     */
+    private List<ClienteDTO> clientes;
+
+    /**
+     * Constructor para crear un nuevo EmpleadoDTO con la información proporcionada.
      *
      * @param nombre     Nombre del usuario.
      * @param apellidos  Apellidos del usuario.
      * @param email      Correo electrónico del usuario.
      * @param username   Nombre de usuario del usuario.
      * @param rol        Rol del usuario.
+     * @param clientes   Lista de clientes.
      */
-    public EmpleadoDTO(String nombre, String apellidos, String email, String username, String rol) {
+    public EmpleadoDTO(String nombre, String apellidos, String email, String username, String rol, List<ClienteDTO> clientes) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
         this.username = username;
         this.rol = rol;
+        this.clientes = clientes;
     }
 
     /**
@@ -138,5 +147,23 @@ public class EmpleadoDTO {
      */
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    /**
+     * Obtiene la lista de clientes del empleado.
+     *
+     * @return Lista de clientes.
+     */
+    public List<ClienteDTO> getClientes() {
+        return clientes;
+    }
+
+    /**
+     * Establece la lista de clientes del empleado.
+     *
+     * @param clientes Lista de clientes.
+     */
+    public void setClientes(List<ClienteDTO> clientes) {
+        this.clientes = clientes;
     }
 }

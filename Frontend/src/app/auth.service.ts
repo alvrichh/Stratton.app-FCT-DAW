@@ -57,4 +57,9 @@ export class AuthService {
     console.log('Usuario es administrador:', roles.includes('ADMIN'));
     return roles.includes('ADMIN');
   }
+
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    return token != null && !this.jwtHelper.isTokenExpired(token);
+  }
 }

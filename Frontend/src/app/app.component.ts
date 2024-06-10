@@ -10,6 +10,7 @@ import { FooterComponent } from './layout/footer/footer.component';
 import { HeaderComponent } from './layout/header/header.component';
 //servicio
 import { CargarScriptsService } from './cargar-scripts.service';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',

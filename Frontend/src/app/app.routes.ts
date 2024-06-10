@@ -8,11 +8,11 @@ import { RegistrarClienteComponent } from './pages/clientes/registrar-cliente/re
 import { ListaClientesComponent } from './pages/clientes/lista-clientes/lista-clientes.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { FeedbackComponent } from './feedback/feedback.component';
+import { HomeComponent } from './layout/home/home.component';
 
 export const routes: Routes = [
     // Redirecciona al componente
     { path: 'empleados', component: ListaEmpleadosComponent, data: { role: 'ADMIN' } },
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent},
     { path: 'registrar-empleado', component: RegistrarEmpleadoComponent },
@@ -20,5 +20,8 @@ export const routes: Routes = [
     { path: 'detalles-empleado/:id', component: DetallesEmpleadoComponent },
     { path: 'registrar-cliente', component: RegistrarClienteComponent },
     { path: 'clientes', component: ListaClientesComponent }, // Agrega la ruta para ListaClientesComponent
-    { path: 'feedback', component: FeedbackComponent }
+    { path: 'feedback', component: FeedbackComponent },
+    { path: 'dashboard', component: HomeComponent},
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+
 ];

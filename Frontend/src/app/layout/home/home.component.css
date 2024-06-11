@@ -12,6 +12,7 @@ mat-card-footer {
 
 .list {
     padding: 2em;
+    display: flex;
 }
 
 .buttonF {
@@ -21,6 +22,8 @@ mat-card-footer {
 
 .left {
     float: left;
+    margin-right: 20px;
+    color: black;
 }
 
 .right {

@@ -1,7 +1,7 @@
 <div fxFill fxLayout="row" fxLayout.xs="column">
-    <div fxFlex class="client left">
+    <div fxFlex class="client">
         <div *ngIf="client?.name; else noClient">
-            <mat-card>
+            <mat-card class="left">
                 <mat-card-header>
                     <mat-card-title><button mat-raised-button color="primary"><i class="material-icons">
                         account_circle
@@ -54,7 +54,7 @@
             </mat-card>
         </div>
         <ng-template #noClient>
-            <mat-card>
+            <mat-card class="left">
                 <mat-card-header>
                     <mat-card-title>APP CRUD Ejemplo</mat-card-title>
                     <mat-card-subtitle>Información</mat-card-subtitle>
@@ -64,14 +64,7 @@
                     <p><b>App Responsive usando Angular Flex Layout.</b></p>
                     <p><b>Tabla con Paginación, búsqueda y ordenación.</b></p>
                     <p><b>Los Clientes se guardan en el Local Storage.</b></p>
-                    <p><b>- Modulos:</b></p>
-                    <p>Flex Layout Module</p>
-                    <p>MaterialModule</p>
-                    <p>BrowserAnimationsModule</p>
-                    <p>MatTableModule, MatSortModule, MatPaginatorModule</p>
-                    <p>MatDialog</p>
-                    <p>Reactive Forms</p>
-                    <p>Toastr</p>
+                  
                 </mat-card-content>
                 <mat-card-footer>
                     <button mat-raised-button color="primary" (click)="addClientDialog()"><i

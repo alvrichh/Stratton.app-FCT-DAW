@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, NgModule } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule } from '@angular/forms';
 import { ClientService } from '../../services/client.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';

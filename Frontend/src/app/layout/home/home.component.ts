@@ -7,16 +7,16 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../modules/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MaterialModule,CommonModule, FormsModule, ReactiveFormsModule, EditclientComponent, AddclientComponent],
+  imports: [MaterialModule, CommonModule, FormsModule, ReactiveFormsModule, EditclientComponent, AddclientComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.sass']
 })
@@ -31,18 +31,15 @@ export class HomeComponent implements OnInit {
   dataSource: MatTableDataSource<Client>;
   displayedColumns = ['seqNo', 'name', 'surname', 'date', 'country', 'dni', 'city', 'address', 'admin'];
 
-
   constructor(
     public dialog: MatDialog,
     private clientService: ClientService,
-    private toastr: ToastrService
-  ) {
-  }
-  
+  ) {}
 
   ngOnInit() {
     this.refreshClients()
   }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -54,44 +51,39 @@ export class HomeComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
-
   addClientDialog() {
     let dialogRef = this.dialog.open(AddclientComponent);
-    dialogRef.afterClosed()
-      .subscribe(
-        res => {
-          setTimeout(() => {
-            this.refreshClients();
-          }, 500);
-        },
-        err => {
-          console.log(err)
-        }
-      )
+    dialogRef.afterClosed().subscribe(
+      res => {
+        setTimeout(() => {
+          this.refreshClients();
+        }, 500);
+      },
+      err => {
+        console.log(err)
+      }
+    )
   }
 
   editClientDialog(clients: Client) {
-    let dialogRef = this.dialog.open(EditclientComponent, {
-      data: clients
-    });
-    dialogRef.afterClosed()
-      .subscribe(
-        res => {
-          setTimeout(() => {
-            this.refreshClients();
-            for (let i = 0; i < this.dataSource.data.length; i++) {
-              if (this.dataSource.data[i].dni === clients.dni) {
-                this.clients = this.dataSource.data[i]
-                break;
-              }
+    let dialogRef = this.dialog.open(EditclientComponent, { data: clients });
+    dialogRef.afterClosed().subscribe(
+      res => {
+        setTimeout(() => {
+          this.refreshClients();
+          for (let i = 0; i < this.dataSource.data.length; i++) {
+            if (this.dataSource.data[i].dni === clients.dni) {
+              this.clients = this.dataSource.data[i];
+              break;
             }
-            this.viewClient(this.clients);
-          }, 500);
-        },
-        err => {
-          console.log(err)
-        }
-      )
+          }
+          this.viewClient(this.clients);
+        }, 500);
+      },
+      err => {
+        console.log(err)
+      }
+    )
   }
 
   //Refresh Table
@@ -111,13 +103,17 @@ export class HomeComponent implements OnInit {
   //Deleted Client
   deleteClient(client: Client) {
     this.dataSource.data = this.dataSource.data.filter((value) => {
-      this.clientService.deleteclient(client)
-      this.client = null
-      this.refreshClients()
+      this.clientService.deleteclient(client);
+      this.client = null;
+      this.refreshClients();
       return value.dni != client.dni;
     });
-    this.toastr.warning('Eliminado!', 'Cliente');
+    swal(
+      'Cliente eliminado',
+      'El Cliente ha sido eliminado con exito',
+      'success'
+    )
+
+    
   }
-
-
 }

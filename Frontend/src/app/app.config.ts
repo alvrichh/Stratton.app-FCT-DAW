@@ -7,8 +7,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 //servicio
 import { CargarScriptsService } from './cargar-scripts.service';
+import { ToastrService } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideHttpClient(withFetch()), provideAnimationsAsync(), provideAnimationsAsync(), CargarScriptsService],
+  providers: [provideRouter(routes), provideHttpClient(withFetch()), provideAnimationsAsync(), provideAnimationsAsync(), CargarScriptsService, ToastrService],
   
 };

@@ -1,5 +1,6 @@
 package com.StrattonApp.Backend.controller;
 
+import com.StrattonApp.Backend.DTO.ClienteDTO;
 import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
 import com.StrattonApp.Backend.repository.ClienteRepository;

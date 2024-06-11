@@ -10,7 +10,6 @@ import java.util.List;
 @Table(name = "clientes")
 @Entity
 public class Cliente {
-	
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -185,19 +184,18 @@ public class Cliente {
 		this.comercializadora = comercializadora;
 	}
 
-    public String getCups() {
-        // TODO Auto-generated method stub
+	public String getCompaniaContratada() {
+		// TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getCups'");
-    }
+	}
 
-    public String getCompaniaContratada() {
-		return "Compañia actual";
-    }
+	public String getCups() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public Date getFechaSubidaContrato() {
-        // TODO Auto-generated method stub
+	public Date getFechaSubidaContrato() {
+		// TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getFechaSubidaContrato'");
-    }
+	}
 
-
-}

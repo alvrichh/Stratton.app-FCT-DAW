@@ -3,11 +3,11 @@
     <form (ngSubmit)="onSubmit()" #clienteForm="ngForm">
         <div class="form-group">
             <label>Nombre:</label>
-            <input type="text" class="form-control" id="nombre" [(ngModel)]="cliente.nombre" name="nombreCompleto" required>
+            <input type="text" class="form-control" id="nombre" [(ngModel)]="cliente.nombre" name="nombre" required>
         </div>
         <div class="form-group">
             <label>Apellidos:</label>
-            <input type="text" class="form-control" id="apellidos" [(ngModel)]="cliente.apellidos" name="nombreCompleto" required>
+            <input type="text" class="form-control" id="apellidos" [(ngModel)]="cliente.apellidos" name="apellidos" required>
         </div>
         <div class="form-group">
             <label>DNI:</label>

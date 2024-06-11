@@ -14,6 +14,6 @@ import com.StrattonApp.Backend.entities.Cliente;
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 	
     @Query("SELECT c FROM Cliente c INNER JOIN c.suministros s WHERE s.cups = :cups")
-    List<Cliente> findByCups(@Param("cups") String cups);
+    List<ClienteDTO> findByCups(@Param("cups") String cups);
     
 }

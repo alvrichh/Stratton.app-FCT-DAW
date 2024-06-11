@@ -11,10 +11,10 @@ public class ClienteDTO {
     private Long id;
     private String cups;
     private String companiaContratada;
-    private Date fechaSubidaContrato;
     private String nombre;
     private String apellidos;
     private String dni;
+    private Date fechaSubidaContrato;
 
     public ClienteDTO(Long id, String cups, String companiaContratada, Date fechaSubidaContrato, String nombre, String apellidos, String dni) {
         this.id = id;

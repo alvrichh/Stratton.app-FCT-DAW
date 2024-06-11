@@ -1,5 +1,5 @@
 <div fxFill fxLayout="row" fxLayout.xs="column">
-    <div fxFlex class="client">
+    <div fxFlex class="client left">
         <div *ngIf="client?.name; else noClient">
             <mat-card>
                 <mat-card-header>
@@ -18,7 +18,7 @@
                         <mat-divider></mat-divider>
                         <mat-list-item>
                             <mat-icon mat-list-icon>date_range</mat-icon>
-                         <!--   <h4 mat-line>{{client?.date | date:'dd/MM/yyyy'}}</h4>-->
+                          <!--  <h4 mat-line>{{client?.date | date:'dd/MM/yyyy'}}</h4>-->
                         </mat-list-item>
                         <mat-divider></mat-divider>
                         <mat-list-item>
@@ -56,12 +56,22 @@
         <ng-template #noClient>
             <mat-card>
                 <mat-card-header>
-                    <mat-card-title>APP CRUD</mat-card-title>
+                    <mat-card-title>APP CRUD Ejemplo</mat-card-title>
                     <mat-card-subtitle>Información</mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
-                    <p><b>StrattonApp.</b></p>
-                
+                    <p><b>App CRUD Ejemplo de Listado de Clientes.</b></p>
+                    <p><b>App Responsive usando Angular Flex Layout.</b></p>
+                    <p><b>Tabla con Paginación, búsqueda y ordenación.</b></p>
+                    <p><b>Los Clientes se guardan en el Local Storage.</b></p>
+                    <p><b>- Modulos:</b></p>
+                    <p>Flex Layout Module</p>
+                    <p>MaterialModule</p>
+                    <p>BrowserAnimationsModule</p>
+                    <p>MatTableModule, MatSortModule, MatPaginatorModule</p>
+                    <p>MatDialog</p>
+                    <p>Reactive Forms</p>
+                    <p>Toastr</p>
                 </mat-card-content>
                 <mat-card-footer>
                     <button mat-raised-button color="primary" (click)="addClientDialog()"><i
@@ -85,9 +95,9 @@
                     class="material-icons">
                     group_add
                 </i> Nuevo Cliente</button>
-            <mat-form-field class="right">
-              <!--  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscador">-->
-            </mat-form-field>
+            <!--<mat-form-field class="right">
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscador">
+            </mat-form-field> -->
             <mat-card-content class="list">
                 <table mat-table class="mat-elevation-z8" [dataSource]="dataSource" matSort>
 

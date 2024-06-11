@@ -10,6 +10,8 @@ import { MatSort } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../../modules/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-home',
@@ -33,6 +35,7 @@ export class HomeComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private clientService: ClientService,
+    private toastr: ToastrService
   ) {
   }
   
@@ -40,7 +43,6 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.refreshClients()
   }
-
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -114,6 +116,7 @@ export class HomeComponent implements OnInit {
       this.refreshClients()
       return value.dni != client.dni;
     });
+    this.toastr.warning('Eliminado!', 'Cliente');
   }
 
 

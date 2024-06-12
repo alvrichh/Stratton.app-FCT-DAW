@@ -1,6 +1,5 @@
 package com.StrattonApp.Backend.service.impl;
 
-
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.StrattonApp.Backend.entities.Empleado;
 import com.StrattonApp.Backend.service.JwtService;
 
 import io.jsonwebtoken.Claims;
@@ -68,7 +68,7 @@ public class JwtServiceImpl implements JwtService {
     // Los claims son declaraciones que contienen información sobre el usuario y metadatos adicionales.
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
-        return claimsResolvers.apply(claims);
+        return claimsResolver.apply(claims);
     }
 
     // Genera el token JWT incluyendo los claims adicionales y los detalles del usuario.
@@ -108,5 +108,4 @@ public class JwtServiceImpl implements JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-   
 }

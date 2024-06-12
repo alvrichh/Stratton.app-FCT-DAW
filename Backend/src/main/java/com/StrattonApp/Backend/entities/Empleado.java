@@ -115,10 +115,10 @@ public class Empleado implements UserDetails {
         roles.size(); // Esto carga la colección de roles
 
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .map(role -> new SimpleGrantedAuthority(role.toString())) // Usar el nombre del rol como string
                 .collect(Collectors.toList());
     }
-    
+
 
 	public Empleado(Long id, @NotBlank(message = "El nombre no puede estar en blanco") String nombre,
 			@NotBlank(message = "El apellido no puede estar en blanco") String apellidos,
@@ -152,6 +152,17 @@ public class Empleado implements UserDetails {
 	public Empleado() {
 	}
 
+	 public String getMainRole() {
+
+	        return roles.stream()
+
+	                .map(Role::name)
+
+	                .findFirst()
+
+	                .orElse("USER"); // Valor por defecto si no hay roles
+
+	    }
 	/**
      * Obtiene el nombre de usuario del usuario.
      *

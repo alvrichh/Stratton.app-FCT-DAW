@@ -12,6 +12,8 @@ public class Suministro {
 
     private Estado estado;
 
+    private String direccion;
+    
     private String mensaje;
     
     private Double potencia;

@@ -95,4 +95,5 @@ public class EmpleadoController {
         EmpleadoDTO empleadoDTO = empleadoService.convertToDTO(empleado);
         return ResponseEntity.ok(empleadoDTO);
     }
+    
 }

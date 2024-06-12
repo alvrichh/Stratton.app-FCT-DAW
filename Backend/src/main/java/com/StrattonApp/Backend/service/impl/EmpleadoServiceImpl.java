@@ -64,7 +64,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 cliente.getNombre(),
                 cliente.getApellidos(),
                 cliente.getDNI(),
-                cliente.getFechaSubidaContrato());
+                cliente.getFechaSubidaContrato(), null);
     }
 
 
@@ -80,7 +80,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getFechaSubidaContrato(),
                                 cliente.getNombre(),
                                 cliente.getApellidos(),
-                                cliente.getDNI());
+                                cliente.getDNI(), null);
                     } else {
                         // Manejo cuando la comercializadora es null
                         return new ClienteDTO(
@@ -90,7 +90,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getFechaSubidaContrato(),
                                 cliente.getNombre(),
                                 cliente.getApellidos(),
-                                cliente.getDNI());
+                                cliente.getDNI(), null);
                     }
                 })
                 .collect(Collectors.toList());

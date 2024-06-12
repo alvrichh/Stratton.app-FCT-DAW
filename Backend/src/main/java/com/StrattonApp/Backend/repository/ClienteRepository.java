@@ -1,4 +1,5 @@
 package com.StrattonApp.Backend.repository;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +16,12 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 	
     @Query("SELECT c FROM Cliente c INNER JOIN c.suministros s WHERE s.cups = :cups")
     List<ClienteDTO> findByCups(@Param("cups") String cups);
-    
+
+	Collection<ClienteDTO> findByEmpleadoId(Long idEmpleado);
+	   // Método para convertir Cliente a ClienteDTO
+    private ClienteDTO convertToDTO(Cliente cliente) {
+        return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), cliente.getCompaniaContratada(),
+                cliente.getNombre(), cliente.getApellidos(), cliente.getDNI(), cliente.getFechaSubidaContrato(), cliente.getEmail());
+    }
+
 }

@@ -6,22 +6,21 @@ public class ClienteDTO {
 
     private Long idCliente;
     private String cups;
-    private String companiaContratada;  	
+    private String companiaContratada;
     private String nombre;
     private String apellidos;
     private String dni;
     private String fechaSubidaContrato;
-
-  
-    // Getters y setters
-
-
-	public Long getIdCliente() {
-        return idCliente;
+    private String email;
+    
+    public ClienteDTO() {
     }
 
+ 
+    // Getters y setters
+
 	public ClienteDTO(Long idCliente, String cups, String companiaContratada, String nombre, String apellidos,
-			String dni, String fechaSubidaContrato) {
+			String dni, String fechaSubidaContrato, String email) {
 		this.idCliente = idCliente;
 		this.cups = cups;
 		this.companiaContratada = companiaContratada;
@@ -29,7 +28,13 @@ public class ClienteDTO {
 		this.apellidos = apellidos;
 		this.dni = dni;
 		this.fechaSubidaContrato = fechaSubidaContrato;
+		this.email = email;
 	}
+
+
+	public Long getIdCliente() {
+        return idCliente;
+    }
 
 	public void setId(Long idCliente) {
         this.idCliente = idCliente;
@@ -82,4 +87,13 @@ public class ClienteDTO {
     public void setDni(String dni) {
         this.dni = dni;
     }
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 }

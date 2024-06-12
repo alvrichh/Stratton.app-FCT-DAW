@@ -1,7 +1,5 @@
 package com.StrattonApp.Backend.DTO.response;
 
-
-
 /**
  * Respuesta de autenticación JWT que contiene el token JWT generado.
  */
@@ -13,12 +11,19 @@ public class JwtAuthenticationResponse {
     private String token;
 
     /**
-     * Constructor para crear una nueva instancia de JwtAuthenticationResponse con el token proporcionado.
+     * Rol del usuario autenticado.
+     */
+    private String role;
+
+    /**
+     * Constructor para crear una nueva instancia de JwtAuthenticationResponse con el token y el rol proporcionados.
      *
      * @param token Token JWT.
+     * @param role  Rol del usuario autenticado.
      */
-    public JwtAuthenticationResponse(String token) {
+    public JwtAuthenticationResponse(String token, String role) {
         this.token = token;
+        this.role = role;
     }
 
     /**
@@ -37,6 +42,24 @@ public class JwtAuthenticationResponse {
      */
     public void setToken(String token) {
         this.token = token;
+    }
+
+    /**
+     * Obtiene el rol del usuario autenticado.
+     *
+     * @return Rol del usuario autenticado.
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * Establece el rol del usuario autenticado.
+     *
+     * @param role Rol del usuario autenticado.
+     */
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**
@@ -59,6 +82,11 @@ public class JwtAuthenticationResponse {
         private String token;
 
         /**
+         * Rol del usuario autenticado.
+         */
+        private String role;
+
+        /**
          * Establece el token JWT.
          *
          * @param token Token JWT.
@@ -70,12 +98,23 @@ public class JwtAuthenticationResponse {
         }
 
         /**
+         * Establece el rol del usuario autenticado.
+         *
+         * @param role Rol del usuario autenticado.
+         * @return Constructor actualizado.
+         */
+        public JwtAuthenticationResponseBuilder role(String role) {
+            this.role = role;
+            return this;
+        }
+
+        /**
          * Construye una instancia de JwtAuthenticationResponse con los atributos proporcionados.
          *
          * @return Instancia de JwtAuthenticationResponse construida.
          */
         public JwtAuthenticationResponse build() {
-            return new JwtAuthenticationResponse(token);
+            return new JwtAuthenticationResponse(token, role);
         }
     }
 }

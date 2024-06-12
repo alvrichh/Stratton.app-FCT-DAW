@@ -21,85 +21,60 @@ import com.StrattonApp.Backend.service.EmpleadoService;
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
 
-    @Autowired
-    private EmpleadoRepository empleadoRepository;
+	@Autowired
+	private EmpleadoRepository empleadoRepository;
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+	@Autowired
+	private ClienteRepository clienteRepository;
 
-    @Override
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-            @Override
-            public UserDetails loadUserByUsername(String username) {
-                return empleadoRepository.findByUsername(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            }
-        };
-    }
+	@Override
+	public UserDetailsService userDetailsService() {
+		return new UserDetailsService() {
+			@Override
+			public UserDetails loadUserByUsername(String username) {
+				return empleadoRepository.findByUsername(username)
+						.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+			}
+		};
+	}
 
-    @Override
-    public List<EmpleadoDTO> getAllUsers() {
-        return empleadoRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-    
+	@Override
+	public List<EmpleadoDTO> getAllUsers() {
+		return empleadoRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+	}
 
-    @Override
-    public EmpleadoDTO getUserById(Long userId) {
-        Empleado empleado = empleadoRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el id: " + userId));
-        return convertToDTO(empleado);
-    }
+	@Override
+	public EmpleadoDTO getUserById(Long userId) {
+		Empleado empleado = empleadoRepository.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el id: " + userId));
+		return convertToDTO(empleado);
+	}
 
-    @Override
-    public ClienteDTO getClienteDetallesById(Long clienteId) {
-        Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
-        return new ClienteDTO(
-                cliente.getIdCliente(),
-                cliente.getCups(),
-                cliente.getCompaniaContratada(),
-                cliente.getNombre(),
-                cliente.getApellidos(),
-                cliente.getDNI(),
-                cliente.getFechaSubidaContrato());
-    }
+	@Override
+	public ClienteDTO getClienteDetallesById(Long clienteId) {
+		Cliente cliente = clienteRepository.findById(clienteId)
+				.orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+		return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), cliente.getCompaniaContratada(),
+				cliente.getNombre(), cliente.getApellidos(), cliente.getDNI(), cliente.getFechaSubidaContrato());
+	}
 
-    @Override
-    public EmpleadoDTO convertToDTO(Empleado empleado) {
-        List<ClienteDTO> clienteDTOs = empleado.getClientes().stream()
-                .map(cliente -> {
-                    if (cliente.getComercializadora() != null) {
-                        return new ClienteDTO(
-                                cliente.getIdCliente(),
-                                cliente.getCups(),
-                                cliente.getComercializadora().getNombre(),
-                                cliente.getNombre(),
-                                cliente.getApellidos(),
-                                cliente.getDNI(),
-                                cliente.getFechaSubidaContrato());
-                    } else {
-                        // Manejo cuando la comercializadora es null
-                        return new ClienteDTO(
-                                cliente.getIdCliente(),
-                                cliente.getCups(),
-                                null, // Puedes manejar esto según tus necesidades
-                                cliente.getNombre(),
-                                cliente.getApellidos(),
-                                cliente.getDNI(),
-                                cliente.getFechaSubidaContrato());
-                    }
-                })
-                .collect(Collectors.toList());
+	@Override
+	public EmpleadoDTO convertToDTO(Empleado empleado) {
+		List<ClienteDTO> clienteDTOs = empleado.getClientes().stream().map(cliente -> {
+			if (cliente.getComercializadora() != null) {
+				return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(),
+						cliente.getComercializadora().getNombre(), cliente.getNombre(), cliente.getApellidos(),
+						cliente.getDNI(), cliente.getFechaSubidaContrato());
+			} else {
+				// Manejo cuando la comercializadora es null
+				return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), null, // Puedes manejar esto según tus
+																						// necesidades
+						cliente.getNombre(), cliente.getApellidos(), cliente.getDNI(),
+						cliente.getFechaSubidaContrato());
+			}
+		}).collect(Collectors.toList());
 
-        return new EmpleadoDTO(
-                empleado.getId(),
-                empleado.getNombre(),
-                empleado.getApellidos(),
-                empleado.getEmail(),
-                empleado.getUsername(),
-                empleado.getRoles().toString(),
-                clienteDTOs);
-    }}
+		return new EmpleadoDTO(empleado.getId(), empleado.getNombre(), empleado.getApellidos(), empleado.getEmail(),
+				empleado.getUsername(), empleado.getRoles().toString(), clienteDTOs);
+	}
+}

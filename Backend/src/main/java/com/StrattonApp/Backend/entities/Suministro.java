@@ -15,7 +15,7 @@ public class Suministro {
     private String mensaje;
     
     private Double potencia;
-
+    
     // Relación con Cliente (uno o varios suministros pertenece a un cliente)
     @ManyToOne
     @JoinColumn(name = "idCliente")
@@ -61,5 +61,22 @@ public class Suministro {
 		this.potencia = potencia;
 	}
 
+	public String getCups() {
+		return cups;
+	}
+
+	public void setCups(String cups) {
+		this.cups = cups;
+	}
+
+	public Estado getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado estado) {
+		this.estado = estado;
+	}
+
+	
     
 }

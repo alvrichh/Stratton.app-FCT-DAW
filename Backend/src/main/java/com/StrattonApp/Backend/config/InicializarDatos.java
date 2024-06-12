@@ -1,18 +1,15 @@
 package com.StrattonApp.Backend.config;
 
-import com.StrattonApp.Backend.entities.Asesoria;
-import com.StrattonApp.Backend.entities.Cliente;
-import com.StrattonApp.Backend.entities.Empleado;
-import com.StrattonApp.Backend.entities.Role;
-import com.StrattonApp.Backend.repository.AsesoriaRepository;
-import com.StrattonApp.Backend.repository.ClienteRepository;
-import com.StrattonApp.Backend.repository.EmpleadoRepository;
+import com.StrattonApp.Backend.entities.*;
+import com.StrattonApp.Backend.repository.*;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 @Component
@@ -22,14 +19,18 @@ public class InicializarDatos implements CommandLineRunner {
     private final AsesoriaRepository asesoriaRepository;
     private final ClienteRepository clienteRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Asesoria asesoria1 = new Asesoria();
+    private final SuministroRepository suministroRepository;
+    private final ComercializadoraRepository comercializadoraRepository;
 
-
-    public InicializarDatos(EmpleadoRepository empleadoRepository, AsesoriaRepository asesoriaRepository, ClienteRepository clienteRepository, PasswordEncoder passwordEncoder) {
+    public InicializarDatos(EmpleadoRepository empleadoRepository, AsesoriaRepository asesoriaRepository,
+                            ClienteRepository clienteRepository, PasswordEncoder passwordEncoder,
+                            SuministroRepository suministroRepository, ComercializadoraRepository comercializadoraRepository) {
         this.empleadoRepository = empleadoRepository;
         this.asesoriaRepository = asesoriaRepository;
         this.clienteRepository = clienteRepository;
         this.passwordEncoder = passwordEncoder;
+        this.suministroRepository = suministroRepository;
+        this.comercializadoraRepository = comercializadoraRepository;
     }
 
     @Override
@@ -38,12 +39,16 @@ public class InicializarDatos implements CommandLineRunner {
         inicializarAsesorias();
         inicializarEmpleados();
         inicializarClientes();
+        inicializarComercializadoras();
+        inicializarSuministros();
     }
 
     private void limpiarTablas() {
+        suministroRepository.deleteAll();
         clienteRepository.deleteAll();
         empleadoRepository.deleteAll();
         asesoriaRepository.deleteAll();
+        comercializadoraRepository.deleteAll();
     }
 
     private void inicializarEmpleados() {
@@ -65,7 +70,7 @@ public class InicializarDatos implements CommandLineRunner {
             admin.setEmail("admin@example.com");
             admin.setPassword(passwordEncoder.encode("admin"));
             admin.setRoles(rolesAdmin);
-            admin.setAsesoria(asesoria1);
+            admin.setAsesoria(asesoriaRepository.findById(1L).orElse(null));
             empleadoRepository.save(admin);
 
             Empleado usuario = new Empleado();
@@ -75,6 +80,7 @@ public class InicializarDatos implements CommandLineRunner {
             usuario.setEmail("usuario@example.com");
             usuario.setPassword(passwordEncoder.encode("usuario"));
             usuario.setRoles(rolesUsuario);
+            usuario.setAsesoria(asesoriaRepository.findById(2L).orElse(null));
             empleadoRepository.save(usuario);
         }
     }
@@ -83,6 +89,7 @@ public class InicializarDatos implements CommandLineRunner {
         // Verificar si ya existen asesorías
         if (asesoriaRepository.count() == 0) {
             // Crear asesorías de ejemplo
+            Asesoria asesoria1 = new Asesoria();
             asesoria1.setNombre("Asesoría 1");
             asesoria1.setDescripcion("Descripción de la asesoría 1");
             asesoriaRepository.save(asesoria1);
@@ -101,31 +108,85 @@ public class InicializarDatos implements CommandLineRunner {
             Empleado admin = empleadoRepository.findByUsername("admin").orElse(null);
             Empleado usuario = empleadoRepository.findByUsername("usuario").orElse(null);
 
-            
             if (admin != null && usuario != null) {
                 // Crear clientes y asociarlos a los empleados
-                Cliente cliente1 = new Cliente();
-                cliente1.setNombre("Cliente1");
-                cliente1.setApellidos("Apellido1");
-                cliente1.setDNI("12345678A");
-                cliente1.setEmail("cliente1@example.com");
-                cliente1.setDireccion("Direccion 1");
-                cliente1.setTelefono(123456789);
-                cliente1.setIBAN("ES1234567890123456789012");
-                cliente1.setEmpleado(admin);
-                clienteRepository.save(cliente1);
-
-                Cliente cliente2 = new Cliente();
-                cliente2.setNombre("Cliente2");
-                cliente2.setApellidos("Apellido2");
-                cliente2.setDNI("87654321B");
-                cliente2.setEmail("cliente2@example.com");
-                cliente2.setDireccion("Direccion 2");
-                cliente2.setTelefono(987654321);
-                cliente2.setIBAN("ES2109876543210987654321");
-                cliente2.setEmpleado(usuario);
-                clienteRepository.save(cliente2);
+                for (int i = 0; i < 10; i++) {
+                    Cliente cliente = new Cliente();
+                    cliente.setNombre("Cliente" + (i + 1));
+                    cliente.setApellidos("Apellido" + (i + 1));
+                    cliente.setDNI(generarDNI());
+                    cliente.setEmail("cliente" + (i + 1) + "@example.com");
+                    cliente.setDireccion("Dirección " + (i + 1));
+                    cliente.setTelefono(generarTelefono());
+                    cliente.setIBAN(generarIBAN());
+                    cliente.setEmpleado(i % 2 == 0 ? admin : usuario);
+                    clienteRepository.save(cliente);
+                }
             }
         }
+    }
+
+    private void inicializarComercializadoras() {
+        // Crear comercializadoras aleatorias de ejemplo
+        for (int i = 0; i < 3; i++) {
+            Comercializadora comercializadora = new Comercializadora();
+            comercializadora.setNombre("Comercializadora " + i);
+            comercializadora.setPlan("Plan " + i);
+            comercializadoraRepository.save(comercializadora);
+        }
+    }
+
+    private void inicializarSuministros() {
+        // Crear suministros aleatorios de ejemplo
+        Random random = new Random();
+        Iterable<Comercializadora> comercializadoras = comercializadoraRepository.findAll();
+        for (int i = 0; i < 10; i++) {
+            Suministro suministro = new Suministro();
+            suministro.setCups(generarCUPS());
+            suministro.setPotencia(random.nextDouble() * 10); // Potencia aleatoria entre 0 y 10
+            suministro.setEstado(Estado.values()[random.nextInt(Estado.values().length)]);
+            suministro.setMensaje("Mensaje de estado " + i);
+            suministro.setComercializadora(((List<Comercializadora>) comercializadoras).get(random.nextInt((int) comercializadoraRepository.count())));
+            suministroRepository.save(suministro);
+        }
+    }
+
+    private String generarCUPS() {
+        // Generar CUPS aleatorio de ejemplo
+        Random random = new Random();
+        StringBuilder cups = new StringBuilder();
+        String caracteres = "abcdefghijklmnopqrstuvwxyz0123456789";
+        for (int i = 0; i < 16; i++) {
+            cups.append(caracteres.charAt(random.nextInt(caracteres.length())));
+        }
+        return cups.toString();
+    }
+
+    private String generarDNI() {
+        // Generar DNI aleatorio de ejemplo
+        Random random = new Random();
+        StringBuilder dni = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            dni.append(random.nextInt(10));
+        }
+        char letra = "TRWAGMYFPDXBNJZSQVHLCKE".charAt(Integer.parseInt(dni.toString()) % 23);
+        dni.append(letra);
+        return dni.toString();
+    }
+
+    private int generarTelefono() {
+        // Generar teléfono aleatorio de ejemplo
+        Random random = new Random();
+        return random.nextInt(1000000000) + 600000000;
+    }
+
+    private String generarIBAN() {
+        // Generar IBAN aleatorio de ejemplo
+        Random random = new Random();
+        StringBuilder iban = new StringBuilder("ES");
+        for (int i = 0; i < 22; i++) {
+            iban.append(random.nextInt(10));
+        }
+        return iban.toString();
     }
 }

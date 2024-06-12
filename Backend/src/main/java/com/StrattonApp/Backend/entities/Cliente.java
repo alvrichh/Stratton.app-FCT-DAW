@@ -187,10 +187,19 @@ public class Cliente {
 	}
 
 
-
-	public Object getFechaSubidaContrato() {
+	public String getFechaSubidaContrato() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		return sdf.format(new Date());
+	}
+
+	public String getCups() {
+		// TODO Auto-generated method stub
+		return "CUPS";
+	}
+
+	public String getCompaniaContratada() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

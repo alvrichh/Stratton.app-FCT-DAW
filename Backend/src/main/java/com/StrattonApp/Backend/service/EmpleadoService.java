@@ -33,7 +33,7 @@ public interface EmpleadoService {
      * @param userId El ID del usuario a buscar.
      * @return Lista de usuarios encontrados (puede contener uno o ningún usuario).
      */
-    List<Empleado> getUserById(Long userId);
+    EmpleadoDTO getUserById(Long userId);
 
     /**
      * Obtiene los detalles de un cliente por su ID.
@@ -42,4 +42,7 @@ public interface EmpleadoService {
      * @return El ClienteDTO con los detalles del cliente.
      */
     ClienteDTO getClienteDetallesById(Long clienteId);
+
+	EmpleadoDTO convertToDTO(Empleado empleado);
+
 }

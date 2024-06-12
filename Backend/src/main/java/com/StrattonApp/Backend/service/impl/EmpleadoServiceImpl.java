@@ -1,23 +1,22 @@
 package com.StrattonApp.Backend.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.StrattonApp.Backend.DTO.EmpleadoDTO;
 import com.StrattonApp.Backend.DTO.ClienteDTO;
 import com.StrattonApp.Backend.entities.Empleado;
 import com.StrattonApp.Backend.entities.Cliente;
+import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
 import com.StrattonApp.Backend.repository.EmpleadoRepository;
 import com.StrattonApp.Backend.repository.ClienteRepository;
 import com.StrattonApp.Backend.service.EmpleadoService;
-
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
@@ -33,7 +32,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) {
-                return (UserDetails) empleadoRepository.findByUsername(username)
+                return empleadoRepository.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             }
         };
@@ -45,25 +44,64 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
-   
-    private EmpleadoDTO convertToDTO(Empleado empleado) {
-        List<ClienteDTO> clienteDTOs = empleado.getClientes().stream()
-                .map(cliente -> new ClienteDTO(cliente.getIdCliente(), cliente.getDNI(), cliente.getNombre(), null, cliente.getApellidos(), null, null, null, null, null, null, null, null, cliente.getFechaSubidaContrato()))
-                .collect(Collectors.toList());
-        return new EmpleadoDTO(empleado.getNombre(), empleado.getApellidos(), empleado.getEmail(), empleado.getUsername(), empleado.getRoles().toString(), clienteDTOs);
-    }
+    
 
     @Override
-    public List<Empleado> getUserById(Long userId) {
-        Optional<Empleado> optionalEmpl = empleadoRepository.findById(userId);
-        return optionalEmpl.map(List::of).orElse(List.of());
+    public EmpleadoDTO getUserById(Long userId) {
+        Empleado empleado = empleadoRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el id: " + userId));
+        return convertToDTO(empleado);
     }
 
     @Override
     public ClienteDTO getClienteDetallesById(Long clienteId) {
-        ClienteDTO cliente = clienteRepository.findById(clienteId)
+        Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
-        return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), cliente.getCompaniaContratada(), cliente.getFechaSubidaContrato(), cliente.getNombre(), cliente.getApellidos(), cliente.getDNI());
+        return new ClienteDTO(
+                cliente.getIdCliente(),
+                cliente.getCups(),
+                cliente.getCompaniaContratada(),
+                cliente.getNombre(),
+                cliente.getApellidos(),
+                cliente.getDNI(),
+                cliente.getFechaSubidaContrato());
+    }
+
+
+    @Override
+    public EmpleadoDTO convertToDTO(Empleado empleado) {
+        List<ClienteDTO> clienteDTOs = empleado.getClientes().stream()
+                .map(cliente -> {
+                    if (cliente.getComercializadora() != null) {
+                        return new ClienteDTO(
+                                cliente.getIdCliente(),
+                                cliente.getCups(),
+                                cliente.getComercializadora().getNombre(),
+                                cliente.getFechaSubidaContrato(),
+                                cliente.getNombre(),
+                                cliente.getApellidos(),
+                                cliente.getDNI());
+                    } else {
+                        // Manejo cuando la comercializadora es null
+                        return new ClienteDTO(
+                                cliente.getIdCliente(),
+                                cliente.getCups(),
+                                null, // Puedes manejar esto según tus necesidades
+                                cliente.getFechaSubidaContrato(),
+                                cliente.getNombre(),
+                                cliente.getApellidos(),
+                                cliente.getDNI());
+                    }
+                })
+                .collect(Collectors.toList());
+
+        return new EmpleadoDTO(
+                empleado.getId(),
+                empleado.getNombre(),
+                empleado.getApellidos(),
+                empleado.getEmail(),
+                empleado.getUsername(),
+                empleado.getRoles().toString(),
+                clienteDTOs);
     }
 }

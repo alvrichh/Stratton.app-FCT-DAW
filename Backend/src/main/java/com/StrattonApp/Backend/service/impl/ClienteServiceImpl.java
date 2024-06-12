@@ -8,7 +8,6 @@ import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.repository.ClienteRepository;
 import com.StrattonApp.Backend.service.ClienteService;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 @Service

@@ -3,75 +3,74 @@ package com.StrattonApp.Backend.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
 
 import com.StrattonApp.Backend.DTO.EmpleadoDTO;
-import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.entities.Empleado;
+import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
 import com.StrattonApp.Backend.repository.EmpleadoRepository;
-import com.StrattonApp.Backend.service.ClienteService;
 import com.StrattonApp.Backend.service.EmpleadoService;
-
 
 @RestController
 @RequestMapping("/api/v1/empleados")
 @CrossOrigin(origins = "http://localhost:4200")
 public class EmpleadoController {
 
-	@Autowired
-	private EmpleadoRepository empleadoRepositorio;
+    @Autowired
+    private EmpleadoRepository empleadoRepositorio;
+
+    @Autowired
+    private EmpleadoService empleadoService;
+
     // Listar todos los empleados
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<Empleado> listarTodosLosEmpleados() {
-        return empleadoRepositorio.findAll();
+    public List<EmpleadoDTO> listarTodosLosEmpleados() {
+        return empleadoService.getAllUsers();
     }
 
     // Guardar un empleado
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public Empleado guardarEmpleado(@RequestBody Empleado empleado) {
-        return empleadoRepositorio.save(empleado);
+    public EmpleadoDTO guardarEmpleado(@RequestBody Empleado empleado) {
+        Empleado savedEmpleado = empleadoRepositorio.save(empleado);
+        return empleadoService.convertToDTO(savedEmpleado);
     }
-    /*
 
-    // Obtener un empleado por usuario
-    @GetMapping("/{usuario}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Empleado> obtenerEmpleadoPorUsuario(@PathVariable String username) {
-        Empleado empleado = empleadoRepositorio.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el usuario: " + username));
-        return ResponseEntity.ok(empleado);
-    }*/
-
+    // Obtener un empleado por ID
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Empleado> obtenerEmpleadoPorId(@PathVariable Long id) {
+    public ResponseEntity<EmpleadoDTO> obtenerEmpleadoPorId(@PathVariable Long id) {
         Empleado empleado = empleadoRepositorio.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el id: " + id));
-        return ResponseEntity.ok(empleado);
+        EmpleadoDTO empleadoDTO = empleadoService.convertToDTO(empleado);
+        return ResponseEntity.ok(empleadoDTO);
     }
+
     // Actualizar empleado
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Empleado> actualizarEmpleado(@PathVariable Long id, @RequestBody Empleado detallesEmpleado) {
+    public ResponseEntity<EmpleadoDTO> actualizarEmpleado(@PathVariable Long id, @RequestBody Empleado detallesEmpleado) {
         Empleado empleado = empleadoRepositorio.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("No existe el cliente con el ID : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + id));
+
         empleado.setNombre(detallesEmpleado.getNombre());
         empleado.setApellidos(detallesEmpleado.getApellidos());
         empleado.setEmail(detallesEmpleado.getEmail());
-        
-        Empleado empleadoActualizado = empleadoRepositorio.save(empleado);
-        return ResponseEntity.ok(empleadoActualizado);
+        empleado.setUsername(detallesEmpleado.getUsername());
+        empleado.setPassword(detallesEmpleado.getPassword());
+        empleado.setRoles(detallesEmpleado.getRoles());
+        empleado.setAsesoria(detallesEmpleado.getAsesoria());
+        empleado.setClientes(detallesEmpleado.getClientes());
 
+        Empleado empleadoActualizado = empleadoRepositorio.save(empleado);
+        EmpleadoDTO empleadoDTO = empleadoService.convertToDTO(empleadoActualizado);
+        return ResponseEntity.ok(empleadoDTO);
     }
 
     // Eliminar empleado
@@ -79,45 +78,21 @@ public class EmpleadoController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarEmpleado(@PathVariable Long id) {
         Empleado empleado = empleadoRepositorio.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el cliente con el ID : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + id));
 
         empleadoRepositorio.delete(empleado);
         Map<String, Boolean> respuesta = new HashMap<>();
         respuesta.put("eliminar", Boolean.TRUE);
         return ResponseEntity.ok(respuesta);
     }
-/*
-    // Agregar cliente a un empleado
-    @PostMapping("/{usuario}/clientes")
-    @PreAuthorize("hasRole('ADMIN')")
-    public Cliente agregarClienteAEmpleado(@PathVariable String usuario, @RequestBody Cliente cliente) {
-        Empleado empleado = empleadoService.obtenerEmpleadoPorUsuario(usuario)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el usuario: " + usuario));
 
-        cliente.setEmpleado(empleado);
-        return clienteService.agregarCliente(cliente);
-    }
-*/
-    /*
-    // Listar clientes de un empleado
-    @GetMapping("/{id}/clientes")
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<Cliente> listarClientesDeEmpleado(@PathVariable Long id) {
-        Empleado empleado = empleadoRepositorio.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el usuario: " + id));
-
-        return empleado.getClientes().stream().collect(Collectors.toList());
-    }
+    // Obtener perfil del empleado autenticado
     @GetMapping("/perfil")
-    public ResponseEntity<Empleado> obtenerPerfilEmpleado(Authentication authentication) {
-        // Obtener el nombre de usuario del empleado autenticado
+    public ResponseEntity<EmpleadoDTO> obtenerPerfilEmpleado(Authentication authentication) {
         String usuario = authentication.getName();
-
-        // Buscar al empleado por su nombre de usuario
         Empleado empleado = empleadoRepositorio.findByUsername(usuario)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el empleado con el usuario: " + usuario));
-
-        // Devolver los datos del empleado encontrado
-        return ResponseEntity.ok(empleado);
-    }*/
+        EmpleadoDTO empleadoDTO = empleadoService.convertToDTO(empleado);
+        return ResponseEntity.ok(empleadoDTO);
+    }
 }

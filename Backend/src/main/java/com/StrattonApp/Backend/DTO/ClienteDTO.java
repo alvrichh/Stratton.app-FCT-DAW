@@ -1,7 +1,5 @@
 package com.StrattonApp.Backend.DTO;
 
-import java.util.Date;
-
 public class ClienteDTO {
 
     private Long idCliente;

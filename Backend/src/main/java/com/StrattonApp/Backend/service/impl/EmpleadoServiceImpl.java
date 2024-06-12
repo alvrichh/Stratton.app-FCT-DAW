@@ -67,7 +67,6 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 cliente.getFechaSubidaContrato());
     }
 
-
     @Override
     public EmpleadoDTO convertToDTO(Empleado empleado) {
         List<ClienteDTO> clienteDTOs = empleado.getClientes().stream()
@@ -77,20 +76,20 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getIdCliente(),
                                 cliente.getCups(),
                                 cliente.getComercializadora().getNombre(),
-                                cliente.getFechaSubidaContrato(),
                                 cliente.getNombre(),
                                 cliente.getApellidos(),
-                                cliente.getDNI());
+                                cliente.getDNI(),
+                                cliente.getFechaSubidaContrato());
                     } else {
                         // Manejo cuando la comercializadora es null
                         return new ClienteDTO(
                                 cliente.getIdCliente(),
                                 cliente.getCups(),
                                 null, // Puedes manejar esto según tus necesidades
-                                cliente.getFechaSubidaContrato(),
                                 cliente.getNombre(),
                                 cliente.getApellidos(),
-                                cliente.getDNI());
+                                cliente.getDNI(),
+                                cliente.getFechaSubidaContrato());
                     }
                 })
                 .collect(Collectors.toList());
@@ -103,5 +102,4 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 empleado.getUsername(),
                 empleado.getRoles().toString(),
                 clienteDTOs);
-    }
-}
+    }}

@@ -1,79 +1,54 @@
 package com.StrattonApp.Backend.controller;
 
-import com.StrattonApp.Backend.DTO.ClienteDTO;
-import com.StrattonApp.Backend.entities.Cliente;
-import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
-import com.StrattonApp.Backend.repository.ClienteRepository;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.StrattonApp.Backend.DTO.ClienteDTO;
+import com.StrattonApp.Backend.entities.Cliente;
+import com.StrattonApp.Backend.service.ClienteService;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/clientes")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ClienteController {
 
     @Autowired
-    private ClienteRepository clienteRepositorio;
+    private ClienteService clienteService;
 
-    // Método para obtener todos los clientes
-    @GetMapping("/clientes")
-    public List<Cliente> obtenerTodosLosClientes() {
-        return clienteRepositorio.findAll();
+    @GetMapping
+    public List<ClienteDTO> listarTodosLosClientes() {
+        return clienteService.getAllClientes();
     }
 
-    // Método para guardar un nuevo cliente
-    @PostMapping("/clientes")
-    public Cliente guardarCliente(@RequestBody Cliente cliente) {
-        return clienteRepositorio.save(cliente);
-    }
-
-    // Método para obtener un cliente por su ID
-    @GetMapping("/clientes/{id}")
-    public ResponseEntity<Cliente> obtenerClientePorId(@PathVariable Long id) {
-        Cliente cliente = clienteRepositorio.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el cliente con el ID : " + id));
+    @GetMapping("/{id}")
+    public ResponseEntity<ClienteDTO> obtenerClientePorId(@PathVariable Long id) {
+        ClienteDTO cliente = clienteService.getClienteById(id);
         return ResponseEntity.ok(cliente);
     }
 
-    // Método para actualizar un cliente
-    @PutMapping("/clientes/{id}")
-    public ResponseEntity<Cliente> actualizarCliente(@PathVariable Long id, @RequestBody Cliente detallesCliente) {
-        Cliente cliente = clienteRepositorio.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el cliente con el ID : " + id));
-        
-        cliente.setNombre(detallesCliente.getNombre());
-        cliente.setApellidos(detallesCliente.getApellidos());
-        cliente.setDNI(detallesCliente.getDNI());
-        cliente.setEmail(detallesCliente.getEmail());
-        cliente.setComercializadora(detallesCliente.getComercializadora());
-        cliente.setSuministros(detallesCliente.getSuministros());
-        cliente.setTelefono(detallesCliente.getTelefono());
-        
-        Cliente clienteActualizado = clienteRepositorio.save(cliente);
-        return ResponseEntity.ok(clienteActualizado);
+    @GetMapping("/{empleadoId}/clientes")
+    public List<ClienteDTO> obtenerClientesPorEmpleadoId(@PathVariable Long empleadoId) {
+        return clienteService.getClientesByEmpleadoId(empleadoId);
+    }
+    @PostMapping
+    public ResponseEntity<ClienteDTO> guardarCliente(@RequestBody Cliente cliente) {
+        ClienteDTO clienteDTO = clienteService.guardarCliente(cliente);
+        return ResponseEntity.ok(clienteDTO);
     }
 
-    // Método para eliminar un cliente
-    @DeleteMapping("/clientes/{id}")
-    public ResponseEntity<Map<String, Boolean>> eliminarCliente(@PathVariable Long id) {
-        Cliente cliente = clienteRepositorio.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el cliente con el ID : " + id));
-        
-        clienteRepositorio.delete(cliente);
-        Map<String, Boolean> respuesta = new HashMap<>();
-        respuesta.put("eliminar", Boolean.TRUE);
-        return ResponseEntity.ok(respuesta);
+    @PutMapping("/{id}")
+    public ResponseEntity<ClienteDTO> actualizarCliente(@PathVariable Long id, @RequestBody Cliente detallesCliente) {
+        ClienteDTO clienteDTO = clienteService.actualizarCliente(id, detallesCliente);
+        return ResponseEntity.ok(clienteDTO);
     }
-/*
-    // Método para obtener los clientes asociados a un empleado específico
-    @GetMapping("/empleados/{empleadoId}/clientes")
-    public List<Cliente> obtenerClientesPorEmpleado(@PathVariable Long empleadoId) {
-        return clienteRepositorio.findById(empleadoId);
-    }*/
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarCliente(@PathVariable Long id) {
+        clienteService.eliminarCliente(id);
+        return ResponseEntity.ok().build();
+    }
+ 
 }

@@ -50,13 +50,19 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 		return convertToDTO(empleado);
 	}
 
-	@Override
-	public ClienteDTO getClienteDetallesById(Long clienteId) {
-		Cliente cliente = clienteRepository.findById(clienteId)
-				.orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
-		return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), cliente.getCompaniaContratada(),
-				cliente.getNombre(), cliente.getApellidos(), cliente.getDNI(), cliente.getFechaSubidaContrato());
-	}
+    @Override
+    public ClienteDTO getClienteDetallesById(Long clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
+        return new ClienteDTO(
+                cliente.getIdCliente(),
+                cliente.getCups(),
+                cliente.getCompaniaContratada(),
+                cliente.getNombre(),
+                cliente.getApellidos(),
+                cliente.getDNI(),
+                cliente.getFechaSubidaContrato(), null);
+    }
 
 	@Override
 	public EmpleadoDTO convertToDTO(Empleado empleado) {
@@ -74,7 +80,40 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 			}
 		}).collect(Collectors.toList());
 
-		return new EmpleadoDTO(empleado.getId(), empleado.getNombre(), empleado.getApellidos(), empleado.getEmail(),
-				empleado.getUsername(), empleado.getRoles().toString(), clienteDTOs);
-	}
+    @Override
+    public EmpleadoDTO convertToDTO(Empleado empleado) {
+        List<ClienteDTO> clienteDTOs = empleado.getClientes().stream()
+                .map(cliente -> {
+                    if (cliente.getComercializadora() != null) {
+                        return new ClienteDTO(
+                                cliente.getIdCliente(),
+                                cliente.getCups(),
+                                cliente.getComercializadora().getNombre(),
+                                cliente.getFechaSubidaContrato(),
+                                cliente.getNombre(),
+                                cliente.getApellidos(),
+                                cliente.getDNI(), null);
+                    } else {
+                        // Manejo cuando la comercializadora es null
+                        return new ClienteDTO(
+                                cliente.getIdCliente(),
+                                cliente.getCups(),
+                                null, // Puedes manejar esto según tus necesidades
+                                cliente.getFechaSubidaContrato(),
+                                cliente.getNombre(),
+                                cliente.getApellidos(),
+                                cliente.getDNI(), null);
+                    }
+                })
+                .collect(Collectors.toList());
+
+        return new EmpleadoDTO(
+                empleado.getId(),
+                empleado.getNombre(),
+                empleado.getApellidos(),
+                empleado.getEmail(),
+                empleado.getUsername(),
+                empleado.getRoles().toString(),
+                clienteDTOs);
+    }
 }

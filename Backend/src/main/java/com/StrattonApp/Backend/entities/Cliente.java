@@ -6,7 +6,9 @@ import jakarta.validation.constraints.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Table(name = "clientes")
@@ -27,7 +29,7 @@ public class Cliente {
 
 	@NotBlank(message = "El dni no puede estar en blanco")
 	@Column(name = "dni", length = 10, nullable = false)
-	private String DNI;
+	private String dni;
 
 	@NotBlank(message = "El email del cliente no puede estar vacío.")
 	@Column(name = "email", length = 60, nullable = false)
@@ -43,16 +45,16 @@ public class Cliente {
 
 	@NotBlank(message = "El IBAN del cliente no puede estar vacío.")
 	@Column(name = "iban", length = 34, nullable = false)
-	private String IBAN;
+	private String iban;
 
 	// Relación con Asesoría (muchos clientes pueden estar asociados a una asesoría)
 	@ManyToOne
 	@JoinColumn(name = "idAsesoria")
 	private Asesoria asesoria;
 
-	// Relación con Contrato (un cliente puede tener varios contratos)
+	// Relación con suministros (un cliente puede tener varios suministros)
 	@OneToMany(mappedBy = "cliente")
-	private List<Suministro> suministros;
+	private Set<Suministro> suministros = new HashSet<>();
 
 	@ManyToOne
 	@JoinColumn(name = "idComercializadora")
@@ -64,21 +66,21 @@ public class Cliente {
 
 	public Cliente(Long idCliente, @NotBlank(message = "El nombre del cliente no puede estar vacío.") String nombre,
 			@NotBlank(message = "El apellido no puede estar en blanco") String apellidos,
-			@NotBlank(message = "El dni no puede estar en blanco") String dNI,
+			@NotBlank(message = "El dni no puede estar en blanco") String dni,
 			@NotBlank(message = "El email del cliente no puede estar vacío.") String email,
 			@NotBlank(message = "La dirección del cliente no puede estar vacío.") String direccion,
 			@NotNull(message = "El telefono del cliente no puede estar vacío.") Integer telefono,
-			@NotBlank(message = "El IBAN del cliente no puede estar vacío.") String iBAN, Asesoria asesoria,
-			List<Suministro> suministros, Comercializadora comercializadora, Empleado empleado) {
+			@NotBlank(message = "El IBAN del cliente no puede estar vacío.") String iban, Asesoria asesoria,
+			Set<Suministro> suministros, Comercializadora comercializadora, Empleado empleado) {
 		super();
 		this.idCliente = idCliente;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
-		DNI = dNI;
+		this.dni = dni;
 		this.email = email;
 		this.direccion = direccion;
 		this.telefono = telefono;
-		IBAN = iBAN;
+		this.iban = iban;
 		this.asesoria = asesoria;
 		this.suministros = suministros;
 		this.comercializadora = comercializadora;
@@ -86,7 +88,6 @@ public class Cliente {
 	}
 
 	public Cliente() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Long getIdCliente() {
@@ -114,11 +115,11 @@ public class Cliente {
 	}
 
 	public String getDNI() {
-		return DNI;
+		return dni;
 	}
 
 	public void setDNI(String dNI) {
-		DNI = dNI;
+		dni = dNI;
 	}
 
 	public String getEmail() {
@@ -146,11 +147,11 @@ public class Cliente {
 	}
 
 	public String getIBAN() {
-		return IBAN;
+		return iban;
 	}
 
 	public void setIBAN(String iBAN) {
-		IBAN = iBAN;
+		iban = iBAN;
 	}
 
 	public Asesoria getAsesoria() {
@@ -161,11 +162,11 @@ public class Cliente {
 		this.asesoria = asesoria;
 	}
 
-	public List<Suministro> getSuministros() {
+	public Set<Suministro> getSuministros() {
 		return suministros;
 	}
 
-	public void setSuministros(List<Suministro> suministros) {
+	public void setSuministros(Set<Suministro> suministros) {
 		this.suministros = suministros;
 	}
 

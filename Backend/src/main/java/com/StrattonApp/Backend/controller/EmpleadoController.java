@@ -51,7 +51,15 @@ public class EmpleadoController {
         EmpleadoDTO empleadoDTO = empleadoService.convertToDTO(empleado);
         return ResponseEntity.ok(empleadoDTO);
     }
-
+    // Obtener un empleado por nombre de usuario
+    @GetMapping("/username/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EmpleadoDTO> obtenerEmpleadoPorUsername(@PathVariable String username) {
+        Empleado empleado = empleadoRepositorio.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el username: " + username));
+        EmpleadoDTO empleadoDTO = empleadoService.convertToDTO(empleado);
+        return ResponseEntity.ok(empleadoDTO);
+    }
     // Actualizar empleado
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -79,6 +87,19 @@ public class EmpleadoController {
     public ResponseEntity<Map<String, Boolean>> eliminarEmpleado(@PathVariable Long id) {
         Empleado empleado = empleadoRepositorio.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + id));
+
+        empleadoRepositorio.delete(empleado);
+        Map<String, Boolean> respuesta = new HashMap<>();
+        respuesta.put("eliminar", Boolean.TRUE);
+        return ResponseEntity.ok(respuesta);
+    }
+
+    // Eliminar empleado por username
+    @DeleteMapping("/username/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Boolean>> eliminarEmpleadoPorUsername(@PathVariable String username) {
+        Empleado empleado = empleadoRepositorio.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el username: " + username));
 
         empleadoRepositorio.delete(empleado);
         Map<String, Boolean> respuesta = new HashMap<>();

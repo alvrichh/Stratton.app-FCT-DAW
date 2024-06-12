@@ -75,7 +75,7 @@ public class SecurityConfig {
 							.requestMatchers(HttpMethod.DELETE, "/strattonapp/cliente/**")
 							.hasAnyAuthority("MANAGER", "ADMIN")
 
-							.anyRequest().authenticated();
+							.anyRequest().permitAll();
 				}).formLogin((form) -> form.permitAll()).logout((logout) -> logout.permitAll().logoutSuccessUrl("/"));
 
 		http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);

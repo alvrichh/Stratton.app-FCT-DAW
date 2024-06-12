@@ -301,6 +301,15 @@ public class Empleado implements UserDetails {
         throw new UnsupportedOperationException("Unimplemented method 'getIdEmpleado'");
     }
 
+    /*
+	public String getFotoPerfilUrl() {
+		return "http://";
+	}
+
+	public void setFotoPerfilUrl(String fotoPerfilUrl) {
+		
+	}
+*/
     
 }
 

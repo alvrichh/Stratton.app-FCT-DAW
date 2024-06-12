@@ -12,16 +12,16 @@ public class EmpleadoDTO implements Serializable {
     private String apellidos;
     private String email;
     private String username;
-    private String rol;
+    private String role;
     private List<ClienteDTO> clientes;
 
-    public EmpleadoDTO(Long id, String nombre, String apellidos, String email, String username, String rol, List<ClienteDTO> clientes) {
+    public EmpleadoDTO(Long id, String nombre, String apellidos, String email, String username, String role, List<ClienteDTO> clientes) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
         this.username = username;
-        this.rol = rol;
+        this.role = role;
         this.clientes = clientes;
     }
 
@@ -67,12 +67,12 @@ public class EmpleadoDTO implements Serializable {
         this.username = username;
     }
 
-    public String getRol() {
-        return rol;
+    public String getRole() {
+        return role;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public List<ClienteDTO> getClientes() {

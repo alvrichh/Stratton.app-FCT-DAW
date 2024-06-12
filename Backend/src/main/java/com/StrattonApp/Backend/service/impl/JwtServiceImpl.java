@@ -68,7 +68,7 @@ public class JwtServiceImpl implements JwtService {
     // Los claims son declaraciones que contienen información sobre el usuario y metadatos adicionales.
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        return claimsResolvers.apply(claims);
     }
 
     // Genera el token JWT incluyendo los claims adicionales y los detalles del usuario.

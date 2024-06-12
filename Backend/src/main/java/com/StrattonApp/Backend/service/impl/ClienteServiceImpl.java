@@ -10,7 +10,6 @@ import com.StrattonApp.Backend.service.ClienteService;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
@@ -21,7 +20,7 @@ public class ClienteServiceImpl implements ClienteService {
         return new ClienteDTO(
             cliente.getIdCliente(),
             cliente.getSuministros(),
-            cliente.getCompaniaContratada(),
+            cliente.getComercializadora(),
             cliente.getFechaSubidaContrato(),
             cliente.getNombre(),
             cliente.getApellidos(),
@@ -32,7 +31,7 @@ public class ClienteServiceImpl implements ClienteService {
             cliente.getIBAN(),
             cliente.getAsesoria() != null ? cliente.getAsesoria().getIdAsesoria() : null,
             cliente.getComercializadora() != null ? cliente.getComercializadora().getIdComercializadora() : null,
-            cliente.getEmpleado() != null ? cliente.getEmpleado().getId() : null
+            cliente.getEmpleado() != null ? cliente.getEmpleado().getIdEmpleado() : null
         );
     }
     

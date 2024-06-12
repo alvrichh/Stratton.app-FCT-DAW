@@ -23,7 +23,7 @@ export class LoginComponent {
 
   login() {
     console.log("Intentando iniciar sesión con:", this.username, this.password);
-    this.authService.register(this.username, this.password).subscribe({
+    this.authService.login(this.username, this.password).subscribe({
       next: (response: any) => {
         const token = response.token; // Extrae el token de la respuesta
         this.authService.saveToken(token); // Guarda el token en el localStorage usando el servicio AuthService

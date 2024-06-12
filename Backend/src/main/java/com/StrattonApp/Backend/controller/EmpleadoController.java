@@ -41,6 +41,7 @@ public class EmpleadoController {
     public Empleado guardarEmpleado(@RequestBody Empleado empleado) {
         return empleadoRepositorio.save(empleado);
     }
+    /*
 
     // Obtener un empleado por usuario
     @GetMapping("/{usuario}")
@@ -49,17 +50,17 @@ public class EmpleadoController {
         Empleado empleado = empleadoRepositorio.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el usuario: " + username));
         return ResponseEntity.ok(empleado);
-    }
+    }*/
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Empleado> obtenerEmpleadoPorId(@PathVariable Long id) {
         Empleado empleado = empleadoRepositorio.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el usuario: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el id: " + id));
         return ResponseEntity.ok(empleado);
     }
     // Actualizar empleado
-    @PutMapping("/{usuario}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Empleado> actualizarEmpleado(@PathVariable Long id, @RequestBody Empleado detallesEmpleado) {
         Empleado empleado = empleadoRepositorio.findById(id)

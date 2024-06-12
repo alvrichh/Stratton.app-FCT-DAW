@@ -62,7 +62,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public ClienteDTO getClienteDetallesById(Long clienteId) {
-        Cliente cliente = clienteRepository.findById(clienteId)
+        ClienteDTO cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
         return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), cliente.getCompaniaContratada(), cliente.getFechaSubidaContrato(), cliente.getNombre(), cliente.getApellidos(), cliente.getDNI());
     }

@@ -23,6 +23,7 @@ public class Asesoria {
     private String descripcion;
     // Relación con Clientes (una asesoría puede tener varios clientes)
     @OneToMany(mappedBy = "asesoria")
+    @JsonIgnore
     private List<Cliente> clientes;
     
     // Relación con Clientes (una asesoría puede tener varios empleados)

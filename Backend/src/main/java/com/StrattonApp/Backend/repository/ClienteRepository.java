@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.StrattonApp.Backend.DTO.ClienteDTO;
 import com.StrattonApp.Backend.entities.Cliente;
+import com.StrattonApp.Backend.entities.Empleado;
 
 
 @Repository
@@ -23,5 +24,10 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
         return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), cliente.getCompaniaContratada(),
                 cliente.getNombre(), cliente.getApellidos(), cliente.getDNI(), cliente.getFechaSubidaContrato(), cliente.getEmail());
     }
+    
+    
+	Long countByEmpleado(Empleado empleado);
+
+	List<Cliente> findByEmpleadoId(Empleado empleado);
 
 }

@@ -15,7 +15,7 @@ public interface JwtService {
      */
     String extractUserName(String token);
     
-    String extractPassword(String token);  // Nuevo método para extraer la contraseña
+   // String extractPassword(String token);  // Nuevo método para extraer la contraseña
 
 
     /**

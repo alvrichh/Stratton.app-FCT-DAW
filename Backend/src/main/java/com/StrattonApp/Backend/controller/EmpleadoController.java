@@ -174,12 +174,12 @@ public class EmpleadoController {
      */
     @GetMapping("/{id}/suministros-clientes")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<SuministroDTO>> obtenerSuministrosClientesPorEmpleado(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerSuministrosClientesPorEmpleado(@PathVariable Long id) {
         logger.info("Endpoint: GET /empleados/{}/suministros-clientes", id);
         Empleado empleado = empleadoRepositorio.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + id));
 
-        List<Cliente> clientes = clienteRepository.findByEmpleadoId(empleado);
+        List<Cliente> clientes = clienteRepository.findByEmpleadoId(id);
         List<SuministroDTO> suministrosClientes = clientes.stream()
                 .flatMap(cliente -> cliente.getSuministros().stream())
                 .map(suministro -> new SuministroDTO(suministro.getCups(), suministro.getDireccion(), suministro.getComercializadora().getNombre(), suministro.getEstado(), null))
@@ -187,5 +187,6 @@ public class EmpleadoController {
 
         return ResponseEntity.ok(suministrosClientes);
     }
+
 
 }

@@ -114,14 +114,6 @@ public class Cliente {
 		this.apellidos = apellidos;
 	}
 
-	public String getDNI() {
-		return dni;
-	}
-
-	public void setDNI(String dNI) {
-		dni = dNI;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -144,14 +136,6 @@ public class Cliente {
 
 	public void setTelefono(Integer telefono) {
 		this.telefono = telefono;
-	}
-
-	public String getIBAN() {
-		return iban;
-	}
-
-	public void setIBAN(String iBAN) {
-		iban = iBAN;
 	}
 
 	public Asesoria getAsesoria() {
@@ -201,6 +185,23 @@ public class Cliente {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	public String getIban() {
+		return iban;
+	}
+
+	public void setIban(String iban) {
+		this.iban = iban;
+	}
+	
 
 
 

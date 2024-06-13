@@ -71,7 +71,7 @@ public class ClienteServiceImpl implements ClienteService {
         clienteDTO.setCompaniaContratada(cliente.getCompaniaContratada());
         clienteDTO.setNombre(cliente.getNombre());
         clienteDTO.setApellidos(cliente.getApellidos());
-        clienteDTO.setDni(cliente.getDNI());
+        clienteDTO.setDni(cliente.getDni());
         clienteDTO.setFechaSubidaContrato(cliente.getFechaSubidaContrato());
         clienteDTO.setEmail(cliente.getEmail());
         // Establece otros campos si es necesario

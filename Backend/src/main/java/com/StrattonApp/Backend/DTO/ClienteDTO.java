@@ -5,10 +5,10 @@ public class ClienteDTO {
     private Long idCliente;
     private String cups;
     private String companiaContratada;
+    private String fechaSubidaContrato;
     private String nombre;
     private String apellidos;
     private String dni;
-    private String fechaSubidaContrato;
     private String email;
     
     public ClienteDTO() {
@@ -17,15 +17,18 @@ public class ClienteDTO {
  
     // Getters y setters
 
-	public ClienteDTO(Long idCliente, String cups, String companiaContratada, String nombre, String apellidos,
-			String dni, String fechaSubidaContrato, String email) {
+
+
+	public ClienteDTO(Long idCliente, String cups, String companiaContratada, String fechaSubidaContrato, String nombre,
+			String apellidos, String dni, String email) {
+		super();
 		this.idCliente = idCliente;
 		this.cups = cups;
 		this.companiaContratada = companiaContratada;
+		this.fechaSubidaContrato = fechaSubidaContrato;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.dni = dni;
-		this.fechaSubidaContrato = fechaSubidaContrato;
 		this.email = email;
 	}
 

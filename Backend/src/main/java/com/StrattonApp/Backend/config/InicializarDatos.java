@@ -122,11 +122,11 @@ public class InicializarDatos implements CommandLineRunner {
 					Cliente cliente = new Cliente();
 					cliente.setNombre("Cliente" + (i + 1));
 					cliente.setApellidos("Apellido" + (i + 1));
-					cliente.setDNI(generarDNI());
+					cliente.setDni(generarDNI());
 					cliente.setEmail("cliente" + (i + 1) + "@example.com");
 					cliente.setDireccion("Dirección " + (i + 1));
 					cliente.setTelefono(generarTelefono());
-					cliente.setIBAN(generarIBAN());
+					cliente.setIban(generarIBAN());
 					cliente.setEmpleado(i % 2 == 0 ? admin : usuario);
 					cliente.setAsesoria(asesoria1);
 					cliente.setComercializadora(endesa);

@@ -43,7 +43,6 @@ public class SuministroDTO {
 	}
 	public SuministroDTO(String cups, String direccion, String nombre, Estado estado,
 			Comercializadora comercializadora) {
-		super();
 		this.cups = cups;
 		this.direccion = direccion;
 		this.nombre = nombre;

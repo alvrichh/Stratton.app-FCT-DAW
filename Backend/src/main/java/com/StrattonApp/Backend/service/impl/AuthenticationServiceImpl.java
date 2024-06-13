@@ -11,6 +11,7 @@ import com.StrattonApp.Backend.DTO.resquest.SignUpRequest;
 import com.StrattonApp.Backend.DTO.resquest.SigninRequest;
 import com.StrattonApp.Backend.entities.Empleado;
 import com.StrattonApp.Backend.entities.Role;
+import com.StrattonApp.Backend.exceptions.GlobalException;
 import com.StrattonApp.Backend.repository.EmpleadoRepository;
 import com.StrattonApp.Backend.service.AuthenticationService;
 import com.StrattonApp.Backend.service.JwtService;
@@ -74,8 +75,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public JwtAuthenticationResponse signin(SigninRequest request) {
-        Empleado user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+       
+    	try {
+
+   		 Authentication authentication = authenticationManager.authenticate(
+
+   	                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+
+   	}catch(Exception e) {
+
+   		 throw new GlobalException("Contraseña no válida para usuario: " + request.getUsername());
+
+   	}
+    	Empleado user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         
         // Obtener el rol del usuario
         String role = user.getRoles().iterator().next().name();
@@ -83,4 +96,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).role(role).build();
     }
+
+	public AuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
 }

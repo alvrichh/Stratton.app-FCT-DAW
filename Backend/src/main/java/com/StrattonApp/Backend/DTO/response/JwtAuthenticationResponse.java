@@ -116,5 +116,6 @@ public class JwtAuthenticationResponse {
         public JwtAuthenticationResponse build() {
             return new JwtAuthenticationResponse(token, role);
         }
+        
     }
 }

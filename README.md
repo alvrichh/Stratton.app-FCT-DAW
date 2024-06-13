@@ -30,6 +30,20 @@ Nota:(*) los requisitos marcados con ✔ son los que por el momento serán esenc
 - RF-2: El sistema debe conocer a qué comercializadora pertenece cada cliente y cuál es el nombre de su oferta (idPlan).
 - RF-3: La información de los clientes se basará en sus números de teléfono, que serán únicos para la identificación de la información.✔
 - RF-4: Las ubicaciones completas, como comunidad autónoma, provincia y municipio, se determinarán mediante el código postal (ZIP).✔
+
+````
+import requests
+
+def obtener_ubicacion_zippopotam(codigo_postal, pais='ES'):
+    url = f'http://api.zippopotam.us/{pais}/{codigo_postal}'
+    response = requests.get(url)
+    return response.json()
+
+codigo_postal = '41018'
+ubicacion = obtener_ubicacion_zippopotam(codigo_postal)
+print(ubicacion)
+````
+
 - RF-5: Cada cliente debe tener uno o más CUPS_luz como puntos de suministro, junto con su UBICACION.
 - RF-6: El sistema debe permitir que los empleados estén asociados a una asesoría.✔
 - RF-7: El sistema debe permitir que los clientes tengan información bancaria asociada.✔

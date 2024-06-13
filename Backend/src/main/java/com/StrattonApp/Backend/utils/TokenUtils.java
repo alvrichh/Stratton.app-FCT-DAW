@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.StrattonApp.Backend.entities.Role;
 import com.StrattonApp.Backend.exceptions.GlobalException;
 
 import io.jsonwebtoken.Claims;
@@ -53,7 +54,7 @@ public class TokenUtils {
 		 */
 		
 		
-		public static String generateToken(String username, String name, String rol, Integer id) {
+	    public static String generateToken(String username, String name, Role rol, Integer id) {
 
 			// Establecemos la fecha de expiración del token en milisegundos
 			Date expirationDate = new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDATY_SECONDS * 1000);
@@ -64,7 +65,7 @@ public class TokenUtils {
 			// subject.
 			Map<String, Object> extra = new HashMap<>();
 			extra.put("name", name);
-			extra.put("rol", rol);
+	        extra.put("rol", rol.name()); // Guardamos el nombre del rol
 			extra.put("id", id);
 			
 
@@ -129,9 +130,10 @@ public class TokenUtils {
 
 			
 			String username = claims.getSubject();
-			String rol = (String) claims.get("rol");
+	        String rol = (String) claims.get("rol");
+	        Role roleEnum = Role.valueOf(rol); // Convertimos el string del rol a un enum Role
 			List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-			authorities.add(new SimpleGrantedAuthority(rol));
+	        authorities.add(new SimpleGrantedAuthority(roleEnum.name()));
 
 			return new UsernamePasswordAuthenticationToken(username, null, authorities);
 

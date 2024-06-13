@@ -17,6 +17,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
+import com.StrattonApp.Backend.entities.Empleado;
 import io.jsonwebtoken.security.Keys;
 
 /**
@@ -40,6 +41,10 @@ public class JwtServiceImpl implements JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractUserRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
     /**
      * Genera un token JWT para el usuario proporcionado.
      *
@@ -48,7 +53,9 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("role", ((Empleado) userDetails).getMainRole()); // Añadir el rol a los claims
+        return generateToken(extraClaims, userDetails);
     }
 
     /**
@@ -61,7 +68,9 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
+        //final String password = extractPassword(token)
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        
     }
 
     // Método genérico para extraer información del token JWT.
@@ -108,5 +117,8 @@ public class JwtServiceImpl implements JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
+
    
 }

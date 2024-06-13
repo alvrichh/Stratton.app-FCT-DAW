@@ -151,6 +151,17 @@ public class Empleado implements UserDetails {
 
 	public Empleado() {
 	}
+	 public String getMainRole() {
+
+	        return roles.stream()
+
+	                .map(Role::name)
+
+	                .findFirst()
+
+	                .orElse("USER"); // Valor por defecto si no hay roles
+
+	    }
 
 	/**
      * Obtiene el nombre de usuario del usuario.

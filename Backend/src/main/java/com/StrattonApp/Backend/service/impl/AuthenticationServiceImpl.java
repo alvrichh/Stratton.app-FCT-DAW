@@ -80,4 +80,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }
+
+	public AuthenticationManager getAuthenticationManager() {
+		return authenticationManager;
+	}
 }

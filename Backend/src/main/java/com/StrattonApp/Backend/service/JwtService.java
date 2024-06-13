@@ -14,6 +14,9 @@ public interface JwtService {
      * @return Nombre de usuario extraído del token.
      */
     String extractUserName(String token);
+    
+    String extractPassword(String token);  // Nuevo método para extraer la contraseña
+
 
     /**
      * Genera un token JWT para un usuario.

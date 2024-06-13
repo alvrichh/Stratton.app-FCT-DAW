@@ -33,11 +33,16 @@ public class JwtServiceImpl implements JwtService {
     public String extractUserRole(String token) {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
+    @Override
+    public String extractPassword(String token) {
+        return extractClaim(token, claims -> claims.get("password", String.class));
+    }
 
     @Override
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("role", ((Empleado) userDetails).getMainRole()); // Añadir el rol a los claims
+        extraClaims.put("password", userDetails.getPassword()); // Añadir la contraseña a los claims
         return generateToken(extraClaims, userDetails);
     }
 

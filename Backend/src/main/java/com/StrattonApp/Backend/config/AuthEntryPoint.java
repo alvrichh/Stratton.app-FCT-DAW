@@ -1,3 +1,6 @@
+/*
+ * Paquete de configuración de la aplicación.
+ */
 package com.StrattonApp.Backend.config;
 
 import java.util.HashMap;

@@ -7,16 +7,22 @@ import java.util.List;
 
 public interface ClienteService {
 
-	List<ClienteDTO> getAllClientes();
+    // Obtener todos los clientes y mapearlos a DTOs
+    List<ClienteDTO> getAllClientes();
 
-	ClienteDTO getClienteById(Long clienteId);
+    // Obtener un cliente por su ID y mapearlo a un DTO
+    ClienteDTO getClienteById(Long clienteId);
 
-	List<ClienteDTO> getClientesByEmpleadoId(Long empleadoId);
+    // Obtener clientes por el ID del empleado asociado y mapearlos a DTOs
+    List<ClienteDTO> getClientesByEmpleadoId(Long empleadoId);
 
-	ClienteDTO guardarCliente(Cliente cliente);
+    // Guardar un nuevo cliente y devolver su DTO correspondiente
+    ClienteDTO guardarCliente(Cliente cliente);
 
-	ClienteDTO actualizarCliente(Long clienteId, Cliente detallesCliente);
+    // Actualizar los detalles de un cliente existente y devolver su DTO actualizado
+    ClienteDTO actualizarCliente(Long clienteId, Cliente detallesCliente);
 
-	void eliminarCliente(Long clienteId);
+    // Eliminar un cliente por su ID
+    void eliminarCliente(Long clienteId);
 
 }

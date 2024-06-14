@@ -1,3 +1,6 @@
+/*
+ * Paquete de servicios.
+ */
 package com.StrattonApp.Backend.service;
 
 import com.StrattonApp.Backend.DTO.response.JwtAuthenticationResponse;

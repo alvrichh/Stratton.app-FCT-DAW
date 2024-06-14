@@ -1,3 +1,6 @@
+/*
+ * Paquete del controlador de la aplicación.
+ */
 package com.StrattonApp.Backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +12,15 @@ import com.StrattonApp.Backend.repository.EmpleadoRepository;
 
 import java.util.List;
 import java.util.Optional;
-
+/**
+ * Controlador RESTful para operaciones administrativas relacionadas con empleados.
+ * Proporciona endpoints para la gestión de empleados como crear, obtener, actualizar y eliminar.
+ */
 @RestController
 @RequestMapping("/api/v1/admin")
 @CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
 
-	//ESTA CLASE NO ES REALMENTE NECESARIA ESTÁ HECHA DE PRUEBA PARA EL CONTROL DEL ADMINISTRADOR
-	//PERO REALMENTE HACE LO MISMO QUE EMPLEADOCONTROLLER!!!!!!!!!1
     @Autowired
     private EmpleadoRepository empleadoRepository;
 

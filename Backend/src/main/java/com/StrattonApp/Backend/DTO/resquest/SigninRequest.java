@@ -1,3 +1,6 @@
+/*
+ * Paquete de peticiones de la aplicación.
+ */
 package com.StrattonApp.Backend.DTO.resquest;
 
 import org.springframework.web.bind.annotation.CrossOrigin;

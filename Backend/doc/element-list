@@ -1,1 +1,12 @@
+com.StrattonApp.Backend
+com.StrattonApp.Backend.config
+com.StrattonApp.Backend.controller
+com.StrattonApp.Backend.DTO
+com.StrattonApp.Backend.DTO.response
+com.StrattonApp.Backend.DTO.resquest
+com.StrattonApp.Backend.entities
+com.StrattonApp.Backend.exceptions
+com.StrattonApp.Backend.repository
+com.StrattonApp.Backend.service
+com.StrattonApp.Backend.service.impl
 com.StrattonApp.Backend.utils

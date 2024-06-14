@@ -1,3 +1,6 @@
+/*
+ * Paquete de implementación de los servicios de la aplicación.
+ */
 package com.StrattonApp.Backend.service.impl;
 
 import org.springframework.security.authentication.AuthenticationManager;

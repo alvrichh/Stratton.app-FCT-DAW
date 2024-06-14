@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
+/**
+ * Entidad que representa una comercializadora en el sistema.
+ */
 @Entity
 public class Comercializadora {
 
@@ -16,40 +19,79 @@ public class Comercializadora {
 
     private String plan;
 
-    // Relación con Contratos (una comercializadora puede ofrecer varios contratos)
+    // Relación con Suministros (una comercializadora puede tener varios suministros)
     @OneToMany(mappedBy = "comercializadora")
     private List<Suministro> suministros;
 
-	public Long getIdComercializadora() {
-		return idComercializadora;
-	}
+    /**
+     * Obtiene el ID de la comercializadora.
+     *
+     * @return ID de la comercializadora
+     */
+    public Long getIdComercializadora() {
+        return idComercializadora;
+    }
 
-	public void setIdComercializadora(Long idComercializadora) {
-		this.idComercializadora = idComercializadora;
-	}
+    /**
+     * Establece el ID de la comercializadora.
+     *
+     * @param idComercializadora ID de la comercializadora a establecer
+     */
+    public void setIdComercializadora(Long idComercializadora) {
+        this.idComercializadora = idComercializadora;
+    }
 
-	public String getNombre() {
-		return nombre;
-	}
+    /**
+     * Obtiene el nombre de la comercializadora.
+     *
+     * @return Nombre de la comercializadora
+     */
+    public String getNombre() {
+        return nombre;
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    /**
+     * Establece el nombre de la comercializadora.
+     *
+     * @param nombre Nombre de la comercializadora a establecer
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	public String getPlan() {
-		return plan;
-	}
+    /**
+     * Obtiene el plan ofrecido por la comercializadora.
+     *
+     * @return Plan ofrecido por la comercializadora
+     */
+    public String getPlan() {
+        return plan;
+    }
 
-	public void setPlan(String plan) {
-		this.plan = plan;
-	}
+    /**
+     * Establece el plan ofrecido por la comercializadora.
+     *
+     * @param plan Plan ofrecido por la comercializadora a establecer
+     */
+    public void setPlan(String plan) {
+        this.plan = plan;
+    }
 
-	public List<Suministro> getContratos() {
-		return suministros;
-	}
+    /**
+     * Obtiene los suministros asociados a la comercializadora.
+     *
+     * @return Lista de suministros asociados a la comercializadora
+     */
+    public List<Suministro> getSuministros() {
+        return suministros;
+    }
 
-	public void setContratos(List<Suministro> contratos) {
-		this.suministros = contratos;
-	}
-
+    /**
+     * Establece los suministros asociados a la comercializadora.
+     *
+     * @param suministros Lista de suministros a establecer
+     */
+    public void setSuministros(List<Suministro> suministros) {
+        this.suministros = suministros;
+    }
 }

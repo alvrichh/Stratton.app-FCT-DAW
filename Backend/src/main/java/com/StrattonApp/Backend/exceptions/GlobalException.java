@@ -1,3 +1,6 @@
+/*
+ * Paquete de control de excepciones.
+ */
 package com.StrattonApp.Backend.exceptions;
 
 import org.springframework.http.HttpStatus;

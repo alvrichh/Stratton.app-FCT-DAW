@@ -1,3 +1,6 @@
+/*
+ * Paquete de las entidades de transferencia de datos de la aplicación.
+ */
 package com.StrattonApp.Backend.DTO;
 
 /**

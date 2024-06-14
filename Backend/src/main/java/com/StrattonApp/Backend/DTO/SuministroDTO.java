@@ -3,6 +3,9 @@ package com.StrattonApp.Backend.DTO;
 import com.StrattonApp.Backend.entities.Comercializadora;
 import com.StrattonApp.Backend.entities.Estado;
 
+/**
+ * DTO (Data Transfer Object) que representa la entidad Cliente para transferencia de datos.
+ */
 public class SuministroDTO {
 
 

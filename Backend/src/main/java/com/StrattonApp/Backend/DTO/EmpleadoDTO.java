@@ -6,6 +6,9 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO (Data Transfer Object) que representa la entidad Cliente para transferencia de datos.
+ */
 public class EmpleadoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;

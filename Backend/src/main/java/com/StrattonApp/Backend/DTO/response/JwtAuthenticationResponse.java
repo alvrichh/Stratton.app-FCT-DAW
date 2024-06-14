@@ -1,3 +1,6 @@
+/*
+ * Paquete de respuestas del jwt.
+ */
 package com.StrattonApp.Backend.DTO.response;
 
 /**

@@ -1,3 +1,6 @@
+/*
+ * Paquete Utils.
+ */
 package com.StrattonApp.Backend.utils;
 
 import java.security.NoSuchAlgorithmException;

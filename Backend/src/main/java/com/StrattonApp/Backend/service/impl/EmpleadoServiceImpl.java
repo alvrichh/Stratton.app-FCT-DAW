@@ -19,7 +19,7 @@ import com.StrattonApp.Backend.repository.ClienteRepository;
 import com.StrattonApp.Backend.service.EmpleadoService;
 
 /**
- * Implementación de la interfaz EmpleadoService para manejar operaciones relacionadas con los empleados.
+ * Implementación de la interfaz{@link EmpleadoService} para manejar operaciones relacionadas con los empleados.
  */
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {

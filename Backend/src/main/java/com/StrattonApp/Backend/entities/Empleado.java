@@ -67,7 +67,7 @@ public class Empleado implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Cargar la colección de roles de manera temprana
-        role.size(); // Esto carga la colección de roles
+    	role.size(); // Esto carga la colección de roles
 
         return role.stream()
                 .map(role -> new SimpleGrantedAuthority(role.name())) // Usar el nombre del rol como string
@@ -170,9 +170,13 @@ public class Empleado implements UserDetails {
     }
 
     public String getMainRole() {
-        return role.stream()
-                .map(Role::name)
-                .findFirst()
-                .orElse("USER"); // Valor por defecto si no hay roles
+        if (role.isEmpty()) {
+            return "USER"; // Valor por defecto si no hay roles
+        } else {
+            // Obtener el primer rol en la colección
+            Role mainRole = role.iterator().next();
+            return mainRole.name();
+        }
     }
+
 }

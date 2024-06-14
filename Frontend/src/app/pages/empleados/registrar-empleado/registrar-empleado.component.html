@@ -105,17 +105,17 @@
 
     
     <div class="form-group">
-      <label for="roles">Rol:</label>
+      <label for="rol">Rol:</label>
       <select class="form-control"
-              id="roles"
+              id="role"
               [(ngModel)]="empleado.role"
-              name="roles"
+              name="role"
               required
               multiple>
-        <option *ngFor="let rol of rolesDisponibles" [value]="rol">{{ rol }}</option>
+        <option *ngFor="let role of rolesDisponibles" [value]="role">{{ role }}</option>
       </select>
-      <div class="alert alert-danger" *ngIf="empleadoForm.controls['roles']?.invalid && (empleadoForm.controls['roles']?.dirty || empleadoForm.controls['roles']?.touched)">
-        <div *ngIf="empleadoForm.controls['roles']?.errors && empleadoForm.controls['roles']?.errors['required']">
+      <div class="alert alert-danger" *ngIf="empleadoForm.controls['role']?.invalid && (empleadoForm.controls['role']?.dirty || empleadoForm.controls['roles']?.touched)">
+        <div *ngIf="empleadoForm.controls['role']?.errors && empleadoForm.controls['role']?.errors['required']">
           Por favor, seleccione al menos un rol.
         </div>
       </div>

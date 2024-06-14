@@ -133,7 +133,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 empleado.getApellidos(),
                 empleado.getEmail(),
                 empleado.getUsername(),
-                empleado.getRoles().toString(),
+                empleado.getMainRole().toString(),
                 clienteDTOs);
     }
 }

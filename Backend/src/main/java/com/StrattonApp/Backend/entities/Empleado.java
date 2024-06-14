@@ -55,7 +55,7 @@ public class Empleado implements UserDetails {
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "usuario_rol")
     @Column(name = "RolesUsuario")
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> role = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "idAsesoria")
@@ -67,10 +67,10 @@ public class Empleado implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Cargar la colección de roles de manera temprana
-        roles.size(); // Esto carga la colección de roles
+        role.size(); // Esto carga la colección de roles
 
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.toString())) // Usar el nombre del rol como string
+        return role.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name())) // Usar el nombre del rol como string
                 .collect(Collectors.toList());
     }
 
@@ -141,11 +141,11 @@ public class Empleado implements UserDetails {
     }
 
     public Set<Role> getRoles() {
-        return roles;
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRoles(Set<Role> role) {
+        this.role = role;
     }
 
     public Asesoria getAsesoria() {
@@ -170,7 +170,7 @@ public class Empleado implements UserDetails {
     }
 
     public String getMainRole() {
-        return roles.stream()
+        return role.stream()
                 .map(Role::name)
                 .findFirst()
                 .orElse("USER"); // Valor por defecto si no hay roles

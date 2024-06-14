@@ -176,7 +176,7 @@ public class EmpleadoController {
      * @param id ID del empleado
      * @return Lista de suministros de los clientes del empleado
      */
-    @GetMapping("/{id}/suministros-clientes")
+    @GetMapping("/{id}/suministros-clientes")    
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> obtenerSuministrosClientesPorEmpleado(@PathVariable Long id) {
         logger.info("Endpoint: GET /empleados/{}/suministros-clientes", id);

@@ -106,5 +106,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationManager getAuthenticationManager() {
         return authenticationManager;
     }
-    
+
 }

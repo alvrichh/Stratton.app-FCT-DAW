@@ -27,7 +27,7 @@ import io.jsonwebtoken.security.Keys;
  * Clase utilitaria para operaciones relacionadas con tokens JWT.
  */
 public class TokenUtils {
-    
+
     // Clave secreta para firmar y verificar tokens JWT
     private final static String ACCESS_TOKEN_SECRET = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
 
@@ -39,11 +39,11 @@ public class TokenUtils {
      *
      * @param username Nombre de usuario (email)
      * @param name     Nombre del usuario
-     * @param rol      Rol del usuario
+     * @param role     Rol del usuario
      * @param id       ID del usuario
      * @return Token JWT generado, incluido el prefijo "Bearer "
      */
-    public static String generateToken(String username, String name, Role rol, Integer id) {
+    public static String generateToken(String username, String name, Role role, Integer id) {
 
         // Establecemos la fecha de expiración del token en milisegundos
         Date expirationDate = new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDATY_SECONDS * 1000);
@@ -51,15 +51,15 @@ public class TokenUtils {
         // Creamos un mapa para guardar la información adicional en el token
         Map<String, Object> extra = new HashMap<>();
         extra.put("name", name);
-        extra.put("rol", rol.name()); // Guardamos el nombre del rol
+        extra.put("role", role.name()); // Guardamos el nombre del rol
         extra.put("id", id);
 
         // Construimos el token JWT
         String token = Jwts.builder()
-                .subject(username)
-                .issuedAt(new Date())
-                .expiration(expirationDate)
-                .claims(extra)
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(expirationDate)
+                .addClaims(extra)
                 .signWith(Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes()))
                 .compact();
 
@@ -79,10 +79,10 @@ public class TokenUtils {
             throws JwtException, IllegalArgumentException, NoSuchAlgorithmException {
 
         Claims claims = Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes()))
+                .setSigningKey(Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes()))
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
 
         return claims;
     }
@@ -120,8 +120,8 @@ public class TokenUtils {
 
         // Extraemos el nombre de usuario y el rol del token
         String username = claims.getSubject();
-        String rol = (String) claims.get("rol");
-        Role roleEnum = Role.valueOf(rol); // Convertimos el string del rol a un enum Role
+        String role = (String) claims.get("role");
+        Role roleEnum = Role.valueOf(role); // Convertimos el string del rol a un enum Role
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(roleEnum.name()));
 
@@ -136,11 +136,16 @@ public class TokenUtils {
      * @return true si el usuario tiene el rol de administrador, false de lo contrario.
      */
     public static boolean isAdmin(String token) {
-        String rol = extractUserRole(token);
-        return Role.ADMIN.name().equals(rol);
+        String role = extractUserRole(token);
+        return Role.ADMIN.name().equals(role);
     }
 
-	private static String extractUserRole(String token) {
-		return extractUserRole(token);
-	}
+    private static String extractUserRole(String token) {
+        try {
+            Claims claims = getAllClaimsFromToken(token);
+            return (String) claims.get("role");
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

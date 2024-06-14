@@ -3,7 +3,9 @@ package com.StrattonApp.Backend.config;
 import com.StrattonApp.Backend.entities.*;
 import com.StrattonApp.Backend.repository.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,10 @@ public class InicializarDatos implements CommandLineRunner {
     final Comercializadora iberdrola = new Comercializadora();
     final Comercializadora naturgy = new Comercializadora();
     final Comercializadora endesa = new Comercializadora();
+
+    
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     /**
      * Constructor que inyecta las dependencias necesarias.
@@ -62,6 +68,9 @@ public class InicializarDatos implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         limpiarTablas();
+		jdbcTemplate.execute("ALTER TABLE empleados AUTO_INCREMENT = 1");
+		jdbcTemplate.execute("ALTER TABLE clientes AUTO_INCREMENT = 1");
+		jdbcTemplate.execute("ALTER TABLE suministros AUTO_INCREMENT = 1");
         inicializarAsesorias();
         inicializarEmpleados();
         inicializarComercializadoras();
@@ -83,7 +92,9 @@ public class InicializarDatos implements CommandLineRunner {
     /**
      * Inicializa los empleados en la base de datos.
      */
+
     private void inicializarEmpleados() {
+
         if (empleadoRepository.count() == 0) {
             Set<Role> rolesAdmin = new HashSet<>();
             rolesAdmin.add(Role.ADMIN);

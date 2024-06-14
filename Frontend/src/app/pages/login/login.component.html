@@ -18,7 +18,6 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-block" (click)="login()">Iniciar Sesión</button>
                     </form>
-                    <p *ngIf="token" class="mt-3">Token generado: {{ token }}</p>
                     <br>
                     <p>No tienes cuenta? 
                         <a class="mt-1"     [routerLink]="['/register']" routerLinkActive="router-link-active" 
@@ -28,27 +27,4 @@
             </div>
         </div>
     </div>  
-    <!--
-    <mat-card>
-        <mat-card-header>
-          <mat-card-title>Iniciar Sesión</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <form [formGroup]="loginForm" (ngSubmit)="login()">
-            <mat-form-field>
-              <input matInput formControlName="username" placeholder="Usuario">
-              <mat-error *ngIf="loginForm.get('username').invalid && (loginForm.get('username').dirty || loginForm.get('username').touched)">
-                Usuario requerido
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field>
-              <input matInput formControlName="password" placeholder="Contraseña" type="password">
-              <mat-error *ngIf="loginForm.get('password').invalid && (loginForm.get('password').dirty || loginForm.get('password').touched)">
-                Contraseña requerida
-              </mat-error>
-            </mat-form-field>
-            <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
-          </form>
-        </mat-card-content>
-      </mat-card> -->
 </div>

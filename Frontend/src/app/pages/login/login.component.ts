@@ -11,15 +11,13 @@ import { RegisterComponent } from '../register/register.component';
   standalone: true,
   imports: [CommonModule, FormsModule, RegisterComponent, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
-  constructor(private authService: AuthService,  private router: Router) {} // Inyecta el servicio AuthService
   username: string;
   password: string;
-  token: string;
-  roles: string[] = [];
+
+  constructor(private authService: AuthService, private router: Router) {} // Inyecta el servicio AuthService
 
   login() {
     console.log("Intentando iniciar sesión con:", this.username, this.password);
@@ -28,7 +26,7 @@ export class LoginComponent {
         const token = response.token; // Extrae el token de la respuesta
         this.authService.saveToken(token); // Guarda el token en el localStorage usando el servicio AuthService
         swal('Inicio de sesión exitoso', 'Has iniciado sesión correctamente', 'success');
-        this.verDashboard(); // Redirige al usuario a la página adecuada
+        this.verDashboard(response.role); // Redirige al usuario a la página adecuada basada en el rol
       },
       error: (error: any) => {
         console.error('Error al iniciar sesión:', error);
@@ -37,11 +35,11 @@ export class LoginComponent {
     });
   }
 
-  verDashboard() {
-    if (this.authService.isAdmin()) {
-      this.router.navigate(['/empleados']);
-    } else {
-      this.router.navigate(['/clientes']); 
+  verDashboard(role: string) {
+    if (role === 'ADMIN') {
+      this.router.navigate(['/empleados']); // Redirige a la lista de empleados si el usuario es admin
+    } else if (role === 'USER') {
+      this.router.navigate([`/${this.authService.getEmpleadoId()}/suministros-clientes`]); // Redirige a la lista de clientes si el usuario es USER
     }
   }
 }

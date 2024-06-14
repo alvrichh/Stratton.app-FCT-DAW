@@ -12,31 +12,54 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/admin")
+@CrossOrigin(origins = "http://localhost:4200")
 public class AdminController {
 
+	//ESTA CLASE NO ES REALMENTE NECESARIA ESTÁ HECHA DE PRUEBA PARA EL CONTROL DEL ADMINISTRADOR
+	//PERO REALMENTE HACE LO MISMO QUE EMPLEADOCONTROLLER!!!!!!!!!1
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
-    // Endpoint para crear un nuevo empleado
+    /**
+     * Crea un nuevo empleado.
+     *
+     * @param empleado Los detalles del empleado a crear.
+     * @return El empleado creado.
+     */
     @PostMapping("/empleados")
     @PreAuthorize("hasAuthority('ADMIN')")
     public Empleado createEmployee(@RequestBody Empleado empleado) {
         return empleadoRepository.save(empleado);
     }
 
-    // Endpoint para obtener todos los empleados
+    /**
+     * Obtiene todos los empleados.
+     *
+     * @return Una lista de todos los empleados.
+     */
     @GetMapping("/empleados")
     public List<Empleado> getAllEmployees() {
         return empleadoRepository.findAll();
     }
 
-    // Endpoint para obtener un empleado por su ID
+    /**
+     * Obtiene un empleado por su ID.
+     *
+     * @param id El ID del empleado.
+     * @return El empleado correspondiente al ID, envuelto en un Optional.
+     */
     @GetMapping("/empleados/{id}")
     public Optional<Empleado> getEmployeeById(@PathVariable Long id) {
         return empleadoRepository.findById(id);
     }
 
-    // Endpoint para actualizar un empleado
+    /**
+     * Actualiza un empleado existente.
+     *
+     * @param id El ID del empleado a actualizar.
+     * @param updatedEmployee Los detalles actualizados del empleado.
+     * @return El empleado actualizado, o null si no se encontró.
+     */
     @PutMapping("/empleados/{id}")
     public Empleado updateEmployee(@PathVariable Long id, @RequestBody Empleado updatedEmployee) {
         return empleadoRepository.findById(id)
@@ -49,7 +72,11 @@ public class AdminController {
                 .orElse(null);
     }
 
-    // Endpoint para eliminar un empleado por su ID
+    /**
+     * Elimina un empleado por su ID.
+     *
+     * @param id El ID del empleado a eliminar.
+     */
     @DeleteMapping("/empleados/{id}")
     public void deleteEmployee(@PathVariable Long id) {
         empleadoRepository.deleteById(id);

@@ -6,6 +6,7 @@ import com.StrattonApp.Backend.DTO.SuministroDTO;
 import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.entities.Comercializadora;
 import com.StrattonApp.Backend.entities.Empleado;
+import com.StrattonApp.Backend.entities.Role;
 import com.StrattonApp.Backend.entities.Suministro;
 import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
 import com.StrattonApp.Backend.repository.ClienteRepository;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/empleados")
+@RequestMapping("/api/v2/empleados")
 @CrossOrigin(origins = "http://localhost:4200")
 public class EmpleadoController {
 
@@ -188,5 +189,27 @@ public class EmpleadoController {
         return ResponseEntity.ok(suministrosClientes);
     }
 
+	public SuministroRepository getSuministroRepository() {
+		return suministroRepository;
+	}
+
+	public void setSuministroRepository(SuministroRepository suministroRepository) {
+		this.suministroRepository = suministroRepository;
+	}
+
+	/*
+	public void handleEventBasedOnRole(Role role) {
+	    switch (role) {
+	        case ADMIN:
+	            // Lógica para manejar eventos para administradores
+	            break;
+	        case USER:
+	            // Lógica para manejar eventos para usuarios normales
+	            break;
+	        default:
+	            // Otros casos o manejo por defecto
+	            break;
+	    }*/
+	
 
 }

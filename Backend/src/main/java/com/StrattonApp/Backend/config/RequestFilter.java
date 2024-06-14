@@ -16,11 +16,23 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Filtro de solicitudes que se ejecuta una vez por solicitud y verifica la autenticación basada en token.
+ */
 @Component
 public class RequestFilter extends OncePerRequestFilter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Filtra las solicitudes para verificar y establecer la autenticación del usuario mediante un token.
+     *
+     * @param request     La solicitud HTTP.
+     * @param response    La respuesta HTTP.
+     * @param chain       Cadena de filtros.
+     * @throws ServletException Si ocurre un error durante el filtrado.
+     * @throws IOException      Si ocurre un error de entrada/salida.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {

@@ -60,19 +60,25 @@ public class SecurityConfig {
 				.exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint(authEntryPoint))
 				.authorizeHttpRequests(request -> {
 					request.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-							// API CRUD EMPLEADO
+							// API CRUD EMPLEADO !!!!!hasAutority aún no funciona correctamente.
+						//###################################################################
+					//###################################################################
+					//###################################################################
+					//###################################################################
+					//###################################################################
 							.requestMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAuthority("ADMIN")
-							.requestMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAuthority("ADMIN")
-							.requestMatchers(HttpMethod.PUT, "/api/v1/admin/**").hasAuthority("ADMIN")
-							.requestMatchers(HttpMethod.DELETE, "/api/v1/admin/**").hasAuthority("ADMIN")
+							.requestMatchers(HttpMethod.GET, "/api/v2/empleados/**").permitAll()
+							.requestMatchers(HttpMethod.POST, "/api/v2/empleados/**").permitAll()
+							.requestMatchers(HttpMethod.PUT, "/api/v2/empleados/**").hasAuthority("ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/api/v2/empleados/**").hasAuthority("ADMIN")
 
 							// API CRUD CLIENTE
-							.requestMatchers(HttpMethod.GET, "/strattonapp/**").permitAll()
-							.requestMatchers(HttpMethod.POST, "/strattonapp/cliente/**")
+							.requestMatchers(HttpMethod.GET, "/api/v2/clientes/**").permitAll()
+							.requestMatchers(HttpMethod.POST, "/api/v2/clientes/**")
 							.hasAnyAuthority("MANAGER", "ADMIN")
-							.requestMatchers(HttpMethod.PUT, "/strattonapp/cliente/**")
-							.hasAnyAuthority("MANAGER", "ROLE_ADMIN")
-							.requestMatchers(HttpMethod.DELETE, "/strattonapp/cliente/**")
+							.requestMatchers(HttpMethod.PUT, "/api/v2/clientes/**")
+							.hasAnyAuthority("MANAGER", "ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/api/v2/clientes/**")
 							.hasAnyAuthority("MANAGER", "ADMIN")
 
 							.anyRequest().permitAll();
@@ -81,21 +87,39 @@ public class SecurityConfig {
 		http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
-	   @Bean
-	    public PasswordEncoder passwordEncoder() {
-	        return new BCryptPasswordEncoder();
-	    }
-	    @Bean
-	    public AuthenticationProvider authenticationProvider() {
-	        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-	        authProvider.setUserDetailsService(userService.userDetailsService());
-	        authProvider.setPasswordEncoder(passwordEncoder());
-	        return authProvider;
-	    }
 
-	    @Bean
-	    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-	        return config.getAuthenticationManager();
-	    }
+	/**
+	 * Crea un bean de PasswordEncoder para codificar las contraseñas.
+	 *
+	 * @return Una instancia de BCryptPasswordEncoder.
+	 */
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
 
+	/**
+	 * Crea un bean de AuthenticationProvider para la autenticación de usuarios.
+	 *
+	 * @return Una instancia de DaoAuthenticationProvider configurada.
+	 */
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+	    authProvider.setUserDetailsService(userService.userDetailsService());
+	    authProvider.setPasswordEncoder(passwordEncoder());
+	    return authProvider;
+	}
+
+	/**
+	 * Crea un bean de AuthenticationManager para gestionar la autenticación.
+	 *
+	 * @param config Configuración de autenticación.
+	 * @return Una instancia de AuthenticationManager.
+	 * @throws Exception Si ocurre un error al configurar el AuthenticationManager.
+	 */
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+	    return config.getAuthenticationManager();
+	}
 }

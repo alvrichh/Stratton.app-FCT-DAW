@@ -25,10 +25,10 @@ import lombok.Builder;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private EmpleadoRepository userRepository; // Asegúrate de que UserRepository esté inyectado correctamente
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+    private EmpleadoRepository userRepository; // Repositorio para acceder a los datos de los empleados
+    private final PasswordEncoder passwordEncoder; // Codificador de contraseñas
+    private final JwtService jwtService; // Servicio para generación y validación de tokens JWT
+    private final AuthenticationManager authenticationManager; // Gestor de autenticación
 
     // Constructor para inyección de dependencias
     public AuthenticationServiceImpl(EmpleadoRepository userRepository,
@@ -50,18 +50,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     @Override
     public JwtAuthenticationResponse signup(SignUpRequest request) {
+        // Verifica si el correo electrónico ya está en uso
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already in use.");
         }
 
-        // Corrige la forma de construir el objeto 'User'
+        // Crea un nuevo objeto Empleado y guarda en la base de datos
         Empleado user = new Empleado();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.getRoles().add(Role.USER); // Asegúrate de que Role.USER esté definido correctamente
+        user.getRoles().add(Role.USER); // Asigna un rol por defecto al nuevo usuario
         userRepository.save(user);
 
+        // Genera un token JWT para el usuario registrado
         String jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }
@@ -70,34 +72,36 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * Inicia sesión de un usuario existente en el sistema.
      *
      * @param request Detalles de inicio de sesión del usuario.
-     * @return Respuesta de autenticación con el token JWT.
-     * @throws IllegalArgumentException Si el nombre de usuario o la contraseña son inválidos.
+     * @return Respuesta de autenticación con el token JWT y el rol del usuario.
+     * @throws GlobalException Si el nombre de usuario o la contraseña son inválidos.
      */
     @Override
     public JwtAuthenticationResponse signin(SigninRequest request) {
-       
-    	try {
+        try {
+            // Autentica al usuario utilizando el AuthenticationManager
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-   		 Authentication authentication = authenticationManager.authenticate(
+            // Obtiene el usuario autenticado desde la base de datos
+            Empleado user = userRepository.findByUsername(request.getUsername())
+                    .orElseThrow(() -> new GlobalException("Usuario no encontrado"));
 
-   	                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+            // Obtiene el rol del usuario autenticado
+            String role = user.getRoles().iterator().next().name();
 
-   	}catch(Exception e) {
+            // Genera un token JWT para el usuario autenticado
+            String jwt = jwtService.generateToken(user);
+            return JwtAuthenticationResponse.builder().token(jwt).role(role).build();
 
-   		 throw new GlobalException("Contraseña no válida para usuario: " + request.getUsername());
-
-   	}
-    	Empleado user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-        
-        // Obtener el rol del usuario
-        String role = user.getRoles().iterator().next().name();
-
-        String jwt = jwtService.generateToken(user);
-        return JwtAuthenticationResponse.builder().token(jwt).role(role).build();
+        } catch (Exception e) {
+            // Captura cualquier excepción de autenticación y la maneja como GlobalException
+            throw new GlobalException("Contraseña no válida para usuario: " + request.getUsername());
+        }
     }
 
-	public AuthenticationManager getAuthenticationManager() {
-		return authenticationManager;
-	}
+    // Getter para el AuthenticationManager (útil para configuración)
+    public AuthenticationManager getAuthenticationManager() {
+        return authenticationManager;
+    }
+    
 }

@@ -11,7 +11,7 @@ import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.service.ClienteService;
 
 @RestController
-@RequestMapping("/api/v1/clientes")
+@RequestMapping("/api/v2/clientes")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ClienteController {
 

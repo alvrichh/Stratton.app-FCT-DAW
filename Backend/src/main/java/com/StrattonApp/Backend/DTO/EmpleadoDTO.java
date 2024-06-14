@@ -3,6 +3,9 @@ package com.StrattonApp.Backend.DTO;
 import java.io.Serializable;
 import java.util.List;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 public class EmpleadoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;

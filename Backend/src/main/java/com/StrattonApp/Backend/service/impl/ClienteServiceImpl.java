@@ -66,7 +66,7 @@ public class ClienteServiceImpl implements ClienteService {
     // Método para convertir Cliente a ClienteDTO
     private ClienteDTO convertToDTO(Cliente cliente) {
         ClienteDTO clienteDTO = new ClienteDTO();
-        clienteDTO.setId(cliente.getIdCliente());
+        clienteDTO.setIdCliente(cliente.getIdCliente());
         clienteDTO.setCups(cliente.getCups());
         clienteDTO.setCompaniaContratada(cliente.getCompaniaContratada());
         clienteDTO.setNombre(cliente.getNombre());

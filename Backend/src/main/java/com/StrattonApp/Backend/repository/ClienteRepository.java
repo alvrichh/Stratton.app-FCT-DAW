@@ -19,13 +19,7 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     List<ClienteDTO> findByCups(@Param("cups") String cups);
 
 	List<Cliente> findByEmpleadoId(Long idEmpleado);
-	   // Método para convertir Cliente a ClienteDTO
-    private ClienteDTO convertToDTO(Cliente cliente) {
-        return new ClienteDTO(cliente.getIdCliente(), cliente.getCups(), cliente.getCompaniaContratada(),
-                cliente.getNombre(), cliente.getApellidos(), cliente.getDni(), cliente.getFechaSubidaContrato(), cliente.getEmail());
-    }
-    
-    
+	   
 	Long countByEmpleado(Empleado empleado);
 
 	List<Cliente> findByEmpleadoId(Empleado empleado);

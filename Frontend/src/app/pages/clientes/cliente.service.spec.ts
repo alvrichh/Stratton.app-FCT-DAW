@@ -12,7 +12,7 @@ export class ClienteService {
   constructor() { }
 
   registrarCliente(cliente: Cliente): Observable<Cliente> {
-    cliente.id = this.clientes.length + 1; // Generar un ID sencillo
+    cliente.idCliente = this.clientes.length + 1; // Generar un ID sencillo
     this.clientes.push(cliente);
     return of(cliente);
   }
@@ -22,12 +22,12 @@ export class ClienteService {
   }
 
   getClienteById(id: number): Observable<Cliente> {
-    const cliente = this.clientes.find(c => c.id === id);
+    const cliente = this.clientes.find(c => c.idCliente === id);
     return of(cliente!);
   }
 
   eliminarCliente(id: number): Observable<any> {
-    this.clientes = this.clientes.filter(cliente => cliente.id !== id);
+    this.clientes = this.clientes.filter(cliente => cliente.idCliente !== id);
     return of({ status: 'success' });
   }
 }

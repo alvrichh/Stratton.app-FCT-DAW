@@ -136,4 +136,27 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 empleado.getMainRole(), // getRoles().toString() SIEMPRE ME VA A COGER USER, NO ENTIENDO DONDE ESTÁ EL ERROR
                 clienteDTOs);
     }
+
+    @Override
+    public Cliente agregarClienteAEmpleado(Long id, ClienteDTO clienteDTO) {
+        // Paso 1: Obtener el empleado por su ID
+        Empleado empleado = empleadoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + id));
+
+        // Paso 2: Convertir ClienteDTO a Cliente
+        Cliente cliente = new Cliente();
+        cliente.setNombre(clienteDTO.getNombre());
+        cliente.setApellidos(clienteDTO.getApellidos());
+        cliente.setEmail(clienteDTO.getEmail());
+        cliente.setTelefono(clienteDTO.getTelefono());
+        cliente.setIban(cliente.getIban());
+        cliente.setComercializadora(cliente.getComercializadora());
+        cliente.setDni(cliente.getDni());
+        // Asignar el empleado al cliente
+        cliente.setEmpleado(empleado);
+
+        // Paso 3: Guardar el cliente
+        return clienteRepository.save(cliente);
+    }
+
 }

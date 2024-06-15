@@ -14,7 +14,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let cliente of clientes">
-        <td *ngIf="isAdmin">{{ cliente.empleado.nombre }}</td>
+        <td *ngIf="isAdmin">{{ cliente.nombre }}</td>
         <td>{{ cliente.nombre }} {{ cliente.apellidos }}</td>
         <td>{{ cliente.dni }}</td>
         <td>{{ cliente.email }}</td>

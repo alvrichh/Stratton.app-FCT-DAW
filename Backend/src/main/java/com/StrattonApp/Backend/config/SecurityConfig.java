@@ -69,8 +69,8 @@ public class SecurityConfig {
 							.requestMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAuthority("ADMIN")
 							.requestMatchers(HttpMethod.GET, "/api/v2/empleados/**").permitAll()
 							.requestMatchers(HttpMethod.POST, "/api/v2/empleados/**").permitAll()
-							.requestMatchers(HttpMethod.PUT, "/api/v2/empleados/**").hasAuthority("ADMIN")
-							.requestMatchers(HttpMethod.DELETE, "/api/v2/empleados/**").hasAuthority("ADMIN")
+							.requestMatchers(HttpMethod.PUT, "/api/v2/empleados/**").permitAll()
+							.requestMatchers(HttpMethod.DELETE, "/api/v2/empleados/**").permitAll()
 
 							// API CRUD CLIENTE
 							.requestMatchers(HttpMethod.GET, "/api/v2/clientes/**").permitAll()

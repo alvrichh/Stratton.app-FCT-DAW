@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -104,6 +105,7 @@ public class EmpleadoController {
         Empleado empleado = empleadoRepositorio.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + id));
 
+        // Actualizar los datos básicos del empleado
         empleado.setNombre(detallesEmpleado.getNombre());
         empleado.setApellidos(detallesEmpleado.getApellidos());
         empleado.setEmail(detallesEmpleado.getEmail());
@@ -111,9 +113,29 @@ public class EmpleadoController {
         empleado.setPassword(detallesEmpleado.getPassword());
         empleado.setRoles(detallesEmpleado.getRoles());
         empleado.setAsesoria(detallesEmpleado.getAsesoria());
-        empleado.setClientes(detallesEmpleado.getClientes());
 
+        // Obtener la lista actual de clientes asociados al empleado
+        Set<Cliente> clientesActuales = empleado.getClientes();
+
+        // Actualizar la lista de clientes asociados al empleado
+        Set<Cliente> nuevosClientes = detallesEmpleado.getClientes();
+        if (nuevosClientes != null) {
+            // Eliminar clientes que ya no están en la nueva lista
+            clientesActuales.removeIf(cliente -> !nuevosClientes.contains(cliente));
+
+            // Agregar nuevos clientes que no estaban en la lista original
+            for (Cliente cliente : nuevosClientes) {
+                if (!clientesActuales.contains(cliente)) {
+                    cliente.setEmpleado(empleado);
+                    clientesActuales.add(cliente);
+                }
+            }
+        }
+
+        // Guardar los cambios en la colección de clientes
+        empleado.setClientes(clientesActuales);
         Empleado empleadoActualizado = empleadoRepositorio.save(empleado);
+
         EmpleadoDTO empleadoDTO = empleadoService.convertToDTO(empleadoActualizado);
         return ResponseEntity.ok(empleadoDTO);
     }

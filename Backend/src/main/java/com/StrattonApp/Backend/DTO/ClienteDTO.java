@@ -16,6 +16,7 @@ public class ClienteDTO {
     private String apellidos;
     private String dni;
     private String email;
+    private Integer telefono;
 
     /**
      * Constructor vacío de ClienteDTO.
@@ -190,4 +191,12 @@ public class ClienteDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	public Integer getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(Integer telefono) {
+		this.telefono = telefono;
+	}
 }

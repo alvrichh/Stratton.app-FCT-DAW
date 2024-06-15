@@ -191,7 +191,13 @@ public class EmpleadoController {
 
         return ResponseEntity.ok(suministrosClientes);
     }
-
+    @PostMapping("/{id}/clientes")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Cliente> agregarClienteAEmpleado(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
+        logger.info("Endpoint: POST /empleados/{}/clientes", id);
+        Cliente clienteGuardado = empleadoService.agregarClienteAEmpleado(id, clienteDTO);
+        return ResponseEntity.ok(clienteGuardado);
+    }
     /**
      * Método getter para obtener el repositorio de suministros.
      *

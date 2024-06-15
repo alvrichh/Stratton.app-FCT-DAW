@@ -33,25 +33,26 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       const decodedToken = this.jwtHelper.decodeToken(token);
-      const roles = decodedToken.roles || [];
-      console.log('Roles del usuario:', roles);
-      return roles;
+      const role = decodedToken.role || [];
+      console.log('Rol del usuario:', role);
+      return role;
     }
     return [];
   }
 
-  getEmpleadoId(): number {
+ getEmpleadoId(): number {
     const token = this.getToken();
     if (token) {
       const decodedToken = this.jwtHelper.decodeToken(token);
-      const empleadoId = decodedToken.empleadoId;
-      console.log('ID del empleado:', empleadoId);
-      return empleadoId;
+      const empleadoId = decodedToken?.empleadoId;
+      if (empleadoId) {
+        console.log('ID del empleado:', empleadoId);
+        return empleadoId;
+      }
     }
-    console.log("error");
+    console.log("Error: no se pudo obtener el ID del empleado");
     return null;
   }
-
   isAdmin(): boolean {
     const roles = this.getUserRoles();
     console.log('Usuario es administrador:', roles.includes('ADMIN'));

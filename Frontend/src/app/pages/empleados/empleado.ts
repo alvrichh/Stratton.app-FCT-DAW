@@ -1,3 +1,5 @@
+import { Cliente } from "../clientes/cliente";
+
 export class Empleado {
     id:number;
     nombre:string;
@@ -7,5 +9,5 @@ export class Empleado {
     password:string;
     role: string[]; // Asumiendo que los roles se manejarán como una lista de strings
     asesoria: string;
-    clientes: [];
+    clientes: Cliente[]; // Ajustar a un array de Cliente
 }   

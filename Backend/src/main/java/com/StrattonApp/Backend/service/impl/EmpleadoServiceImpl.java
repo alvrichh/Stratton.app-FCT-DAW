@@ -133,7 +133,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 empleado.getApellidos(),
                 empleado.getEmail(),
                 empleado.getUsername(),
-                empleado.getMainRole(),
+                empleado.getMainRole(), // getRoles().toString() SIEMPRE ME VA A COGER USER, NO ENTIENDO DONDE ESTÁ EL ERROR
                 clienteDTOs);
     }
 }

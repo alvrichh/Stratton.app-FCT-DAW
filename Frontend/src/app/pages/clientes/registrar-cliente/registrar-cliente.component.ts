@@ -15,6 +15,7 @@ import { Cliente } from '../cliente';
 export class RegistrarClienteComponent implements OnInit {
 
   cliente: Cliente = new Cliente();
+  empleadoId: number = 1; // Asumiendo que ya tienes el ID del empleado
 
   constructor(private clienteService: ClienteService, private router: Router) { }
 
@@ -28,7 +29,7 @@ export class RegistrarClienteComponent implements OnInit {
   }
 
   guardarCliente(): void {
-    this.clienteService.registrarCliente(this.cliente).subscribe(data => {
+    this.clienteService.agregarClienteAEmpleado(this.empleadoId, this.cliente).subscribe(data => {
       console.log(data);
       this.verListaClientes();
     }, error => console.log(error));

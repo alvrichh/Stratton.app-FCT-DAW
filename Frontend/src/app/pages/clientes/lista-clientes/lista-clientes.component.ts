@@ -18,6 +18,7 @@ export class ListaClientesComponent implements OnInit {
   clientes: Cliente[] = [];
   empleadoId: number;
   isAdmin: boolean = false;
+  empleados: any;
 
   constructor(private clienteService: ClienteService, private router: Router, private authService: AuthService) { }
 

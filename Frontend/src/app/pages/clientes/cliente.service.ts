@@ -2,15 +2,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Cliente } from './cliente';
+import { Suministro } from './Suministro';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
 
-  private baseURL = "http://localhost:8080/api/v1/clientes";
+  private baseURL = "http://localhost:8080/api/v2/clientes";
+  private empleadoURL = "http://localhost:8080/api/v2/empleados";
 
   constructor(private httpClient: HttpClient) { }
+
+  agregarClienteAEmpleado(id: number, cliente: Cliente): Observable<Object> {
+    return this.httpClient.post(`${this.empleadoURL}/${id}/clientes`, cliente);
+  }
 
   obtenerListaDeClientes(): Observable<Cliente[]> {
     return this.httpClient.get<Cliente[]>(`${this.baseURL}`);
@@ -21,7 +27,7 @@ export class ClienteService {
   }
 
   obtenerClientePorId(id: number): Observable<Cliente> {
-    return this.httpClient.get<Cliente>(`${this.baseURL}/${id}`);
+    return this.httpClient.get<Cliente>(`${this.empleadoURL}/${id}`);
   }
 
   actualizarCliente(id: number, cliente: Cliente): Observable<Object> {
@@ -32,7 +38,12 @@ export class ClienteService {
     return this.httpClient.delete(`${this.baseURL}/${id}`);
   }
 
-  obtenerClientesPorEmpleado(empleadoId: number): Observable<Cliente[]> {
-    return this.httpClient.get<Cliente[]>(`${this.baseURL}/empleado/${empleadoId}`);
+  obtenerClientesPorEmpleado(id: number): Observable<Cliente[]> {
+    return this.httpClient.get<Cliente[]>(`${this.baseURL}/empleado/${id}`);
+  }
+
+  // Nuevo método para obtener suministros de los clientes de un empleado
+  obtenerSuministrosDeClientesPorEmpleado(id: number): Observable<Suministro[]> {
+    return this.httpClient.get<Suministro[]>(`${this.empleadoURL}/${id}/suministros-clientes`);
   }
 }

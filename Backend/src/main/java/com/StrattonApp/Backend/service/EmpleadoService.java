@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.StrattonApp.Backend.DTO.EmpleadoDTO;
 import com.StrattonApp.Backend.DTO.ClienteDTO;
+import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.entities.Empleado;
 
 /**
@@ -44,6 +45,8 @@ public interface EmpleadoService {
     ClienteDTO getClienteDetallesById(Long clienteId);
 
 	EmpleadoDTO convertToDTO(Empleado empleado);
+
+	Cliente agregarClienteAEmpleado(Long id, ClienteDTO clienteDTO);
 
 
 }

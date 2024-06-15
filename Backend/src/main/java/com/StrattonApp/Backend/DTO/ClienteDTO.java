@@ -3,6 +3,8 @@
  */
 package com.StrattonApp.Backend.DTO;
 
+import com.StrattonApp.Backend.entities.Comercializadora;
+
 /**
  * DTO (Data Transfer Object) que representa la entidad Cliente para transferencia de datos.
  */
@@ -37,7 +39,7 @@ public class ClienteDTO {
      * @param email               Correo electrónico del cliente
      */
     public ClienteDTO(Long idCliente, String cups, String companiaContratada, String fechaSubidaContrato, String nombre,
-                      String apellidos, String dni, String email) {
+                      String apellidos, String dni, String email, Integer telefono) {
         this.idCliente = idCliente;
         this.cups = cups;
         this.companiaContratada = companiaContratada;
@@ -46,9 +48,15 @@ public class ClienteDTO {
         this.apellidos = apellidos;
         this.dni = dni;
         this.email = email;
+        this.telefono=telefono;
     }
 
-    /**
+    public ClienteDTO(Long idCliente2, String cups2, Comercializadora comercializadora, String fechaSubidaContrato2,
+			String nombre2, String apellidos2, String dni2, String email2, Integer telefono2) {
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
      * Obtiene el ID del cliente.
      *
      * @return ID del cliente

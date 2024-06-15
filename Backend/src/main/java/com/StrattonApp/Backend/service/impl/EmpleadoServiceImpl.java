@@ -89,7 +89,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 cliente.getNombre(),
                 cliente.getApellidos(),
                 cliente.getDni(),
-                cliente.getEmail());
+                cliente.getEmail(),
+                cliente.getTelefono());
     }
 
     /**
@@ -111,7 +112,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getNombre(),
                                 cliente.getApellidos(),
                                 cliente.getDni(),
-                                cliente.getEmail());
+                                cliente.getEmail(),
+                                cliente.getTelefono());
                     } else {
                         // Manejo cuando la comercializadora es null
                         return new ClienteDTO(
@@ -122,7 +124,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getNombre(),
                                 cliente.getApellidos(),
                                 cliente.getDni(),
-                                cliente.getEmail());
+                                cliente.getEmail(),
+                                cliente.getTelefono());
                     }
                 })
                 .collect(Collectors.toList());

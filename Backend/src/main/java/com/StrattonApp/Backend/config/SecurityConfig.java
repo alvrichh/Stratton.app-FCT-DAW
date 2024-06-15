@@ -74,12 +74,11 @@ public class SecurityConfig {
 
 							// API CRUD CLIENTE
 							.requestMatchers(HttpMethod.GET, "/api/v2/clientes/**").permitAll()
-							.requestMatchers(HttpMethod.POST, "/api/v2/clientes/**")
-							.hasAnyAuthority("MANAGER", "ADMIN")
-							.requestMatchers(HttpMethod.PUT, "/api/v2/clientes/**")
-							.hasAnyAuthority("MANAGER", "ADMIN")
-							.requestMatchers(HttpMethod.DELETE, "/api/v2/clientes/**")
-							.hasAnyAuthority("MANAGER", "ADMIN")
+							.requestMatchers(HttpMethod.POST, "/api/v2/clientes/**").permitAll()
+							.requestMatchers(HttpMethod.PUT, "/api/v2/clientes/**").permitAll()
+							//.hasAnyAuthority("MANAGER", "ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/api/v2/clientes/**").permitAll()
+							//.hasAnyAuthority("MANAGER", "ADMIN")
 
 							.anyRequest().permitAll();
 				}).formLogin((form) -> form.permitAll()).logout((logout) -> logout.permitAll().logoutSuccessUrl("/"));

@@ -1,17 +1,24 @@
 .container {
-    max-width: 600px;
-  }
-  
-  .card {
-    margin-top: 20px;
-    background-color: #343F4B;
-  }
-  
-  .card-header h3 {
-    margin: 0;
-  }
-  
-  .card-body p {
-    margin: 10px 0;
-  }
-  
+  max-width: 600px;
+}
+
+.card {
+  margin-top: 20px;
+  background-color: #343F4B;
+  color: #fff; /* Para que el texto sea visible sobre el fondo oscuro */
+}
+
+.card-header h3 {
+  margin: 0;
+}
+
+.card-body p {
+  margin: 10px 0;
+}
+
+.card-img {
+  max-width: 150px; /* Tamaño fijo para la imagen */
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 50%; /* Hace que la imagen sea circular */
+}

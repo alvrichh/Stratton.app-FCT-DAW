@@ -1,17 +1,20 @@
 <div class="container mt-5">
-    <h2 class="mb-4">Detalles del Cliente</h2>
-    <div class="card">
-      <div class="card-header">
-        <h3>{{ cliente.nombre }} {{ cliente.apellidos }}</h3>
+  <h2 class="mb-4 text-center">Detalles del Cliente</h2>
+  <div class="card">
+    <div class="row no-gutters">
+      <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" class="card-img img-fluid rounded-circle" alt="Foto de perfil">
       </div>
-      <div class="card-body">
-        <p><strong>DNI:</strong> {{ cliente.dni }}</p>
-        <p><strong>Email:</strong> {{ cliente.email }}</p>
-        <p><strong>Comercializadora:</strong> {{ cliente.companiaContratada }}</p>
-        <p><strong>Fecha de Subida del Contrato:</strong> {{ cliente.fechaSubidaContrato }}</p>
-        <!-- Agrega otros campos necesarios -->
+      <div class="col-md-8">
+        <div class="card-body">
+          <h3 class="card-title">{{ cliente.nombre }} {{ cliente.apellidos }}</h3>
+          <p class="card-text"><strong>DNI:</strong> {{ cliente.dni }}</p>
+          <p class="card-text"><strong>Email:</strong> {{ cliente.email }}</p>
+          <p class="card-text"><strong>Comercializadora:</strong> {{ cliente.companiaContratada }}</p>
+          <p class="card-text"><strong>Fecha de Subida del Contrato:</strong> {{ cliente.fechaSubidaContrato }}</p>
+        </div>
       </div>
     </div>
-    <button class="btn btn-primary mt-3" (click)="regresar()">Regresar</button>
   </div>
-  
+  <button class="btn btn-primary mt-3" (click)="regresar()">Regresar</button>
+</div>

@@ -164,4 +164,10 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         return clienteRepository.save(cliente);
     }
 
+	@Override //este método no debería estar
+	public Cliente agregarClienteAEmpleado(Long id, Cliente cliente) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

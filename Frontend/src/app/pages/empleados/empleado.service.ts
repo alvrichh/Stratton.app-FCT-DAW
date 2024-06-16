@@ -42,4 +42,8 @@ export class EmpleadoService {
     return this.httpClient.get<any>(`${this.baseURL}/perfil`);
   }
 
+  getTotalClientesPorEmpleado(id: number): Observable<number> {
+    const url = `${this.baseURL}/${id}/total-clientes`;
+    return this.httpClient.get<number>(url);
+  }
 }

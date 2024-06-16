@@ -1,62 +1,81 @@
-<h3>Detalles del empleado</h3>
-<div>
-    <label><b>ID: </b> {{empleado.id}}</label>
-</div>
-<div>
-    <label><b>Nombre: </b> {{empleado.nombre}}</label>
-</div>
-<div>
-    <label><b>Apellido: </b> {{empleado.apellidos}}</label>
-</div>
-<div>
-    <label><b>Email: </b> {{empleado.email}}</label>
-</div>
-grafico:
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Detalles del Empleado</h2>
+    <div class="card">
+        <div class="row no-gutters">
+            <!-- Columna 1: Foto del empleado -->
+            <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
+                <img *ngIf="empleado.foto" [src]="empleado.foto" class="card-img img-fluid rounded-circle"
+                    alt="Foto de {{ empleado.nombre }}">
+                <div *ngIf="!empleado.foto" class="alert alert-info text-center">
+                    No hay foto disponible
+                </div>
+            </div>
+            
+            <!-- Columna 2: Detalles del empleado -->
+            <div class="col-md-4">
+                <div class="card-body">
+                    <h3 class="card-title">{{ empleado.nombre }} {{ empleado.apellidos }}</h3>
+                    <p class="card-text"><strong>ID:</strong> {{ empleado.id }}</p>
+                    <p class="card-text"><strong>Email:</strong> {{ empleado.email }}</p>
+                    <p class="card-text"><strong>Usuario:</strong> {{ empleado.username }}</p>
+                    <p class="card-text"><strong>Asesoria:</strong> Stratton Global {{ empleado.asesoria }}</p>
+                    <p class="card-text"><strong>Roles:</strong> {{ empleado.role }}</p>
+                </div>
+            </div>
+            
+            <!-- Columna 3: Estadísticas de suministros -->
+            <div class="col-md-4 mb-2 mt-2">
+                <div>
+                    <div class="bg-success text-white p-3 rounded">
+                        <h4 class="mb-0">Suministros Activos</h4>
+                        <h2>{{ totalClientes }}</h2>
+                    </div>
+                    <div class="bg-warning text-white p-3 rounded mt-2">
+                        <h4 class="mb-0">Suministros Pendientes</h4>
+                        <h2>{{ totalClientes }}</h2>
+                    </div>
+                    <div class="bg-danger text-white p-3 rounded mt-2">
+                        <h4 class="mb-0">Suministros K.O.</h4>
+                        <h2>{{ totalClientes }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <!-- Contenedor para el gráfico -->
-  <canvas id="grafico" width="400" height="400"></canvas>
+    <!-- Botones en la parte inferior -->
+    <div class="text-center mt-4">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#clientesModal">
+            Ver Clientes
+        </button>
+        <button class="btn btn-secondary ml-2" routerLink="/empleados">Regresar</button>
+    </div>
+</div>
 
-  <script>
-      // Obtener el contexto del lienzo (canvas)
-      var ctx = document.getElementById('grafico').getContext('2d');
-
-      // Datos aleatorios para los minutos en llamada, espera y pausa
-      var minutosLlamada = [25, 40, 30, 20, 45];
-      var minutosEspera = [15, 20, 35, 10, 25];
-      var minutosPausa = [10, 5, 15, 8, 12];
-      var nombresEmpleados = ['Empleado 1', 'Empleado 2', 'Empleado 3', 'Empleado 4', 'Empleado 5'];
-
-      // Crear el gráfico de barras
-      var chart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-              labels: nombresEmpleados,
-              datasets: [
-                  {
-                      label: 'Minutos en Llamada',
-                      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                      data: minutosLlamada
-                  },
-                  {
-                      label: 'Minutos en Espera',
-                      backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                      data: minutosEspera
-                  },
-                  {
-                      label: 'Minutos en Pausa',
-                      backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                      data: minutosPausa
-                  }
-              ]
-          },
-          options: {
-              scales: {
-                  yAxes: [{
-                      ticks: {
-                          beginAtZero: true
-                      }
-                  }]
-              }
-          }
-      });
-  </script>
+<!-- Modal para mostrar los clientes -->
+<div class="modal fade" id="clientesModal" tabindex="-1" role="dialog" aria-labelledby="clientesModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="clientesModalLabel">Clientes del Empleado {{ empleado.nombre }} {{
+                    empleado.apellidos }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Lista de clientes -->
+                <ul class="list-group">
+                    <li class="list-group-item">Cliente 1</li>
+                    <li class="list-group-item">Cliente 2</li>
+                    <li class="list-group-item">Cliente 3</li>
+                    <!-- Ajusta esta lista según los clientes del empleado -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

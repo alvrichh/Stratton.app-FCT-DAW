@@ -120,6 +120,48 @@ document.getElementById('toggleContrastButton').addEventListener('click', functi
       }
     }
   }
+   // Obtener el contexto del lienzo (canvas)
+   var ctx = document.getElementById('grafico').getContext('2d');
+  
+   // Datos aleatorios para los minutos en llamada, espera y pausa
+   var minutosLlamada = [25, 40, 30, 20, 45];
+   var minutosEspera = [15, 20, 35, 10, 25];
+   var minutosPausa = [10, 5, 15, 8, 12];
+   var nombresEmpleados = ['Empleado 1', 'Empleado 2', 'Empleado 3', 'Empleado 4', 'Empleado 5'];
+ 
+   // Crear el gráfico de barras
+   var chart = new Chart(ctx, {
+     type: 'bar',
+     data: {
+       labels: nombresEmpleados,
+       datasets: [
+         {
+           label: 'Minutos en Llamada',
+           backgroundColor: 'rgba(255, 99, 132, 0.5)',
+           data: minutosLlamada
+         },
+         {
+           label: 'Minutos en Espera',
+           backgroundColor: 'rgba(255, 206, 86, 0.5)',
+           data: minutosEspera
+         },
+         {
+           label: 'Minutos en Pausa',
+           backgroundColor: 'rgba(54, 162, 235, 0.5)',
+           data: minutosPausa
+         }
+       ]
+     },
+     options: {
+       scales: {
+         yAxes: [{
+           ticks: {
+             beginAtZero: true
+           }
+         }]
+       }
+     }
+   });
 
   /*
 

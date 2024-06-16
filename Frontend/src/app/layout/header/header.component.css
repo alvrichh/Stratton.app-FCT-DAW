@@ -1,12 +1,21 @@
 .header{
   background-color: #343F4B;
+  
 }
+
 .logo{
     width: 100px;
     margin-right: 10px;
 }
 .nav-link{
     cursor: pointer;
+}
+.navbar-nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  list-style-type: none;
+  margin: 0;
 }
 
   /*

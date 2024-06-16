@@ -18,6 +18,8 @@ export class RegistrarEmpleadoComponent implements OnInit{
   empleado: Empleado = new Empleado();
   username: any;
   rolesDisponibles: string[] = ["ADMIN", "USER"];  // Correcta definición del array de roles
+  empleadoForm: any;
+  confirmPassword: string;
   constructor(private empleadoServicio:EmpleadoService, private router:Router){}
 
   ngOnInit(): void {
@@ -36,4 +38,12 @@ export class RegistrarEmpleadoComponent implements OnInit{
   verListaEmpleados(){
     this.router.navigate(["/empleados"]);
   }
+  validatePasswordConfirmation() {
+    if (this.empleado.password !== this.confirmPassword) {
+      this.empleadoForm.controls['confirmPassword'].setErrors({ 'passwordMismatch': true });
+    } else {
+      this.empleadoForm.controls['confirmPassword'].setErrors(null);
+    }
+  }
+  
 }

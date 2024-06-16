@@ -1,13 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 footer {
-	background-color: #e3f7ff;
+	background-color: #343F4B;
 	color: #ffffff;
 	padding: 10px;
 	text-align: center;
 	z-index: 2;
 	width: 100%;
-	color: #222222;
 
 	.info {
 		display: flex;
@@ -49,6 +48,7 @@ footer {
 			flex-direction: column;
 			box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
 			transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+			color: #222222;
 
 
 			&:hover {

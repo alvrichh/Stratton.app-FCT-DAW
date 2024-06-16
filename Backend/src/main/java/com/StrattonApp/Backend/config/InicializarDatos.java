@@ -173,15 +173,15 @@ public class InicializarDatos implements CommandLineRunner {
      */
     private void inicializarComercializadoras() {
         if (comercializadoraRepository.count() == 0) {
-            iberdrola.setNombre("Iberdrola");
+            iberdrola.setCompaniaContratada("Iberdrola");
             iberdrola.setPlan("Plan Iberdrola");
             comercializadoraRepository.save(iberdrola);
 
-            naturgy.setNombre("Naturgy");
+            naturgy.setCompaniaContratada("Naturgy");
             naturgy.setPlan("Plan Naturgy");
             comercializadoraRepository.save(naturgy);
 
-            endesa.setNombre("Endesa");
+            endesa.setCompaniaContratada("Endesa");;
             endesa.setPlan("Plan Endesa");
             comercializadoraRepository.save(endesa);
         }

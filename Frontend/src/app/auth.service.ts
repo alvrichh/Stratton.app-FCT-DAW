@@ -63,4 +63,8 @@ export class AuthService {
     const token = this.getToken();
     return token != null && !this.jwtHelper.isTokenExpired(token);
   }
+  logout() {
+    localStorage.removeItem('token');
+    console.log('Sesión cerrada.');
+  }
 }

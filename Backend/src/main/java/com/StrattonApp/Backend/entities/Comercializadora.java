@@ -15,7 +15,7 @@ public class Comercializadora {
     private Long idComercializadora;
 
     @NotBlank(message = "El nombre de la comercializadora no puede estar vacío.")
-    private String nombre;
+    private String companiaContratada;
 
     private String plan;
 
@@ -46,18 +46,18 @@ public class Comercializadora {
      *
      * @return Nombre de la comercializadora
      */
-    public String getNombre() {
-        return nombre;
-    }
-
+ 
+    public String getCompaniaContratada() {
+  		return companiaContratada;
+  	}
     /**
      * Establece el nombre de la comercializadora.
      *
      * @param nombre Nombre de la comercializadora a establecer
      */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public void setCompaniaContratada(String companiaContratada) {
+		this.companiaContratada = companiaContratada;
+	}
 
     /**
      * Obtiene el plan ofrecido por la comercializadora.
@@ -68,7 +68,10 @@ public class Comercializadora {
         return plan;
     }
 
-    /**
+  
+
+
+	/**
      * Establece el plan ofrecido por la comercializadora.
      *
      * @param plan Plan ofrecido por la comercializadora a establecer

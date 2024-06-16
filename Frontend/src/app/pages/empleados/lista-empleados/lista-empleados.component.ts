@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { EmpleadoService } from '../empleado.service';
 import { Router } from '@angular/router';
 import swal from 'sweetalert2';
+import { AuthService } from '../../../auth.service';
 
 @Component({
   selector: 'app-lista-empleados',
@@ -14,20 +15,26 @@ import swal from 'sweetalert2';
 })
 export class ListaEmpleadosComponent implements OnInit{
 
-  empleados:Empleado[];
+  empleados: Empleado[];
   empleado: any;
 
-  constructor(private empleadoServicio:EmpleadoService, private router:Router){}
+  constructor(
+    private empleadoServicio: EmpleadoService,
+    private router: Router,
+    public authService: AuthService // Inyecta el servicio de autenticación
+  ) {}
+
   ngOnInit(): void {
-    this.obtenerEmpleados();    
+    if (this.authService.isLoggedIn()) {
+      this.obtenerEmpleados();
+    }
   }
 
-  actualizarEmpleado(id:number){
+  actualizarEmpleado(id: number) {
     this.router.navigate(['actualizar-empleado', id]);
   }
 
-
-  eliminarEmpleado(id:number){
+  eliminarEmpleado(id: number) {
     swal({
       title: '¿Estas seguro?',
       text: "Confirma si deseas eliminar al empleado",
@@ -41,7 +48,7 @@ export class ListaEmpleadosComponent implements OnInit{
       cancelButtonClass: 'btn btn-danger',
       buttonsStyling: true
     }).then((result) => {
-      if(result.value){
+      if (result.value) {
         this.empleadoServicio.eliminarEmpleado(id).subscribe(dato => {
           console.log(dato);
           this.obtenerEmpleados();
@@ -49,25 +56,19 @@ export class ListaEmpleadosComponent implements OnInit{
             'Empleado eliminado',
             'El empleado ha sido eliminado con exito',
             'success'
-          )
-        })
+          );
+        });
       }
-    })
-  }
-
-
-  verEmpleado(id:number){
-    this.router.navigate(['detalles-empleado', id]);
-
-  }
-
-  private obtenerEmpleados(){
-    this.empleadoServicio.obtenerListaDeEmpleados().subscribe(dato =>{
-      this.empleados = dato;
-      
     });
-    
+  }
 
+  verEmpleado(id: number) {
+    this.router.navigate(['detalles-empleado', id]);
+  }
 
-}
+  private obtenerEmpleados() {
+    this.empleadoServicio.obtenerListaDeEmpleados().subscribe(dato => {
+      this.empleados = dato;
+    });
+  }
 }

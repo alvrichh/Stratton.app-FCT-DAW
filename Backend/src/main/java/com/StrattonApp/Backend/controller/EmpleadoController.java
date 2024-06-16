@@ -208,7 +208,7 @@ public class EmpleadoController {
         List<Cliente> clientes = clienteRepository.findByEmpleadoId(id);
         List<SuministroDTO> suministrosClientes = clientes.stream()
                 .flatMap(cliente -> cliente.getSuministros().stream())
-                .map(suministro -> new SuministroDTO(suministro.getCups(), suministro.getDireccion(), suministro.getComercializadora().getNombre(), suministro.getEstado(), null))
+                .map(suministro -> new SuministroDTO(suministro.getCups(), suministro.getDireccion(), suministro.getComercializadora().getCompaniaContratada(), suministro.getEstado(), null))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(suministrosClientes);

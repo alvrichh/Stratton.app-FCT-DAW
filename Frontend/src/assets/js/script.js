@@ -1,5 +1,4 @@
 console.clear();
-
 /* selector functions */
 const $ = (s, o = document) => o.querySelector(s);
 const $$ = (s, o = document) => o.querySelectorAll(s);

@@ -3,6 +3,7 @@
  */
 package com.StrattonApp.Backend.DTO;
 
+import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.entities.Comercializadora;
 
 /**
@@ -98,9 +99,13 @@ public class ClienteDTO {
      * @return Compañía contratada por el cliente
      */
     public String getCompaniaContratada() {
-        return companiaContratada;
+        Cliente cliente = new Cliente();
+		if (cliente != null && cliente.getComercializadora() != null) {
+            return cliente.getComercializadora().getCompaniaContratada();
+        } else {
+            return "No especificado";
+        }
     }
-
     /**
      * Establece la compañía contratada por el cliente.
      *

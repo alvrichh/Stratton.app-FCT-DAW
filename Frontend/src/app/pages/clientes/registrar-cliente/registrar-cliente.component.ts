@@ -16,6 +16,7 @@ export class RegistrarClienteComponent implements OnInit {
 
   cliente: Cliente = new Cliente();
   empleadoId: number = 1; // Asumiendo que ya tienes el ID del empleado
+clienteForm: any;
 
   constructor(private clienteService: ClienteService, private router: Router) { }
 
@@ -37,5 +38,10 @@ export class RegistrarClienteComponent implements OnInit {
 
   verListaClientes(): void {
     this.router.navigate(['/clientes']);
+  }
+  selectComercializadora(): void {
+    // Aquí puedes agregar lógica adicional si es necesario
+    console.log('Comercializadora seleccionada:', this.cliente.companiaContratada);
+    // Por ejemplo, podrías realizar acciones específicas según la comercializadora seleccionada
   }
 }

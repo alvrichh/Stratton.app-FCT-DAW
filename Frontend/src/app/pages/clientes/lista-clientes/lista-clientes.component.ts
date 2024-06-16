@@ -11,21 +11,23 @@ import { AuthService } from '../../../auth.service';
   standalone: true,
   imports: [CommonModule], // No necesitas importar Empleado aquí
   templateUrl: './lista-clientes.component.html',
-  styleUrls: ['./lista-clientes.component.css']
+  styleUrl: './lista-clientes.component.css'
 })
 export class ListaClientesComponent implements OnInit {
 
-  clientes: Cliente[] = [];
+  clientes: Cliente[];
   empleadoId: number;
   isAdmin: boolean = false;
   empleados: any;
 
-  constructor(private clienteService: ClienteService, private router: Router, private authService: AuthService) { }
+  constructor(private clienteService: ClienteService, private router: Router, public authService: AuthService) { }
 
   ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
     this.empleadoId = this.authService.getEmpleadoId(); // Obtén el ID del empleado logueado
     this.isAdmin = this.authService.isAdmin(); // Verifica si el usuario es administrador
     this.obtenerClientes();
+    }
   }
 
   private obtenerClientes() {
@@ -41,7 +43,7 @@ export class ListaClientesComponent implements OnInit {
   }
 
   verCliente(id: number) {
-    this.router.navigate(['ver-cliente', id]);
+    this.router.navigate(['detalles-cliente', id]);
   }
 
   actualizarCliente(id: number) {

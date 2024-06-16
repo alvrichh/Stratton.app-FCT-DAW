@@ -1,25 +1,33 @@
-<!-- header.component.html -->
 <header class="header sticky-top">
-  <img src="assets/images/arsyncbw.png" alt="Logo" class="logo">
-  <nav class="nav">
-    <a href="#" class="nav-link active">Contratos</a>
-  </nav>
-  <div *ngIf="authService.isLoggedIn(); else loginLink" class="profile">
-    <div class="profile-image"></div>
-    <div>álvaro rodríguez molina</div>
-    <button class="btn btn-primary navbar-toggler" id="linedrch" type="button" data-bs-toggle="collapse"
-      data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
-      aria-label="Alternar navegación">
-      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-list"
-        viewBox="0 0 16 16">
-        <path fill-rule="evenodd"
-          d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-      </svg>
-    </button>
-  </div>
-  <ng-template #loginLink>
-    <a routerLink="login" routerLinkActive="active" class="nav-link">Iniciar Sesión</a>
-  </ng-template>
-  <a routerLink="dashboard" routerLinkActive="active" class="nav-link">dashboard</a>
+  <nav class="navbar navbar-expand-sm navbar-dark">
+    <img src="assets/images/StrattonAPPlogo2.png" alt="Logo" class="logo">
 
+    <ul *ngIf="authService.isAdmin()" class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a routerLink="empleados" routerLinkActive="active" class="nav-link">Empleados</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="clientes" routerLinkActive="active" class="nav-link">Clientes</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="registrar-empleado" routerLinkActive="active" class="nav-link">Nuevo Empleado</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/registrar-cliente" routerLinkActive="active" class="nav-link">Nuevo Cliente</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a routerLink="feedback" routerLinkActive="active" class="nav-link">Califica la web</a>
+      </li>
+      <li *ngIf="authService.isLoggedIn() else loginLink" class="nav-item">
+        <a (click)="logout()" class="logout-btn nav-link">Cerrar Sesión</a>
+        </li>
+      <ng-template #loginLink>
+        <li class="nav-item">
+          <a routerLink="login" routerLinkActive="active" class="nav-link">Iniciar Sesión</a>
+        </li>
+      </ng-template>
+    </ul>
+  </nav>
 </header>

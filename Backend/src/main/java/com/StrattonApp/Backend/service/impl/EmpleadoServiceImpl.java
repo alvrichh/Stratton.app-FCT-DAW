@@ -107,7 +107,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                         return new ClienteDTO(
                                 cliente.getIdCliente(),
                                 cliente.getCups(),
-                                cliente.getComercializadora().getNombre(),
+                                cliente.getComercializadora().getCompaniaContratada(),
                                 cliente.getFechaSubidaContrato(),
                                 cliente.getNombre(),
                                 cliente.getApellidos(),

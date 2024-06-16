@@ -5,6 +5,8 @@ import swal from 'sweetalert2';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { RegisterComponent } from '../register/register.component';
+import { Empleado } from '../empleados/empleado';
+import { EmpleadoService } from '../empleados/empleado.service';
 
 @Component({
   selector: 'app-signin',
@@ -39,7 +41,7 @@ export class LoginComponent {
     if (role === 'ADMIN') {
       this.router.navigate(['/empleados']); // Redirige a la lista de empleados si el usuario es admin
     } else if (role === 'USER') {
-      this.router.navigate([`/${this.authService.getEmpleadoId()}/suministros-clientes`]); // Redirige a la lista de clientes si el usuario es USER
+      this.router.navigate([`/clientes`]); // Redirige a la lista de clientes si el usuario es USER
     }
   }
 }

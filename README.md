@@ -59,6 +59,78 @@ print(ubicacion)
 - RN-5: Los clientes asignados a empleados deben tener un código válido.✔
 - RN-6: La asignación de clientes a empleados debe ser coherente.✔
 - RN-7: Los números de cuenta bancaria (CCC) deben tener un formato válido.✔
+### Casos de Uso detallados para Gestión de Empleados:
+
+**Ver Detalles Empleado:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de ver sus propios detalles.
+  3. Visualiza la información personal.
+
+**Ver Detalles de Otro Empleado:**
+- **Actores**: Administrador
+- **Flujo principal**:
+  1. El administrador inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un empleado.
+  3. Visualiza los detalles del empleado seleccionado.
+
+**Crear Empleado:**
+- **Actores**: Administrador
+- **Flujo principal**:
+  1. El administrador inicia sesión en el sistema.
+  2. Accede a la opción de agregar un nuevo empleado.
+  3. Ingresa los datos del nuevo empleado (nombre, apellidos, email, rol, etc.).
+  4. Guarda la información del nuevo empleado en el sistema.
+
+**Actualizar Empleado:**
+- **Actores**: Administrador
+- **Flujo principal**:
+  1. El administrador inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un empleado para actualizar.
+  3. Modifica los datos del empleado (nombre, apellidos, email, rol, etc.).
+  4. Guarda los cambios realizados en la información del empleado.
+
+**Eliminar Empleado:**
+- **Actores**: Administrador
+- **Flujo principal**:
+  1. El administrador inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un empleado para eliminar.
+  3. Confirma la eliminación del empleado seleccionado.
+  4. El empleado seleccionado es eliminado del sistema junto con todos sus datos asociados.
+
+### Casos de Uso detallados para Gestión de Clientes por Empleados:
+
+**Ver Detalles Cliente:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de ver detalles de clientes.
+  3. Selecciona un cliente para ver sus detalles almacenados en el sistema.
+
+**Agregar Cliente:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de agregar un nuevo cliente.
+  3. Ingresa los datos del nuevo cliente (nombre, apellidos, email, teléfono, etc.).
+  4. Guarda la información del nuevo cliente en el sistema.
+
+**Actualizar Cliente:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un cliente para actualizar.
+  3. Modifica los datos del cliente (nombre, apellidos, email, teléfono, etc.).
+  4. Guarda los cambios realizados en la información del cliente.
+
+**Eliminar Cliente:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un cliente para eliminar.
+  3. Confirma la eliminación del cliente seleccionado.
+  4. El cliente seleccionado es eliminado del sistema junto con todos sus datos asociados.
 
 ## Dependencias Springboot:
 - Spring Boot Starter Web:

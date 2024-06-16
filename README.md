@@ -24,6 +24,15 @@ La principal motivación del proyecto es poder gestionar mis propios clientes o 
 ## ARQUITECTURA
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/5ef284ac-e66f-4159-acb7-bc72c404f6b5)
 
+
+| Entidad   | Atributos                                      |
+|-----------|------------------------------------------------|
+| Empleado   | id, nombre, Correo, Contraseña, RolID  |
+| Cliente  | ClaseID, UsuarioID |
+| Suministro     | ClaseID, Nombre, Descripcion |
+| Asesoria     | TareaID, Titulo, Descripcion, Fecha_Entrega, Nota, ClaseID, UsuarioID |
+
+
 ## Casos de uso
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/751bfc3b-9e41-4d14-8f70-0cd2828b5ae1)
 
@@ -157,6 +166,68 @@ Simplifica la configuración para conectarse con servicios de autenticación ext
 Proporciona herramientas para reiniciar automáticamente la aplicación durante el desarrollo.
 Facilita la recarga en caliente de cambios en el código.
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/d7f7e791-db1d-44a3-9f43-d87c1953a5a3)
+
+# Entidades y sus Atributos
+
+## Empleado
+| Atributo       | Tipo           | Descripción                              |
+|----------------|----------------|------------------------------------------|
+| idEmpleado     | Long           | Identificador único del empleado         |
+| nombre         | String         | Nombre del empleado                      |
+| apellidos      | String         | Apellidos del empleado                   |
+| dni            | String         | Documento Nacional de Identidad          |
+| email          | String         | Correo electrónico del empleado          |
+| telefono       | String         | Número de teléfono del empleado          |
+| fechaContratacion | Date        | Fecha de contratación                    |
+| rol            | String         | Rol del empleado en la empresa           |
+| mainRole       | String         | Rol principal del empleado               |
+
+## Cliente
+| Atributo               | Tipo           | Descripción                              |
+|------------------------|----------------|------------------------------------------|
+| idCliente              | Long           | Identificador único del cliente          |
+| nombre                 | String         | Nombre del cliente                       |
+| apellidos              | String         | Apellidos del cliente                    |
+| dni                    | String         | Documento Nacional de Identidad          |
+| email                  | String         | Correo electrónico del cliente           |
+| telefono               | String         | Número de teléfono del cliente           |
+| fechaSubidaContrato    | Date           | Fecha de subida del contrato             |
+| cups                   | String         | Código Universal de Punto de Suministro  |
+| companiaContratada     | String         | Compañía contratada por el cliente       |
+| empleado               | Empleado       | Empleado asociado al cliente             |
+
+## Suministro
+| Atributo               | Tipo           | Descripción                              |
+|------------------------|----------------|------------------------------------------|
+| cups                   | String         | Código Universal de Punto de Suministro  |
+| estado                 | Estado         | Estado del suministro                    |
+| direccion              | String         | Dirección del suministro                 |
+| mensaje                | String         | Mensaje asociado al suministro           |
+| potencia               | Double         | Potencia del suministro                  |
+| cliente                | Cliente        | Cliente asociado al suministro           |
+| comercializadora       | Comercializadora | Comercializadora asociada al suministro  |
+
+## Comercializadora
+| Atributo               | Tipo           | Descripción                              |
+|------------------------|----------------|------------------------------------------|
+| idComercializadora     | Long           | Identificador único de la comercializadora |
+| nombre                 | String         | Nombre de la comercializadora            |
+| direccion              | String         | Dirección de la comercializadora         |
+| telefono               | String         | Número de teléfono de la comercializadora |
+| email                  | String         | Correo electrónico de la comercializadora |
+| web                    | String         | Sitio web de la comercializadora         |
+
+## Asesoria
+| Atributo               | Tipo           | Descripción                              |
+|------------------------|----------------|------------------------------------------|
+| idAsesoria             | Long           | Identificador único de la asesoría       |
+| descripcion            | String         | Descripción de la asesoría               |
+| fecha                  | Date           | Fecha de la asesoría                     |
+| cliente                | Cliente        | Cliente asociado a la asesoría           |
+| empleado               | Empleado       | Empleado que brinda la asesoría          |
+| suministro             | Suministro     | Suministro asociado a la asesoría        |
+
+
 ## @TODO
 - Separación de Responsabilidades:
     * Angular se encargará de la interfaz de usuario (UI) y la interacción con el usuario.

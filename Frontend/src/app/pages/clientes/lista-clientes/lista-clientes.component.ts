@@ -1,44 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { ClienteService } from '../cliente.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Cliente } from '../cliente'; // Importa la clase Cliente
 import { CommonModule } from '@angular/common';
 import swal from 'sweetalert2';
 import { AuthService } from '../../../auth.service';
+import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-lista-clientes',
   standalone: true,
-  imports: [CommonModule], // No necesitas importar Empleado aquí
+  imports: [CommonModule, RouterLink, FormsModule], // No necesitas importar Empleado aquí
   templateUrl: './lista-clientes.component.html',
-  styleUrl: './lista-clientes.component.css'
+  styleUrl: './lista-clientes.component.css',
 })
 export class ListaClientesComponent implements OnInit {
-
   clientes: Cliente[];
   empleadoId: number;
+  filteredClientes: Cliente[] = [];
   isAdmin: boolean = false;
+  searchText: string = '';
   empleados: any;
 
-  constructor(private clienteService: ClienteService, private router: Router, public authService: AuthService) { }
+  constructor(
+    private clienteService: ClienteService,
+    private router: Router,
+    public authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-    this.empleadoId = this.authService.getEmpleadoId(); // Obtén el ID del empleado logueado
-    this.isAdmin = this.authService.isAdmin(); // Verifica si el usuario es administrador
-    this.obtenerClientes();
+      this.empleadoId = this.authService.getEmpleadoId(); // Obtén el ID del empleado logueado
+      this.isAdmin = this.authService.isAdmin(); // Verifica si el usuario es administrador
+      this.obtenerClientes();
+      this.filteredClientes = [...this.clientes];
     }
   }
 
   private obtenerClientes() {
     if (this.isAdmin) {
-      this.clienteService.obtenerListaDeClientes().subscribe(data => {
+      this.clienteService.obtenerListaDeClientes().subscribe((data) => {
         this.clientes = data;
       });
     } else {
-      this.clienteService.obtenerClientesPorEmpleado(this.empleadoId).subscribe(data => {
-        this.clientes = data;
-      });
+      this.clienteService
+        .obtenerClientesPorEmpleado(this.empleadoId)
+        .subscribe((data) => {
+          this.clientes = data;
+        });
     }
   }
 
@@ -49,11 +58,11 @@ export class ListaClientesComponent implements OnInit {
   actualizarCliente(id: number) {
     this.router.navigate(['actualizar-cliente', id]);
   }
-  
-  eliminarCliente(id:number){
+
+  eliminarCliente(id: number) {
     swal({
       title: '¿Estas seguro?',
-      text: "Confirma si deseas eliminar al cliente",
+      text: 'Confirma si deseas eliminar al cliente',
       type: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -62,19 +71,39 @@ export class ListaClientesComponent implements OnInit {
       cancelButtonText: 'No, cancelar',
       confirmButtonClass: 'btn btn-success',
       cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: true
+      buttonsStyling: true,
     }).then((result) => {
-      if(result.value){
-        this.clienteService.eliminarCliente(id).subscribe(dato => {
+      if (result.value) {
+        this.clienteService.eliminarCliente(id).subscribe((dato) => {
           console.log(dato);
           this.obtenerClientes();
           swal(
             'Cliente eliminado',
             'El Cliente ha sido eliminado con exito',
             'success'
-          )
-        })
+          );
+        });
       }
-    })
+    });
+  }
+  /*
+  FILTRO DE BÚSQUEDA (NO FUNCIONA)
+  */
+    applyFilter(): void {
+      const searchText = this.searchText.toLowerCase().trim();
+      if (searchText) {
+        this.filteredClientes = this.clientes.filter(
+          (cliente) =>
+            cliente.nombre.toLowerCase().includes(searchText) ||
+            cliente.apellidos.toLowerCase().includes(searchText) ||
+            cliente.dni.toLowerCase().includes(searchText) ||
+            cliente.email.toLowerCase().includes(searchText) ||
+            cliente.companiaContratada.toLowerCase().includes(searchText) ||
+            cliente.fechaSubidaContrato.toLowerCase().includes(searchText)
+        );
+      } else {
+        this.filteredClientes = [...this.clientes]; // Mostrar todos los clientes si no hay texto de búsqueda
+      }
+    ;
   }
 }

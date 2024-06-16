@@ -23,11 +23,11 @@ export class ClienteService {
   }
 
   registrarCliente(cliente: Cliente): Observable<Object> {
-    return this.httpClient.post(`${this.baseURL}`, cliente);
+    return this.httpClient.post(`${this.empleadoURL}`, cliente);
   }
 
   obtenerClientePorId(id: number): Observable<Cliente> {
-    return this.httpClient.get<Cliente>(`${this.empleadoURL}/${id}`);
+    return this.httpClient.get<Cliente>(`${this.baseURL}/${id}`);
   }
 
   actualizarCliente(id: number, cliente: Cliente): Observable<Object> {

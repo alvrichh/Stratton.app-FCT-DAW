@@ -46,6 +46,8 @@ public interface EmpleadoService {
 
 	EmpleadoDTO convertToDTO(Empleado empleado);
 
+	Cliente agregarClienteAEmpleado(Long id, Cliente cliente);
+
 	Cliente agregarClienteAEmpleado(Long id, ClienteDTO clienteDTO);
 
 

@@ -113,7 +113,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getApellidos(),
                                 cliente.getDni(),
                                 cliente.getEmail(),
-                                cliente.getTelefono());
+                                cliente.getTelefono(),
+                        		cliente.getDireccion());
                     } else {
                         // Manejo cuando la comercializadora es null
                         return new ClienteDTO(
@@ -125,7 +126,9 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getApellidos(),
                                 cliente.getDni(),
                                 cliente.getEmail(),
-                                cliente.getTelefono());
+                                cliente.getTelefono(),
+                        		cliente.getDireccion());
+
                     }
                 })
                 .collect(Collectors.toList());
@@ -155,9 +158,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         cliente.setIban(cliente.getIban());
         cliente.setComercializadora(cliente.getComercializadora());
         cliente.setDni(cliente.getDni());
-        // Asignar el empleado al cliente
         cliente.setEmpleado(empleado);
-
+        cliente.setDireccion(cliente.getDireccion());
         // Paso 3: Guardar el cliente
         return clienteRepository.save(cliente);
     }

@@ -86,6 +86,40 @@ document.getElementById('toggleContrastButton').addEventListener('click', functi
   function cerrarVideo() {
     containerVideo.style.display = "none";
   }
+  
+  function toggleSearch() {
+    var icon = document.querySelector('.search-icon');
+    var input = document.getElementById('searchInput');
+    var filter = input.value.toUpperCase();
+    var table = document.getElementById('tableBody');
+    var rows = table.getElementsByTagName('tr');
+
+    icon.classList.add('small');
+    setTimeout(function() {
+      icon.innerHTML = '🔎';
+    }, 200);
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (var i = 0; i < rows.length; i++) {
+      var cells = rows[i].getElementsByTagName('td');
+      var found = false;
+      for (var j = 0; j < cells.length; j++) {
+        var cell = cells[j];
+        if (cell) {
+          var txtValue = cell.textContent || cell.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            found = true;
+            break;
+          }
+        }
+      }
+      if (found) {
+        rows[i].style.display = '';
+      } else {
+        rows[i].style.display = 'none';
+      }
+    }
+  }
 
   /*
 

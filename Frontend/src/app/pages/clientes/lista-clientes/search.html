@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Botón de Búsqueda</title>
+  <style>
+    .search-button {
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      position: relative;
+      padding: 10px;
+    }
+
+    .search-icon {
+      font-size: 20px;
+      transition: font-size 0.2s ease-out;
+    }
+
+    .search-icon.small {
+      font-size: 14px;
+    }
+
+    .search-input {
+      padding: 8px;
+      margin-left: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .table th, .table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <input type="text" class="search-input" id="searchInput" oninput="toggleSearch()" placeholder="Buscar...">
+    <button class="search-button">
+      <span class="search-icon">🔍</span>
+    </button>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>DNI</th>
+        <th>Email</th>
+        <th>Comercializadora</th>
+        <th>Fecha Subida Contrato</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <tr>
+        <td>Juan Pérez</td>
+        <td>12345678A</td>
+        <td>juan@example.com</td>
+        <td>Iberdrola</td>
+        <td>01/01/2023</td>
+      </tr>
+      <tr>
+        <td>María López</td>
+        <td>87654321B</td>
+        <td>maria@example.com</td>
+        <td>Endesa</td>
+        <td>15/02/2023</td>
+      </tr>
+      <tr>
+        <td>Pedro García</td>
+        <td>54321678C</td>
+        <td>pedro@example.com</td>
+        <td>Naturgy</td>
+        <td>10/03/2023</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    function toggleSearch() {
+      var icon = document.querySelector('.search-icon');
+      var input = document.getElementById('searchInput');
+      var filter = input.value.toUpperCase();
+      var table = document.getElementById('tableBody');
+      var rows = table.getElementsByTagName('tr');
+
+      icon.classList.add('small');
+      setTimeout(function() {
+        icon.innerHTML = '🔎';
+      }, 200);
+
+      // Loop through all table rows, and hide those who don't match the search query
+      for (var i = 0; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName('td');
+        var found = false;
+        for (var j = 0; j < cells.length; j++) {
+          var cell = cells[j];
+          if (cell) {
+            var txtValue = cell.textContent || cell.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              found = true;
+              break;
+            }
+          }
+        }
+        if (found) {
+          rows[i].style.display = '';
+        } else {
+          rows[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+</body>
+</html>

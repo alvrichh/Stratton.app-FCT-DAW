@@ -13,6 +13,7 @@ import com.StrattonApp.Backend.service.EmpleadoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -213,13 +214,30 @@ public class EmpleadoController {
 
         return ResponseEntity.ok(suministrosClientes);
     }
-    @PostMapping("/{id}/clientes")
+    /*
+     *   @PostMapping("/{id}/clientes")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Cliente> agregarClienteAEmpleado(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
         logger.info("Endpoint: POST /empleados/{}/clientes", id);
         Cliente clienteGuardado = empleadoService.agregarClienteAEmpleado(id, clienteDTO);
         return ResponseEntity.ok(clienteGuardado);
     }
+     
+  
+    */
+    @PostMapping("/{id}/clientes")
+    public ResponseEntity<Cliente> agregarClienteAEmpleado(
+            @PathVariable Long id, 
+            @RequestBody Cliente cliente) {
+
+        if (cliente.getDireccion() == null || cliente.getDireccion().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        Cliente createdCliente = empleadoService.agregarClienteAEmpleado(id, cliente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCliente);
+    }
+     
     /**
      * Método getter para obtener el repositorio de suministros.
      *

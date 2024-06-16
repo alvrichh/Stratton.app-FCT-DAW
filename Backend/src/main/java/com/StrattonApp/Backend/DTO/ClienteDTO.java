@@ -20,6 +20,7 @@ public class ClienteDTO {
     private String dni;
     private String email;
     private Integer telefono;
+    private String direccion;
 
     /**
      * Constructor vacío de ClienteDTO.
@@ -52,9 +53,21 @@ public class ClienteDTO {
         this.telefono=telefono;
     }
 
-    public ClienteDTO(Long idCliente2, String cups2, Comercializadora comercializadora, String fechaSubidaContrato2,
-			String nombre2, String apellidos2, String dni2, String email2, Integer telefono2) {
-		// TODO Auto-generated constructor stub
+
+
+	public ClienteDTO(Long idCliente, String cups, String companiaContratada, String fechaSubidaContrato, String nombre,
+			String apellidos, String dni, String email, Integer telefono, String direccion) {
+		super();
+		this.idCliente = idCliente;
+		this.cups = cups;
+		this.companiaContratada = companiaContratada;
+		this.fechaSubidaContrato = fechaSubidaContrato;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.dni = dni;
+		this.email = email;
+		this.telefono = telefono;
+		this.direccion = direccion;
 	}
 
 	/**
@@ -211,5 +224,13 @@ public class ClienteDTO {
 
 	public void setTelefono(Integer telefono) {
 		this.telefono = telefono;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
 	}
 }

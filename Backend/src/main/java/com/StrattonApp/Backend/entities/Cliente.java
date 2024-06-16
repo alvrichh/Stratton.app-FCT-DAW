@@ -36,7 +36,7 @@ public class Cliente {
     @Column(name = "email", length = 60, nullable = false)
     private String email;
 
-    @NotBlank(message = "La dirección del cliente no puede estar vacío.")
+    @NotBlank(message = "La dirección del cliente no puede estar vacía.")
     @Column(name = "direccion", length = 60, nullable = false)
     private String direccion;
 
@@ -316,4 +316,28 @@ public class Cliente {
     public void setIban(String iban) {
         this.iban = iban;
     }
+
+	public Cliente(Long idCliente, @NotBlank(message = "El nombre del cliente no puede estar vacío.") String nombre,
+			@NotBlank(message = "El apellido no puede estar en blanco") String apellidos,
+			@NotBlank(message = "El dni no puede estar en blanco") String dni,
+			@NotBlank(message = "El email del cliente no puede estar vacío.") String email,
+			@NotBlank(message = "La dirección del cliente no puede estar vacío.") String direccion,
+			@NotNull(message = "El telefono del cliente no puede estar vacío.") Integer telefono,
+			@NotBlank(message = "El IBAN del cliente no puede estar vacío.") String iban, Asesoria asesoria,
+			Set<Suministro> suministros, Comercializadora comercializadora, Empleado empleado) {
+		super();
+		this.idCliente = idCliente;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.dni = dni;
+		this.email = email;
+		this.direccion = direccion;
+		this.telefono = telefono;
+		this.iban = iban;
+		this.asesoria = asesoria;
+		this.suministros = suministros;
+		this.comercializadora = comercializadora;
+		this.empleado = empleado;
+	}
+    
 }

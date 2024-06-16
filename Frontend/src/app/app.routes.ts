@@ -9,6 +9,8 @@ import { ListaClientesComponent } from './pages/clientes/lista-clientes/lista-cl
 import { RegisterComponent } from './pages/register/register.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { HomeComponent } from './layout/home/home.component';
+import { DetallesClienteComponent } from './pages/clientes/detalles-cliente/detalles-cliente.component';
+import { ActualizarClienteComponent } from './pages/clientes/actualizar-cliente/actualizar-cliente.component';
 
 export const routes: Routes = [
     // Redirecciona al componente
@@ -23,5 +25,9 @@ export const routes: Routes = [
     { path: 'feedback', component: FeedbackComponent },
     { path: 'dashboard', component: HomeComponent},
     { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'detalles-cliente/:id', component: DetallesClienteComponent },
+    { path: 'actualizar-cliente/:id', component: ActualizarClienteComponent },
+
+
 
 ];

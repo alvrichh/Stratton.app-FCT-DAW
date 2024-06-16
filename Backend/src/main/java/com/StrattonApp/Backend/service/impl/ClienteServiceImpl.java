@@ -126,6 +126,7 @@ public class ClienteServiceImpl implements ClienteService {
         clienteDTO.setDni(cliente.getDni());
         clienteDTO.setFechaSubidaContrato(cliente.getFechaSubidaContrato());
         clienteDTO.setEmail(cliente.getEmail());
+        clienteDTO.setDireccion(cliente.getDireccion()); //nuevo campo
         // Establecer otros campos si es necesario
         return clienteDTO;
     }

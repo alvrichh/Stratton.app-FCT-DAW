@@ -1,4 +1,7 @@
 # Stratton.app-FCT-DAW
+
+![StrattonAPPlogo2](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/f086d67b-73db-46d6-b5d6-05a7eb72d567)
+
 Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos del proyecto final de base de datos del año anterior, ampliándolo con las tecnologías que hemos aprendido este año, utilizando para la seguridad security springboot, y para el frontend angular 17
 
 ### Enlaces de interés:

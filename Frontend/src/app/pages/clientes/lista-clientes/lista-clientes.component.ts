@@ -33,7 +33,7 @@ export class ListaClientesComponent implements OnInit {
       this.empleadoId = this.authService.getEmpleadoId(); // Obtén el ID del empleado logueado
       this.isAdmin = this.authService.isAdmin(); // Verifica si el usuario es administrador
       this.obtenerClientes();
-      this.filteredClientes = [...this.clientes];
+     // this.filteredClientes = [...this.clientes];
     }
   }
 

@@ -16,7 +16,7 @@ export class RegistrarClienteComponent implements OnInit {
 
   cliente: Cliente = new Cliente();
   empleadoId: number = 1; // Asumiendo que ya tienes el ID del empleado
-clienteForm: any;
+  clienteForm: any;
 
   constructor(private clienteService: ClienteService, private router: Router) { }
 

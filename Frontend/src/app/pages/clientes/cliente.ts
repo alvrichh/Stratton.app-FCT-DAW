@@ -11,6 +11,6 @@ export class Cliente {
   fechaSubidaContrato: string;
   empleado: Empleado;
   telefono: number;
-  iban: string; // Nuevo campo IBAN añadido
+  iban: string; 
   direccion: string;
 }

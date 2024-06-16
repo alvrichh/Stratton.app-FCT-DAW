@@ -1,54 +1,47 @@
 package com.StrattonApp.Backend.service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.StrattonApp.Backend.entities.Empleado;
+import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
+import com.StrattonApp.Backend.repository.EmpleadoRepository;
+import com.StrattonApp.Backend.repository.RolRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
+@Service
+public class EmpleadoService {
+    @Autowired
+    private EmpleadoRepository empleadoRepository;
 
-import com.StrattonApp.Backend.DTO.EmpleadoDTO;
-import com.StrattonApp.Backend.DTO.ClienteDTO;
-import com.StrattonApp.Backend.entities.Cliente;
-import com.StrattonApp.Backend.entities.Empleado;
+    @Autowired
+    private RolRepository rolRepository;
 
-/**
- * Interfaz que define operaciones relacionadas con usuarios en el sistema.
- */
-public interface EmpleadoService {
+    public Empleado createEmpleado(Empleado empleado) {
+        return empleadoRepository.save(empleado);
+    }
 
-    /**
-     * Obtiene un servicio de detalles de usuario para la autenticación.
-     *
-     * @return Un servicio de detalles de usuario.
-     */
-    UserDetailsService userDetailsService();
+    public Optional<Empleado> getEmpleadoById(Long id) {
+        return empleadoRepository.findById(id);
+    }
 
-    /**
-     * Obtiene una lista de todos los usuarios en el sistema.
-     *
-     * @return Lista de objetos EmpleadoDTO que representan a todos los usuarios.
-     */
-    List<EmpleadoDTO> getAllUsers();
+    public List<Empleado> getAllEmpleados() {
+        return empleadoRepository.findAll();
+    }
 
-    /**
-     * Obtiene un usuario por su ID.
-     *
-     * @param userId El ID del usuario a buscar.
-     * @return Lista de usuarios encontrados (puede contener uno o ningún usuario).
-     */
-    EmpleadoDTO getUserById(Long userId);
+    public Empleado updateEmpleado(Long id, Empleado empleadoDetails) {
+        Empleado empleado = empleadoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Empleado not found"));
+        empleado.setNombre(empleadoDetails.getNombre());
+        empleado.setRol(empleadoDetails.getRol());
+        // actualizar otros campos necesarios
+        return empleadoRepository.save(empleado);
+    }
 
-    /**
-     * Obtiene los detalles de un cliente por su ID.
-     *
-     * @param clienteId El ID del cliente a buscar.
-     * @return El ClienteDTO con los detalles del cliente.
-     */
-    ClienteDTO getClienteDetallesById(Long clienteId);
-
-	EmpleadoDTO convertToDTO(Empleado empleado);
-
-	Cliente agregarClienteAEmpleado(Long id, Cliente cliente);
-
-	Cliente agregarClienteAEmpleado(Long id, ClienteDTO clienteDTO);
-
-
+    public void deleteEmpleado(Long id) {
+        Empleado empleado = empleadoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Empleado not found"));
+        empleadoRepository.delete(empleado);
+    }
 }

@@ -1,28 +1,42 @@
 package com.StrattonApp.Backend.service;
-
-import com.StrattonApp.Backend.DTO.ClienteDTO;
-import com.StrattonApp.Backend.entities.Cliente;
-
 import java.util.List;
+import java.util.Optional;
 
-public interface ClienteService {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-    // Obtener todos los clientes y mapearlos a DTOs
-    List<ClienteDTO> getAllClientes();
+import com.StrattonApp.Backend.entities.Cliente;
+import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
+import com.StrattonApp.Backend.repository.ClienteRepository;
 
-    // Obtener un cliente por su ID y mapearlo a un DTO
-    ClienteDTO getClienteById(Long clienteId);
+@Service
+public class ClienteService {
+    @Autowired
+    private ClienteRepository clienteRepository;
 
-    // Obtener clientes por el ID del empleado asociado y mapearlos a DTOs
-    List<ClienteDTO> getClientesByEmpleadoId(Long empleadoId);
+    public Cliente createCliente(Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
 
-    // Guardar un nuevo cliente y devolver su DTO correspondiente
-    ClienteDTO guardarCliente(Cliente cliente);
+    public Optional<Cliente> getClienteById(Long id) {
+        return clienteRepository.findById(id);
+    }
 
-    // Actualizar los detalles de un cliente existente y devolver su DTO actualizado
-    ClienteDTO actualizarCliente(Long clienteId, Cliente detallesCliente);
+    public List<Cliente> getAllClientes() {
+        return clienteRepository.findAll();
+    }
 
-    // Eliminar un cliente por su ID
-    void eliminarCliente(Long clienteId);
+    public Cliente updateCliente(Long id, Cliente clienteDetails) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente not found"));
+        cliente.setNombre(clienteDetails.getNombre());
+        cliente.setSuministros(clienteDetails.getSuministros());
+        return clienteRepository.save(cliente);
+    }
 
+    public void deleteCliente(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente not found"));
+        clienteRepository.delete(cliente);
+    }
 }

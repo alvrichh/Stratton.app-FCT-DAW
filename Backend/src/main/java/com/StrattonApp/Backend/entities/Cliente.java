@@ -37,7 +37,7 @@ public class Cliente {
     private String email;
 
     @NotBlank(message = "La dirección del cliente no puede estar vacía.")
-    @Column(name = "direccion", length = 60, nullable = false)
+    @Column(name = "direccion", length = 60, nullable = true)
     private String direccion;
 
     @NotNull(message = "El telefono del cliente no puede estar vacío.")

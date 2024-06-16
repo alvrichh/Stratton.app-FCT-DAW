@@ -19,4 +19,9 @@
     object-fit: cover;
     border-radius: 50%; /* Hace que la imagen sea circular */
   }
+
+  #clientesModal{
+    color: #343F4B;
+    top: 150px;
+  }
   

@@ -46,9 +46,9 @@
           <td>{{ cliente.companiaContratada }}</td>
           <td>{{ cliente.fechaSubidaContrato }}</td>
           <td class="d-flex">
-            <button (click)="verCliente(cliente.idCliente)" class="btn btn-warning mr-2">Ver</button>
-            <button (click)="actualizarCliente(cliente.idCliente)" class="btn btn-info mr-2">Editar</button>
-            <button (click)="eliminarCliente(cliente.idCliente)" class="btn btn-danger">Borrar</button>
+            <button (click)="verCliente(cliente.idCliente)" class="btn btn-info mr-2"><i class="bi bi-eye"></i> Ver</button>
+            <button (click)="actualizarCliente(cliente.idCliente)" class="btn btn-warning mr-2"><i class="bi bi-pencil-square"></i> Editar</button>
+            <button (click)="eliminarCliente(cliente.idCliente)" class="btn btn-danger"><i class="bi bi-trash3"></i> Borrar</button>
           </td>
         </tr>
       </tbody>

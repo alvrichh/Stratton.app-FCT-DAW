@@ -1,4 +1,7 @@
 # Stratton.app-FCT-DAW
+
+![StrattonAPPlogo2](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/f086d67b-73db-46d6-b5d6-05a7eb72d567)
+
 Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos del proyecto final de base de datos del año anterior, ampliándolo con las tecnologías que hemos aprendido este año, utilizando para la seguridad security springboot, y para el frontend angular 17
 
 ### Enlaces de interés:
@@ -20,6 +23,15 @@ La principal motivación del proyecto es poder gestionar mis propios clientes o 
 
 ## ARQUITECTURA
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/5ef284ac-e66f-4159-acb7-bc72c404f6b5)
+
+
+| Entidad   | Atributos                                      |
+|-----------|------------------------------------------------|
+| Empleado   | id, nombre, Correo, Contraseña, RolID  |
+| Cliente  | ClaseID, UsuarioID |
+| Suministro     | ClaseID, Nombre, Descripcion |
+| Asesoria     | TareaID, Titulo, Descripcion, Fecha_Entrega, Nota, ClaseID, UsuarioID |
+
 
 ## Casos de uso
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/751bfc3b-9e41-4d14-8f70-0cd2828b5ae1)
@@ -59,6 +71,78 @@ print(ubicacion)
 - RN-5: Los clientes asignados a empleados deben tener un código válido.✔
 - RN-6: La asignación de clientes a empleados debe ser coherente.✔
 - RN-7: Los números de cuenta bancaria (CCC) deben tener un formato válido.✔
+### Casos de Uso detallados para Gestión de Empleados:
+
+**Ver Detalles Empleado:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de ver sus propios detalles.
+  3. Visualiza la información personal.
+
+**Ver Detalles de Otro Empleado:**
+- **Actores**: Administrador
+- **Flujo principal**:
+  1. El administrador inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un empleado.
+  3. Visualiza los detalles del empleado seleccionado.
+
+**Crear Empleado:**
+- **Actores**: Administrador
+- **Flujo principal**:
+  1. El administrador inicia sesión en el sistema.
+  2. Accede a la opción de agregar un nuevo empleado.
+  3. Ingresa los datos del nuevo empleado (nombre, apellidos, email, rol, etc.).
+  4. Guarda la información del nuevo empleado en el sistema.
+
+**Actualizar Empleado:**
+- **Actores**: Administrador
+- **Flujo principal**:
+  1. El administrador inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un empleado para actualizar.
+  3. Modifica los datos del empleado (nombre, apellidos, email, rol, etc.).
+  4. Guarda los cambios realizados en la información del empleado.
+
+**Eliminar Empleado:**
+- **Actores**: Administrador
+- **Flujo principal**:
+  1. El administrador inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un empleado para eliminar.
+  3. Confirma la eliminación del empleado seleccionado.
+  4. El empleado seleccionado es eliminado del sistema junto con todos sus datos asociados.
+
+### Casos de Uso detallados para Gestión de Clientes por Empleados:
+
+**Ver Detalles Cliente:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de ver detalles de clientes.
+  3. Selecciona un cliente para ver sus detalles almacenados en el sistema.
+
+**Agregar Cliente:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de agregar un nuevo cliente.
+  3. Ingresa los datos del nuevo cliente (nombre, apellidos, email, teléfono, etc.).
+  4. Guarda la información del nuevo cliente en el sistema.
+
+**Actualizar Cliente:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un cliente para actualizar.
+  3. Modifica los datos del cliente (nombre, apellidos, email, teléfono, etc.).
+  4. Guarda los cambios realizados en la información del cliente.
+
+**Eliminar Cliente:**
+- **Actores**: Empleado
+- **Flujo principal**:
+  1. El empleado inicia sesión en el sistema.
+  2. Accede a la opción de buscar y seleccionar un cliente para eliminar.
+  3. Confirma la eliminación del cliente seleccionado.
+  4. El cliente seleccionado es eliminado del sistema junto con todos sus datos asociados.
 
 ## Dependencias Springboot:
 - Spring Boot Starter Web:
@@ -82,6 +166,68 @@ Simplifica la configuración para conectarse con servicios de autenticación ext
 Proporciona herramientas para reiniciar automáticamente la aplicación durante el desarrollo.
 Facilita la recarga en caliente de cambios en el código.
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/d7f7e791-db1d-44a3-9f43-d87c1953a5a3)
+
+# Entidades y sus Atributos
+
+## Empleado
+| Atributo       | Tipo           | Descripción                              |
+|----------------|----------------|------------------------------------------|
+| idEmpleado     | Long           | Identificador único del empleado         |
+| nombre         | String         | Nombre del empleado                      |
+| apellidos      | String         | Apellidos del empleado                   |
+| dni            | String         | Documento Nacional de Identidad          |
+| email          | String         | Correo electrónico del empleado          |
+| telefono       | String         | Número de teléfono del empleado          |
+| fechaContratacion | Date        | Fecha de contratación                    |
+| rol            | String         | Rol del empleado en la empresa           |
+| mainRole       | String         | Rol principal del empleado               |
+
+## Cliente
+| Atributo               | Tipo           | Descripción                              |
+|------------------------|----------------|------------------------------------------|
+| idCliente              | Long           | Identificador único del cliente          |
+| nombre                 | String         | Nombre del cliente                       |
+| apellidos              | String         | Apellidos del cliente                    |
+| dni                    | String         | Documento Nacional de Identidad          |
+| email                  | String         | Correo electrónico del cliente           |
+| telefono               | String         | Número de teléfono del cliente           |
+| fechaSubidaContrato    | Date           | Fecha de subida del contrato             |
+| cups                   | String         | Código Universal de Punto de Suministro  |
+| companiaContratada     | String         | Compañía contratada por el cliente       |
+| empleado               | Empleado       | Empleado asociado al cliente             |
+
+## Suministro
+| Atributo               | Tipo           | Descripción                              |
+|------------------------|----------------|------------------------------------------|
+| cups                   | String         | Código Universal de Punto de Suministro  |
+| estado                 | Estado         | Estado del suministro                    |
+| direccion              | String         | Dirección del suministro                 |
+| mensaje                | String         | Mensaje asociado al suministro           |
+| potencia               | Double         | Potencia del suministro                  |
+| cliente                | Cliente        | Cliente asociado al suministro           |
+| comercializadora       | Comercializadora | Comercializadora asociada al suministro  |
+
+## Comercializadora
+| Atributo               | Tipo           | Descripción                              |
+|------------------------|----------------|------------------------------------------|
+| idComercializadora     | Long           | Identificador único de la comercializadora |
+| nombre                 | String         | Nombre de la comercializadora            |
+| direccion              | String         | Dirección de la comercializadora         |
+| telefono               | String         | Número de teléfono de la comercializadora |
+| email                  | String         | Correo electrónico de la comercializadora |
+| web                    | String         | Sitio web de la comercializadora         |
+
+## Asesoria
+| Atributo               | Tipo           | Descripción                              |
+|------------------------|----------------|------------------------------------------|
+| idAsesoria             | Long           | Identificador único de la asesoría       |
+| descripcion            | String         | Descripción de la asesoría               |
+| fecha                  | Date           | Fecha de la asesoría                     |
+| cliente                | Cliente        | Cliente asociado a la asesoría           |
+| empleado               | Empleado       | Empleado que brinda la asesoría          |
+| suministro             | Suministro     | Suministro asociado a la asesoría        |
+
+
 ## @TODO
 - Separación de Responsabilidades:
     * Angular se encargará de la interfaz de usuario (UI) y la interacción con el usuario.

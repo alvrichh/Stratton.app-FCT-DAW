@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Empleado } from '../empleado';
 import { CommonModule } from '@angular/common';
 import { EmpleadoService } from '../empleado.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import swal from 'sweetalert2';
 import { AuthService } from '../../../auth.service';
 
 @Component({
   selector: 'app-lista-empleados',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './lista-empleados.component.html',
   styleUrl: './lista-empleados.component.css'
 })

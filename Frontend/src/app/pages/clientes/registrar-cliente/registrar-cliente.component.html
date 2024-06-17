@@ -11,7 +11,7 @@
                     <div class="form-group col-md-6">
                         <label for="nombre">Nombre</label>
                         <input type="text" class="form-control" id="nombre" [(ngModel)]="cliente.nombre" name="nombre"
-                            required minlength="4" maxlength="50">
+                            required minlength="4" maxlength="50" onkeydown="focusNextInput(event)">
                         <div class="alert alert-danger"
                             *ngIf="clienteForm.controls['nombre'].invalid && (clienteForm.controls['nombre'].dirty || clienteForm.controls['nombre'].touched)">
                             <div
@@ -31,7 +31,7 @@
                     <div class="form-group col-md-6">
                         <label for="apellidos">Apellidos</label>
                         <input type="text" class="form-control" id="apellidos" [(ngModel)]="cliente.apellidos"
-                            name="apellidos" required minlength="4" maxlength="50">
+                            name="apellidos" required minlength="4" maxlength="50" onkeydown="focusNextInput(event)">
                         <div class="alert alert-danger"
                             *ngIf="clienteForm.controls['apellidos'].invalid && (clienteForm.controls['apellidos'].dirty || clienteForm.controls['apellidos'].touched)">
                             <div
@@ -54,7 +54,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="dni">DNI</label>
-                        <input type="text" class="form-control" id="dni" [(ngModel)]="cliente.dni" name="dni" required>
+                        <input type="text" class="form-control" id="dni" [(ngModel)]="cliente.dni" name="dni" required onkeydown="focusNextInput(event)">
                         <div class="alert alert-danger"
                             *ngIf="clienteForm.controls['dni'].invalid && (clienteForm.controls['dni'].dirty || clienteForm.controls['dni'].touched)">
                             <div
@@ -66,7 +66,7 @@
                     <div class="form-group col-md-6">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" [(ngModel)]="cliente.email" name="email"
-                            required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                            required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" onkeydown="focusNextInput(event)">
                         <div class="alert alert-danger"
                             *ngIf="clienteForm.controls['email'].invalid && (clienteForm.controls['email'].dirty || clienteForm.controls['email'].touched)">
                             <div
@@ -86,7 +86,7 @@
                     <div class="form-group col-md-6">
                         <label for="cups">CUPS</label>
                         <input type="text" class="form-control" id="cups" [(ngModel)]="cliente.cups" name="cups"
-                            required minlength="10" maxlength="20">
+                            required minlength="10" maxlength="20" onkeydown="focusNextInput(event)">
                         <div class="alert alert-danger"
                             *ngIf="clienteForm.controls['cups'].invalid && (clienteForm.controls['cups'].dirty || clienteForm.controls['cups'].touched)">
                             <div
@@ -106,7 +106,7 @@
                     <div class="form-group col-md-6">
                         <label for="comercializadora">Comercializadora</label>
                         <select class="form-control" id="comercializadora" [(ngModel)]="cliente.companiaContratada"
-                            name="companiaContratada" required (change)="selectComercializadora()">
+                            name="companiaContratada" required (change)="selectComercializadora()" onkeydown="focusNextInput(event)">
                             <option value="">Seleccionar...</option>
                             <option value="Endesa">Endesa</option>
                             <option value="Iberdrola">Iberdrola</option>
@@ -135,11 +135,11 @@
                     <div class="form-group col-md-6">
                         <label for="fechaSubidaContrato">Fecha de Subida del Contrato</label>
                         <input type="date" class="form-control" id="fechaSubidaContrato"
-                            [(ngModel)]="cliente.fechaSubidaContrato" name="fechaSubidaContrato">
+                            [(ngModel)]="cliente.fechaSubidaContrato" name="fechaSubidaContrato" onkeydown="focusNextInput(event)">
                     </div>
                     <div class="form-group col-md-6">
                         <label for="iban">IBAN</label>
-                        <input type="text" class="form-control" id="iban" [(ngModel)]="cliente.iban" name="iban">
+                        <input type="text" class="form-control" id="iban" [(ngModel)]="cliente.iban" name="iban" onkeydown="focusNextInput(event)">
                     </div>
                 </div>
 
@@ -147,14 +147,14 @@
                 <div class="form-group">
                     <label for="direccion">Dirección</label>
                     <input type="text" class="form-control" id="direccion" [(ngModel)]="cliente.direccion"
-                        name="direccion">
+                        name="direccion" onkeydown="focusNextInput(event)">
                 </div>
 
                 <!-- Campo de Teléfono -->
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
-                    <input type="tel" class="form-control" id="telefono" [(ngModel)]="cliente.telefono" name="telefono"
-                        required minlength="9" maxlength="15">
+                    <input type="number" class="form-control" id="telefono" [(ngModel)]="cliente.telefono" name="telefono"
+                        required minlength="9" maxlength="15" onkeydown="focusNextInput(event)">
                     <div class="alert alert-danger"
                         *ngIf="clienteForm.controls['telefono'].invalid && (clienteForm.controls['telefono'].dirty || clienteForm.controls['telefono'].touched)">
                         <div

@@ -39,7 +39,7 @@ export class ClienteService {
   }
 
   obtenerClientesPorEmpleado(id: number): Observable<Cliente[]> {
-    return this.httpClient.get<Cliente[]>(`${this.baseURL}/empleado/${id}`);
+    return this.httpClient.get<Cliente[]>(`${this.empleadoURL}/${id}`);
   }
 
   // Nuevo método para obtener suministros de los clientes de un empleado

@@ -1,0 +1,16 @@
+.card{
+    color: black;
+}
+.avatar-container {
+    width: 80px; /* Tamaño del contenedor del avatar */
+    height: 80px;
+    overflow: hidden;
+    margin-bottom: 110px;
+  }
+  
+  .avatar-container img {
+    width: 100%; /* Ajusta el tamaño de la imagen al contenedor */
+    height: auto;
+    border-radius: 50%; /* Hace que la imagen sea circular */
+  }
+  

@@ -34,7 +34,7 @@ export class ListaClientesComponent implements OnInit {
       this.isAdmin = this.authService.isAdmin(); // Verifica si el usuario es administrador
       this.obtenerClientes();
      // console.log(this.authService.getEmpleadoId());
-     // this.filteredClientes = [...this.clientes];
+      this.filteredClientes = [...this.clientes];
     }
   }
 
@@ -42,10 +42,14 @@ export class ListaClientesComponent implements OnInit {
     if (this.isAdmin) {
       this.clienteService.obtenerListaDeClientes().subscribe((data) => {
         this.clientes = data;
+        this.filteredClientes = [...this.clientes]; // Inicialmente muestra todos los clientes
+
       });
     } else {
       this.clienteService.obtenerClientesPorEmpleado(this.id).subscribe((data) => {
           this.clientes = data;
+          this.filteredClientes = [...this.clientes]; // Inicialmente muestra todos los clientes
+
         });
     }
   }
@@ -88,21 +92,18 @@ export class ListaClientesComponent implements OnInit {
   /*
   FILTRO DE BÚSQUEDA (NO FUNCIONA)
   */
-    applyFilter(): void {
-      const searchText = this.searchText.toLowerCase().trim();
-      if (searchText) {
-        this.filteredClientes = this.clientes.filter(
-          (cliente) =>
-            cliente.nombre.toLowerCase().includes(searchText) ||
-            cliente.apellidos.toLowerCase().includes(searchText) ||
-            cliente.dni.toLowerCase().includes(searchText) ||
-            cliente.email.toLowerCase().includes(searchText) ||
-            cliente.companiaContratada.toLowerCase().includes(searchText) ||
-            cliente.fechaSubidaContrato.toLowerCase().includes(searchText)
-        );
-      } else {
-        this.filteredClientes = [...this.clientes]; // Mostrar todos los clientes si no hay texto de búsqueda
-      }
-    ;
+  applyFilter(): void {
+    const searchText = this.searchText.toLowerCase().trim();
+    if (searchText) {
+      this.filteredClientes = this.clientes.filter(cliente =>
+        cliente.nombre.toLowerCase().includes(searchText) ||
+        cliente.apellidos.toLowerCase().includes(searchText) ||
+        cliente.dni.toLowerCase().includes(searchText) ||
+        cliente.companiaContratada.toLowerCase().includes(searchText) ||
+        cliente.fechaSubidaContrato.toLowerCase().includes(searchText)
+      );
+    } else {
+      this.filteredClientes = [...this.clientes]; // Mostrar todos los clientes si no hay texto de búsqueda
+    }
   }
 }

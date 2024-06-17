@@ -62,7 +62,7 @@ public class ClienteController {
      * @return El cliente guardado, envuelto en ResponseEntity.
      */
     @PostMapping
-    public ResponseEntity<ClienteDTO> guardarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<?> guardarCliente(@RequestBody Cliente cliente) {
         ClienteDTO clienteDTO = clienteService.guardarCliente(cliente);
         return ResponseEntity.ok(clienteDTO);
     }

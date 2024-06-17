@@ -15,10 +15,29 @@ import { FormsModule, NgModel } from '@angular/forms';
   styleUrl: './lista-clientes.component.css',
 })
 export class ListaClientesComponent implements OnInit {
-orderBy: any;
-order: any;
-sort(arg0: string) {
+  orderBy: string = '';
+  order: string = 'asc'; // 'asc' or 'desc'
+o(arg0: string) {
 throw new Error('Method not implemented.');
+
+}
+sort(column: string): void {
+  if (this.orderBy === column) {
+    this.order = this.order === 'asc' ? 'desc' : 'asc';
+  } else {
+    this.orderBy = column;
+    this.order = 'asc';
+  }
+  // Lógica para ordenar filteredClientes según this.orderBy y this.order
+  this.filteredClientes.sort((a, b) => {
+    // Implementa la lógica de ordenación según el tipo de dato (cadena, número, fecha, etc.)
+    // Ejemplo básico:
+    if (this.order === 'asc') {
+      return a[column] > b[column] ? 1 : -1;
+    } else {
+      return a[column] < b[column] ? 1 : -1;
+    }
+  });
 }
   clientes: Cliente[];
   id: number;
@@ -100,7 +119,8 @@ throw new Error('Method not implemented.');
   */
   applyFilter(): void {
     const searchText = this.searchText.toLowerCase().trim();
-    
+    this.sort(this.orderBy); // Aplica la ordenación actual después del filtrado
+
     if (searchText) {
       this.filteredClientes = this.clientes.filter(cliente =>
         cliente.nombre.toLowerCase().includes(searchText) ||

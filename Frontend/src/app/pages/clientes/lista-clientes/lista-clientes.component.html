@@ -38,18 +38,18 @@
     <table class="table table-striped">
       <thead class="table-dark">
         <tr>
-          <th *ngIf="isAdmin">Asesor</th>
-          <th>Nombre Completo</th>
-          <th>DNI</th>
-          <th>Telefono</th>
-          <th>Comercializadora</th>
-          <th>Fecha Subida Contrato</th>
-          <th>Acciones</th>
+          <th *ngIf="isAdmin" (click)="sort('nombre')" scope="col">Asesor <span class="arrow" *ngIf="orderBy === 'nombre'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th (click)="sort('nombre')" scope="col">Nombre Completo <span class="arrow" *ngIf="orderBy === 'nombre'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th (click)="sort('dni')" scope="col">DNI <span class="arrow" *ngIf="orderBy === 'dni'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th (click)="sort('telefono')" scope="col">Telefono <span class="arrow" *ngIf="orderBy === 'telefono'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th (click)="sort('companiaContratada')" scope="col">Comercializadora <span class="arrow" *ngIf="orderBy === 'companiaContratada'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th (click)="sort('fechaSubidaContrato')" scope="col">Fecha Subida Contrato <span class="arrow" *ngIf="orderBy === 'fechaSubidaContrato'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let cliente of filteredClientes">
-          <td *ngIf="isAdmin">{{ cliente.nombre }}</td>
+          <td *ngIf="isAdmin">alvrich</td>
           <td>{{ cliente.nombre }} {{ cliente.apellidos }}</td>
           <td>{{ cliente.dni }}</td>
           <td>{{ cliente.telefono }}</td>

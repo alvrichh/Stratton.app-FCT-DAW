@@ -5,7 +5,8 @@ WORKDIR /app
 # Copia los archivos menos el dockerfile
 COPY . .
 # Instala las dependencias
-RUN npm install
+RUN npm install --force
+RUN npm install sweetalert2 --force
 # Construye la aplicación Angular
 RUN npm run build --prod
 # Usa una imagen de Nginx para servir la aplicación Angular

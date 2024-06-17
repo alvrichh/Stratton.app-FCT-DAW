@@ -16,7 +16,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 })
 export class ListaClientesComponent implements OnInit {
   clientes: Cliente[];
-  empleadoId: number;
+  id: number;
   filteredClientes: Cliente[] = [];
   isAdmin: boolean = false;
   searchText: string = '';
@@ -30,9 +30,10 @@ export class ListaClientesComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.empleadoId = this.authService.getEmpleadoId(); // Obtén el ID del empleado logueado
+      this.id = this.authService.getEmpleadoId(); // Obtén el ID del empleado logueado
       this.isAdmin = this.authService.isAdmin(); // Verifica si el usuario es administrador
       this.obtenerClientes();
+     // console.log(this.authService.getEmpleadoId());
      // this.filteredClientes = [...this.clientes];
     }
   }
@@ -44,7 +45,7 @@ export class ListaClientesComponent implements OnInit {
       });
     } else {
       this.clienteService
-        .obtenerClientesPorEmpleado(this.empleadoId)
+        .obtenerClientesPorEmpleado(this.id)
         .subscribe((data) => {
           this.clientes = data;
         });

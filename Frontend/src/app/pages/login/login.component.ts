@@ -22,7 +22,7 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {} // Inyecta el servicio AuthService
 
   login() {
-    console.log("Intentando iniciar sesión con:", this.username, this.password);
+    //console.log("Intentando iniciar sesión con:", this.username, this.password);
     this.authService.login(this.username, this.password).subscribe({
       next: (response: any) => {
         const token = response.token; // Extrae el token de la respuesta

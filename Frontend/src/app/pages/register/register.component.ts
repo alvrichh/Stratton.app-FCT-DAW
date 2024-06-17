@@ -20,12 +20,11 @@ export class RegisterComponent {
   password: string;
   email: string;
   token: string;
-  roles: string[] = [];
+  role: string[] = [];
   
   constructor(private authService: AuthService,  private router: Router) {} // Inyecta el servicio AuthService
 
   register() {
-    console.log("Intentando iniciar sesión con:", this.username, this.password);
     this.authService.register(this.username, this.password).subscribe({
       next: (response: any) => {
         const token = response.token; // Extrae el token de la respuesta

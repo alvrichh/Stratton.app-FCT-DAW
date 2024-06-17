@@ -34,7 +34,7 @@ export class AuthService {
     if (token) {
       const decodedToken = this.jwtHelper.decodeToken(token);
       const role = decodedToken.role || [];
-      console.log('Rol del usuario:', role);
+      //console.log('Rol del usuario:', role);
       return role;
     }
     return [];
@@ -42,20 +42,22 @@ export class AuthService {
 
  getEmpleadoId(): number {
     const token = this.getToken();
+    const decodedToken = this.jwtHelper.decodeToken(token);
+
+    const id = decodedToken?.id;
     if (token) {
-      const decodedToken = this.jwtHelper.decodeToken(token);
-      const empleadoId = decodedToken?.empleadoId;
-      if (empleadoId) {
-        console.log('ID del empleado:', empleadoId);
-        return empleadoId;
+      const id = decodedToken?.id;
+      if (id) {
+        console.log('ID del empleado:', id);
+        return id;
       }
     }
     console.log("Error: no se pudo obtener el ID del empleado");
-    return null;
+    return id;
   }
   isAdmin(): boolean {
     const roles = this.getUserRoles();
-    console.log('Usuario es administrador:', roles.includes('ADMIN'));
+   // console.log('Usuario es administrador:', roles.includes('ADMIN'));
     return roles.includes('ADMIN');
   }
 

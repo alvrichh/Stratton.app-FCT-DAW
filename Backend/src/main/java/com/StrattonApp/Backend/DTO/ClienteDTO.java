@@ -6,9 +6,16 @@ package com.StrattonApp.Backend.DTO;
 import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.entities.Comercializadora;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * DTO (Data Transfer Object) que representa la entidad Cliente para transferencia de datos.
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClienteDTO {
 
     private Long idCliente;
@@ -21,12 +28,12 @@ public class ClienteDTO {
     private String email;
     private Integer telefono;
     private String direccion;
+    private String iban;
 
     /**
      * Constructor vacío de ClienteDTO.
      */
-    public ClienteDTO() {
-    }
+  
 
     /**
      * Constructor de ClienteDTO con todos los atributos.
@@ -232,5 +239,13 @@ public class ClienteDTO {
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
+	}
+
+	public String getIban() {
+		return iban;
+	}
+
+	public void setIban(String iban) {
+		this.iban = iban;
 	}
 }

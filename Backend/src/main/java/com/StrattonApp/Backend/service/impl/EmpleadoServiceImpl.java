@@ -114,7 +114,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getDni(),
                                 cliente.getEmail(),
                                 cliente.getTelefono(),
-                        		cliente.getDireccion());
+                        		cliente.getDireccion(),
+                        		cliente.getIban());
                     } else {
                         // Manejo cuando la comercializadora es null
                         return new ClienteDTO(
@@ -127,7 +128,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                                 cliente.getDni(),
                                 cliente.getEmail(),
                                 cliente.getTelefono(),
-                        		cliente.getDireccion());
+                        		cliente.getDireccion(),
+                        		cliente.getIban());
 
                     }
                 })
@@ -151,10 +153,10 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
         // Paso 2: Convertir ClienteDTO a Cliente
         Cliente cliente = new Cliente();
-        cliente.setNombre(clienteDTO.getNombre());
-        cliente.setApellidos(clienteDTO.getApellidos());
-        cliente.setEmail(clienteDTO.getEmail());
-        cliente.setTelefono(clienteDTO.getTelefono());
+        cliente.setNombre(cliente.getNombre());
+        cliente.setApellidos(cliente.getApellidos());
+        cliente.setEmail(cliente.getEmail());
+        cliente.setTelefono(cliente.getTelefono());
         cliente.setIban(cliente.getIban());
         cliente.setComercializadora(cliente.getComercializadora());
         cliente.setDni(cliente.getDni());

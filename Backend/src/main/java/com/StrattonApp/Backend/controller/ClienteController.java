@@ -68,6 +68,19 @@ public class ClienteController {
     }
 
     /**
+     * Guarda un nuevo cliente asociado a un empleado específico.
+     *
+     * @param empleadoId El ID del empleado.
+     * @param cliente Los detalles del cliente a guardar.
+     * @return El cliente guardado, envuelto en ResponseEntity.
+     */
+    @PostMapping("/{empleadoId}/clientes")
+    public ResponseEntity<?> guardarClientePorEmpleado(@PathVariable Long empleadoId, @RequestBody Cliente cliente) {
+        ClienteDTO clienteDTO = clienteService.guardarClientePorEmpleado(empleadoId, cliente);
+        return ResponseEntity.ok(clienteDTO);
+    }
+
+    /**
      * Actualiza un cliente existente por su ID.
      *
      * @param id             El ID del cliente a actualizar.

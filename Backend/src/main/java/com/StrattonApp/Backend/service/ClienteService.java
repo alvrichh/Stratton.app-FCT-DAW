@@ -25,4 +25,6 @@ public interface ClienteService {
     // Eliminar un cliente por su ID
     void eliminarCliente(Long clienteId);
 
+	ClienteDTO guardarClientePorEmpleado(Long empleadoId, Cliente cliente);
+
 }

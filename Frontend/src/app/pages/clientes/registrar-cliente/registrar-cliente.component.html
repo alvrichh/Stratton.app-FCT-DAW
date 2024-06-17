@@ -79,6 +79,15 @@
                     <input type="text" class="form-control" id="direccion" [(ngModel)]="cliente.direccion"
                         name="direccion">
                 </div>
+                <!-- Telefono -->
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="number" class="form-control" id="telefono" [(ngModel)]="cliente.telefono"
+                        name="telefono" #telefono="ngModel">
+                        <div *ngIf="telefono.errors && telefono.errors['required']">
+                            El número de teléfono es obligatorio.
+                          </div>
+                </div>
 
                 <!-- Botón de submit -->
                 <button type="submit" class="btn btn-success" [disabled]="!clienteForm.valid">Registrar Cliente</button>

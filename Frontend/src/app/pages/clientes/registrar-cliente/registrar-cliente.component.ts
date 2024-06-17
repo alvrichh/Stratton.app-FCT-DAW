@@ -40,7 +40,6 @@ export class RegistrarClienteComponent implements OnInit {
     this.router.navigate(['/clientes']);
   }
   selectComercializadora(): void {
-    // Aquí puedes agregar lógica adicional si es necesario
     console.log('Comercializadora seleccionada:', this.cliente.companiaContratada);
     // Por ejemplo, podrías realizar acciones específicas según la comercializadora seleccionada
   }

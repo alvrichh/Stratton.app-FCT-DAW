@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.StrattonApp.Backend.DTO.ClienteDTO;
 import com.StrattonApp.Backend.entities.Cliente;
+import com.StrattonApp.Backend.entities.Empleado;
 import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
 import com.StrattonApp.Backend.repository.ClienteRepository;
+import com.StrattonApp.Backend.repository.EmpleadoRepository;
 import com.StrattonApp.Backend.service.ClienteService;
 
 /**
@@ -20,6 +22,8 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    @Autowired 
+    private EmpleadoRepository empleadoRepository;
 
     /**
      * Obtiene todos los clientes y los convierte a {@link ClienteDTO}.
@@ -89,8 +93,7 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setDireccion(detallesCliente.getDireccion());
         cliente.setTelefono(detallesCliente.getTelefono());
         cliente.setIban(detallesCliente.getIban());
-
-        // Puedes continuar actualizando otros campos según sea necesario
+        cliente.setComercializadora(detallesCliente.getComercializadora());
 
         Cliente clienteActualizado = clienteRepository.save(cliente);
         return convertToDTO(clienteActualizado);
@@ -127,7 +130,23 @@ public class ClienteServiceImpl implements ClienteService {
         clienteDTO.setFechaSubidaContrato(cliente.getFechaSubidaContrato());
         clienteDTO.setEmail(cliente.getEmail());
         clienteDTO.setDireccion(cliente.getDireccion());
+        clienteDTO.setIban(cliente.getIban());
+        clienteDTO.setTelefono(cliente.getTelefono());
         return clienteDTO;
     }
 
+    @Override	
+    public ClienteDTO guardarClientePorEmpleado(Long empleadoId, Cliente cliente) {
+    	   if (cliente.getTelefono() == null) {
+               throw new IllegalArgumentException("Telefono cannot be null");
+
+           }
+    	   
+        Empleado empleado = empleadoRepository.findById(empleadoId)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + empleadoId));
+        
+        cliente.setEmpleado(empleado); // Asocia el cliente con el empleado
+        Cliente savedCliente = clienteRepository.save(cliente);
+        return convertToDTO(savedCliente);
+    }
 }

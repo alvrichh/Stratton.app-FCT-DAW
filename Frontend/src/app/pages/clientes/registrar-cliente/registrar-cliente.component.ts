@@ -32,12 +32,17 @@ export class RegistrarClienteComponent implements OnInit {
   }
 
   guardarCliente(): void {
-    this.clienteService.agregarClienteAEmpleado(this.empleadoId, this.cliente).subscribe(data => {
-      console.log(data);
-      this.verListaClientes();
-    }, error => console.log(error));
+    // Método para enviar el cliente al servicio y guardar en la base de datos
+    this.clienteService.agregarClienteAEmpleado(this.empleadoId, this.cliente).subscribe(
+      data => {
+        console.log('Cliente guardado correctamente:', data);
+        this.verListaClientes(); // Redirigir a la lista de clientes después de guardar
+      },
+      error => {
+        console.error('Error al guardar el cliente:', error);
+      }
+    );
   }
-
   verListaClientes(): void {
     this.router.navigate(['/clientes']);
   }

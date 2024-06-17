@@ -2,12 +2,19 @@ package com.StrattonApp.Backend.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 /**
  * Entidad que representa una comercializadora en el sistema.
  */
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Comercializadora {
 
     @Id

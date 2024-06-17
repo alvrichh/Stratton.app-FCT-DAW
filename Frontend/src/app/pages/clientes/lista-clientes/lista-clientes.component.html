@@ -1,15 +1,38 @@
 <div *ngIf="authService.isLoggedIn(); else notLoggedIn" class="ml-3 mr-3">
   <h2 class="mt-4">Lista de Clientes</h2>
-  <button class="btn btn-warning mb-3" routerLink="/registrar-cliente">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
-      <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-      <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
-    </svg> Añadir Cliente
-  </button>
-  <input type="text" class="search-input" [(ngModel)]="searchText" placeholder="Buscar..." (input)="applyFilter()">
-  <button class="search-button">
-    <span class="search-icon">🔍</span>
-  </button>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-warning mr-5" routerLink="/registrar-cliente">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+      </svg> Añadir Cliente
+    </button>
+  
+    <div class="form-group mb-0 mr-2">
+      <select class="form-control form-control-sm mr-2" [(ngModel)]="selectedCompania">
+        <option value="">Comercializadora</option>
+        <option value="Endesa">Endesa</option>
+        <option value="Iberdrola">Iberdrola</option>
+        <option value="Naturgy">Naturgy</option>
+      </select>
+    </div>
+  
+    <input type="text" class="form-control form-control-sm mr-2 search-input" [(ngModel)]="searchText" placeholder="Buscar..." (input)="applyFilter()">
+    <button class="btn btn-primary search-button">
+      <span class="search-icon">🔍</span>
+    </button>
+  </div>
+  
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="mt-4">
+        <img *ngIf="selectedCompania === 'Endesa'" src="assets/images/endesa.png" alt="Endesa" class="img-thumbnail">
+        <img *ngIf="selectedCompania === 'Iberdrola'" src="assets/images/iberdrola.png" alt="Iberdrola" class="img-thumbnail">
+        <img *ngIf="selectedCompania === 'Naturgy'" src="assets/images/naturgy.png" alt="Naturgy" class="img-thumbnail">
+      </div>
+    </div>
+  </div>
+  
 
   <div class="table-responsive">
     <table class="table table-striped">

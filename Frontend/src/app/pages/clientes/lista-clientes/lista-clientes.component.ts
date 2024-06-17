@@ -15,11 +15,17 @@ import { FormsModule, NgModel } from '@angular/forms';
   styleUrl: './lista-clientes.component.css',
 })
 export class ListaClientesComponent implements OnInit {
+orderBy: any;
+order: any;
+sort(arg0: string) {
+throw new Error('Method not implemented.');
+}
   clientes: Cliente[];
   id: number;
   filteredClientes: Cliente[] = [];
   isAdmin: boolean = false;
   searchText: string = '';
+  selectedCompania: string = '';
   empleados: any;
 
   constructor(
@@ -94,6 +100,7 @@ export class ListaClientesComponent implements OnInit {
   */
   applyFilter(): void {
     const searchText = this.searchText.toLowerCase().trim();
+    
     if (searchText) {
       this.filteredClientes = this.clientes.filter(cliente =>
         cliente.nombre.toLowerCase().includes(searchText) ||
@@ -106,4 +113,5 @@ export class ListaClientesComponent implements OnInit {
       this.filteredClientes = [...this.clientes]; // Mostrar todos los clientes si no hay texto de búsqueda
     }
   }
+  
 }

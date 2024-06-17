@@ -1,0 +1,9 @@
+/* Estilo personalizado para ajustar imágenes thumbnail */
+.img-thumbnail {
+    margin: auto;
+    height: auto; /* Altura automática para mantener la proporción */
+    background-color: transparent !important; /* Elimina el color blanco de fondo */
+    border: none !important; /* Elimina el borde */
+    margin-bottom: 80px;
+  }
+  

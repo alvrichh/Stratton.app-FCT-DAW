@@ -1,28 +1,15 @@
 <div *ngIf="authService.isLoggedIn(); else notLoggedIn" class="ml-3 mr-3">
   <h2 class="mt-4">Lista de Clientes</h2>
-  <button class="btn btn-warning mb-3 " routerLink="/registrar-cliente"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
-    <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-    <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
-  </svg> Añadir Cliente</button>
+  <button class="btn btn-warning mb-3" routerLink="/registrar-cliente">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+      <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+      <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+    </svg> Añadir Cliente
+  </button>
   <input type="text" class="search-input" id="searchInput" oninput="toggleSearch()" placeholder="Buscar...">
   <button class="search-button">
     <span class="search-icon">🔍</span>
   </button>
-<!--
-
-  <div>
-
-    <input [(ngModel)]="searchText" placeholder="{{ 'Faqs.search' | translate }}" (keyup)="showSearchResults($event)" class="search-input"/>
-
-  </div>
-  <div class="search-bar">
-    <input type="text" class="search" placeholder="¡Comienza a buscar tu plato favorito!" (keyup)="searchTerm$.next($event.target.value)">
-  </div>
-    <form ng-submit="showResults(searchTerm)">
-    <input type="text" ng-model="searchTerm">
-</form>
--->
-
 
   <div class="table-responsive">
     <table class="table table-striped">
@@ -43,18 +30,30 @@
           <td>{{ cliente.nombre }} {{ cliente.apellidos }}</td>
           <td>{{ cliente.dni }}</td>
           <td>{{ cliente.telefono }}</td>
-          <td>{{ cliente.companiaContratada }}</td>
+          <td>
+            {{ cliente.companiaContratada }}
+            <div *ngIf="cliente.logo">
+              <img [src]="cliente.logo" alt="Logo Comercializadora" class="img-thumbnail" width="100">
+            </div>
+          </td>
           <td>{{ cliente.fechaSubidaContrato }}</td>
           <td class="d-flex">
-            <button (click)="verCliente(cliente.idCliente)" class="btn btn-info mr-2"><i class="bi bi-eye"></i> Ver</button>
-            <button (click)="actualizarCliente(cliente.idCliente)" class="btn btn-warning mr-2"><i class="bi bi-pencil-square"></i> Editar</button>
-            <button (click)="eliminarCliente(cliente.idCliente)" class="btn btn-danger"><i class="bi bi-trash3"></i> Borrar</button>
+            <button (click)="verCliente(cliente.idCliente)" class="btn btn-info mr-2">
+              <i class="bi bi-eye"></i> Ver
+            </button>
+            <button (click)="actualizarCliente(cliente.idCliente)" class="btn btn-warning mr-2">
+              <i class="bi bi-pencil-square"></i> Editar
+            </button>
+            <button (click)="eliminarCliente(cliente.idCliente)" class="btn btn-danger">
+              <i class="bi bi-trash3"></i> Borrar
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+
 <ng-template #notLoggedIn>
   <div class="alert alert-warning mt-4" role="alert">
     Debes iniciar sesión para ver la lista de clientes.

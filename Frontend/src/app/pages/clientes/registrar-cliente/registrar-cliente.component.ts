@@ -57,5 +57,21 @@ export class RegistrarClienteComponent implements OnInit {
 
   selectComercializadora(): void {
     console.log('Comercializadora seleccionada:', this.cliente.companiaContratada);
-  }
+
+    // Ejemplo: Mostrar imagen asociada a la comercializadora seleccionada
+    switch (this.cliente.companiaContratada) {
+      case 'Endesa':
+        this.cliente.logo = 'assets/images/endesa.png'; // Ruta a la imagen de Endesa
+        break;
+      case 'Iberdrola':
+        this.cliente.logo = 'assets/images/iberdrola.png'; // Ruta a la imagen de Iberdrola
+        break;
+      case 'Naturgy':
+        this.cliente.logo = 'assets/images/naturgy.png'; // Ruta a la imagen de Naturgy
+        break;
+      default:
+        this.cliente.logo = ''; // Si no hay selección o no se reconoce la comercializadora, limpiar la imagen
+        break;
+    }
+  }  
 }

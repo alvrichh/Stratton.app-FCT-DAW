@@ -13,4 +13,5 @@ export class Cliente {
   telefono: number;
   iban: string; 
   direccion: string;
+  logo: string;
 }

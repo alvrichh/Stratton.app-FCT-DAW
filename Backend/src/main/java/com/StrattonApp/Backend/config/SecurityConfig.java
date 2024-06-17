@@ -2,6 +2,8 @@ package com.StrattonApp.Backend.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +11,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,12 +20,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
-import com.StrattonApp.Backend.service.EmpleadoService;
-import com.StrattonApp.Backend.config.AuthEntryPoint;
 import com.StrattonApp.Backend.entities.Role;
+import com.StrattonApp.Backend.service.EmpleadoService;
 
 /**
  * Configuración de seguridad para la aplicación con JWT
@@ -120,4 +120,14 @@ public class SecurityConfig {
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
+	   @Bean
+	    public CorsFilter corsFilter() {
+	        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	        CorsConfiguration config = new CorsConfiguration();
+	        config.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Permitir solicitudes desde localhost:4200
+	        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+	        config.setAllowedHeaders(Arrays.asList("*"));
+	        source.registerCorsConfiguration("/**", config);
+	        return new CorsFilter(source);
+	    }
 }

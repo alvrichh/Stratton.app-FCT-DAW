@@ -45,7 +45,7 @@ public class JwtServiceImpl implements JwtService {
 
     /**
      * Extrae el rol del usuario desde el token JWT.
-     *
+     *	
      * @param token Token JWT
      * @return Rol del usuario extraído del token
      */

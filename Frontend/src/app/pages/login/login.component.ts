@@ -5,8 +5,6 @@ import swal from 'sweetalert2';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { RegisterComponent } from '../register/register.component';
-import { Empleado } from '../empleados/empleado';
-import { EmpleadoService } from '../empleados/empleado.service';
 
 @Component({
   selector: 'app-signin',
@@ -19,16 +17,19 @@ export class LoginComponent {
   username: string;
   password: string;
 
-  constructor(private authService: AuthService, private router: Router) {} // Inyecta el servicio AuthService
+  constructor(private authService: AuthService, private router: Router) {}
 
   login() {
-    //console.log("Intentando iniciar sesión con:", this.username, this.password);
     this.authService.login(this.username, this.password).subscribe({
       next: (response: any) => {
-        const token = response.token; // Extrae el token de la respuesta
-        this.authService.saveToken(token); // Guarda el token en el localStorage usando el servicio AuthService
+        const token = response.token;
+        this.authService.saveToken(token);
+
+        const employeeId = this.authService.getEmpleadoId();
+        console.log('Empleado ID después de iniciar sesión:', employeeId);
+
         swal('Inicio de sesión exitoso', 'Has iniciado sesión correctamente', 'success');
-        this.verDashboard(response.role); // Redirige al usuario a la página adecuada basada en el rol
+        this.verDashboard(response.role);
       },
       error: (error: any) => {
         console.error('Error al iniciar sesión:', error);
@@ -39,9 +40,9 @@ export class LoginComponent {
 
   verDashboard(role: string) {
     if (role === 'ADMIN') {
-      this.router.navigate(['/empleados']); // Redirige a la lista de empleados si el usuario es admin
+      this.router.navigate(['/empleados']);
     } else if (role === 'USER') {
-      this.router.navigate([`/clientes`]); // Redirige a la lista de clientes si el usuario es USER
+      this.router.navigate([`/clientes`]);
     }
   }
 }

@@ -65,11 +65,14 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public String generateToken(UserDetails userDetails) {
+        Empleado empleado = (Empleado) userDetails; // Cast a Empleado si userDetails es de tipo Empleado
+        
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("role", ((Empleado) userDetails).getMainRole()); // Añadir el rol a los claims
+        extraClaims.put("role", empleado.getMainRole()); // Añadir el rol a los claims
+        extraClaims.put("id", empleado.getId()); // Añadir el ID del empleado a los claims
+
         return generateToken(extraClaims, userDetails);
     }
-
     /**
      * Valida si un token JWT es válido para el usuario dado.
      *
@@ -77,11 +80,18 @@ public class JwtServiceImpl implements JwtService {
      * @param userDetails Detalles del usuario
      * @return `true` si el token es válido, `false` si no
      */
-    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final Integer userId = extractUserId(token);
+
+        // Verificar que el nombre de usuario y el ID del usuario coincidan con los del token
+        return (userName.equals(userDetails.getUsername()) && userId.equals(((Empleado) userDetails).getId())) && !isTokenExpired(token);
     }
+
+    private Integer extractUserId(String token) {
+        return extractClaim(token, claims -> (Integer) claims.get("id"));
+    }
+
 
     // Método genérico para extraer un claim del token
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

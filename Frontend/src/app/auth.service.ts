@@ -23,6 +23,7 @@ export class AuthService {
 
   saveToken(token: string) {
     localStorage.setItem('token', token);
+    this.saveEmpleadoId();
   }
 
   getToken(): string {
@@ -34,30 +35,26 @@ export class AuthService {
     if (token) {
       const decodedToken = this.jwtHelper.decodeToken(token);
       const role = decodedToken.role || [];
-      //console.log('Rol del usuario:', role);
       return role;
     }
     return [];
   }
 
- getEmpleadoId(): number {
+  saveEmpleadoId() {
     const token = this.getToken();
     const decodedToken = this.jwtHelper.decodeToken(token);
-
     const id = decodedToken?.id;
-    if (token) {
-      const id = decodedToken?.id;
-      if (id) {
-        console.log('ID del empleado:', id);
-        return id;
-      }
+    if (id) {
+      localStorage.setItem('empleadoId', id);
     }
-    console.log("Error: no se pudo obtener el ID del empleado");
-    return id;
   }
+
+  getEmpleadoId(): number {
+    return Number(localStorage.getItem('empleadoId'));
+  }
+
   isAdmin(): boolean {
     const roles = this.getUserRoles();
-   // console.log('Usuario es administrador:', roles.includes('ADMIN'));
     return roles.includes('ADMIN');
   }
 
@@ -65,8 +62,10 @@ export class AuthService {
     const token = this.getToken();
     return token != null && !this.jwtHelper.isTokenExpired(token);
   }
+
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('empleadoId');
     console.log('Sesión cerrada.');
   }
 }

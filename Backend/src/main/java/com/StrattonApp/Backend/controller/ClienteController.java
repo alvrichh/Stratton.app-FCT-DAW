@@ -16,7 +16,7 @@ import com.StrattonApp.Backend.service.ClienteService;
  */
 @RestController
 @RequestMapping("/api/v2/clientes")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:80")
 public class ClienteController {
 
     @Autowired

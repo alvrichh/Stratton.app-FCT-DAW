@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-@CrossOrigin // Permite el acceso CORS de cualquier origen a todos los endpoints en este controlador
+@CrossOrigin(origins = "http://localhost:80")
 public class AuthenticationController {
 
     @Autowired

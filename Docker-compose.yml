@@ -5,13 +5,11 @@ services:
     container_name: strattonapp-bbdd
     restart: unless-stopped
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: 
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: strattonapp
-    volumes:
-     - mysql_data:/data/db
-
+ 
   strattonapp_back:
     build:
       context: ./Backend
@@ -43,7 +41,3 @@ services:
       - "80:80"
     depends_on:
       - strattonapp_back
-
-volumes:
-  mysql_data:
-  

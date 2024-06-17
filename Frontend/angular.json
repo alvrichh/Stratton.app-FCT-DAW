@@ -63,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "gestion-empleados-frontend:build:production"
+              "buildTarget": "strattonapp-front:build:production"
             },
             "development": {
-              "buildTarget": "gestion-empleados-frontend:build:development"
+              "buildTarget": "strattonapp-front:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -74,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "gestion-empleados-frontend:build"
+            "buildTarget": "strattonapp-front:build"
           }
         },
         "test": {

@@ -14,10 +14,6 @@ export class ClienteService {
 
   constructor(private httpClient: HttpClient) { }
 
-  agregarClienteAEmpleado(id: number, cliente: Cliente): Observable<Object> {
-    return this.httpClient.post(`${this.baseURL}/${id}/clientes`, cliente);
-  }
-
   obtenerListaDeClientes(): Observable<Cliente[]> {
     return this.httpClient.get<Cliente[]>(`${this.baseURL}`);
   }
@@ -40,6 +36,9 @@ export class ClienteService {
 
   obtenerClientesPorEmpleado(id: number): Observable<Cliente[]> {
     return this.httpClient.get<Cliente[]>(`${this.baseURL}/${id}/clientes`);
+  }
+  agregarClienteAEmpleado(id: number, cliente: Cliente): Observable<Object> {
+    return this.httpClient.post(`${this.baseURL}/${id}/clientes`, cliente);
   }
 
   // Nuevo método para obtener suministros de los clientes de un empleado

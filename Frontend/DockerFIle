@@ -7,6 +7,7 @@ COPY . .
 # Instala las dependencias
 RUN npm install --force
 RUN npm install sweetalert2 --force
+RUN ng serve -o
 # Construye la aplicación Angular
 RUN npm run build --prod
 # Usa una imagen de Nginx para servir la aplicación Angular

@@ -1,6 +1,7 @@
 package com.StrattonApp.Backend.entities;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -64,6 +65,8 @@ public class Empleado implements UserDetails {
     @OneToMany(mappedBy = "empleado", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Cliente> clientes = new HashSet<>();
 
+    
+    @Transactional
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Cargar la colección de roles de manera temprana

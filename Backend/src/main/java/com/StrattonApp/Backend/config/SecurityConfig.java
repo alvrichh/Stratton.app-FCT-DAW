@@ -24,6 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.StrattonApp.Backend.service.EmpleadoService;
 import com.StrattonApp.Backend.config.AuthEntryPoint;
+import com.StrattonApp.Backend.entities.Role;
 
 /**
  * Configuración de seguridad para la aplicación con JWT
@@ -40,12 +41,12 @@ public class SecurityConfig {
 
 	@Autowired
 	AuthEntryPoint authEntryPoint;
-	
+
 	@Autowired
 	RequestFilter requestFilter;
-	
-    @Autowired
-    EmpleadoService userService;
+
+	@Autowired
+	EmpleadoService userService;
 
 	/**
 	 * Configura la cadena de filtros de seguridad.
@@ -58,7 +59,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				.exceptionHandling((exceptionHandling) -> exceptionHandling.authenticationEntryPoint(authEntryPoint))
-				.authorizeHttpRequests(request -> {
+				.authorizeHttpRequests(request -> 
 					request.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
 							// API CRUD EMPLEADO !!!!!hasAutority aún no funciona correctamente.
 						//###################################################################
@@ -66,7 +67,7 @@ public class SecurityConfig {
 					//###################################################################
 					//###################################################################
 					//###################################################################
-							.requestMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAuthority("ADMIN")
+							.requestMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAuthority(Role.ADMIN.toString())
 							.requestMatchers(HttpMethod.GET, "/api/v2/empleados/**").permitAll()
 							.requestMatchers(HttpMethod.POST, "/api/v2/empleados/**").permitAll()
 							.requestMatchers(HttpMethod.PUT, "/api/v2/empleados/**").permitAll()
@@ -79,11 +80,9 @@ public class SecurityConfig {
 							//.hasAnyAuthority("MANAGER", "ADMIN")
 							.requestMatchers(HttpMethod.DELETE, "/api/v2/clientes/**").permitAll()
 							//.hasAnyAuthority("MANAGER", "ADMIN")
-
-							.anyRequest().permitAll();
-				}).formLogin((form) -> form.permitAll()).logout((logout) -> logout.permitAll().logoutSuccessUrl("/"));
-
-		http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
+							.anyRequest().authenticated()).sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+							.authenticationProvider(authenticationProvider())
+							.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
 
@@ -94,7 +93,7 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-	    return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
 
 	/**
@@ -104,10 +103,10 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
-	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-	    authProvider.setUserDetailsService(userService.userDetailsService());
-	    authProvider.setPasswordEncoder(passwordEncoder());
-	    return authProvider;
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userService.userDetailsService());
+		authProvider.setPasswordEncoder(passwordEncoder());
+		return authProvider;
 	}
 
 	/**
@@ -119,6 +118,6 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-	    return config.getAuthenticationManager();
+		return config.getAuthenticationManager();
 	}
 }

@@ -5,6 +5,7 @@ import com.StrattonApp.Backend.DTO.EmpleadoDTO;
 import com.StrattonApp.Backend.DTO.SuministroDTO;
 import com.StrattonApp.Backend.entities.Cliente;
 import com.StrattonApp.Backend.entities.Empleado;
+import com.StrattonApp.Backend.entities.Role;
 import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
 import com.StrattonApp.Backend.repository.ClienteRepository;
 import com.StrattonApp.Backend.repository.EmpleadoRepository;
@@ -56,7 +57,7 @@ public class EmpleadoController {
      * @return Lista de todos los empleados
      */
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority(Role.ADMIN.toString())")
     public List<EmpleadoDTO> listarTodosLosEmpleados() {
         logger.info("Endpoint: GET /empleados");
         return empleadoService.getAllUsers();

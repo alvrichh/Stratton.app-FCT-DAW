@@ -4,6 +4,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { ClienteService } from '../cliente.service';
 import { Router } from '@angular/router';
 import { Cliente } from '../cliente';
+import { AuthService } from '../../../auth.service'; // Asegúrate de importar AuthService
 
 @Component({
   selector: 'app-registrar-cliente',
@@ -15,15 +16,21 @@ import { Cliente } from '../cliente';
 export class RegistrarClienteComponent implements OnInit {
 
   cliente: Cliente = new Cliente();
-  empleadoId: number = 1; // Asumiendo que ya tienes el ID del empleado
+  empleadoId: number; 
   clienteForm: any;
 
-  constructor(private clienteService: ClienteService, private router: Router) { }
+  constructor(
+    private clienteService: ClienteService,
+    private router: Router,
+    private authService: AuthService // Inyecta AuthService
+  ) { }
 
   ngOnInit(): void {
     console.clear();
     console.log(this.cliente);
-
+    
+    this.empleadoId = this.authService.getEmpleadoId(); // Obtén el ID del empleado
+    // this.empleadoId = this.authService.getEmpleadoId();
   }
 
   onSubmit(): void {
@@ -43,11 +50,12 @@ export class RegistrarClienteComponent implements OnInit {
       }
     );
   }
+
   verListaClientes(): void {
     this.router.navigate(['/clientes']);
   }
+
   selectComercializadora(): void {
     console.log('Comercializadora seleccionada:', this.cliente.companiaContratada);
-    // Por ejemplo, podrías realizar acciones específicas según la comercializadora seleccionada
   }
 }

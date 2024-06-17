@@ -66,7 +66,7 @@
                     <div class="form-group col-md-6">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" [(ngModel)]="cliente.email" name="email"
-                            required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                          >
                         <div class="alert alert-danger"
                             *ngIf="clienteForm.controls['email'].invalid && (clienteForm.controls['email'].dirty || clienteForm.controls['email'].touched)">
                             <div
@@ -172,6 +172,6 @@
                     </div>
 
                     <!-- Botón de submit -->
-                    <button type="submit" class="btn btn-success mt-4" [disabled]="!clienteForm.valid">Guardar
+                    <button type="submit" class="btn btn-success mt-4">Guardar
                         </button>
                     <form>

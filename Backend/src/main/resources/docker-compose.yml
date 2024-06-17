@@ -1,18 +1,46 @@
-version: '3.8'
-
+version: '3.9'
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: strattonapp_mysql
+  db:
+    image: mysql:latest
+    container_name: strattonapp-bbdd
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: strattonapp
-      MYSQL_USER: kike
-      MYSQL_PASSWORD: 123456
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+
+  strattonapp_back:
+    build:
+      context: ./Backend
+      dockerfile: DockerFile
+    container_name: strattonapp_back
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      BBDD_HOST: db
+      BBDD_NAME: strattonapp
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      APP_PORT: 8080
+      LOG_LEVEL: DEBUG
+      DLL_AUTO: create
+    depends_on:
+      - db
+
+  strattonapp_front:
+    build:
+      context: ./Frontend
+      dockerfile: DockerFile
+    container_name: strattonapp_front
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - strattonapp_back
 
 volumes:
   mysql_data:

@@ -1,7 +1,7 @@
 # Etapa de construcción
 FROM maven:3-openjdk-17 as builder
+COPY pom.xml /usr/src/app/
 COPY src /usr/src/app/src
-COPY pom.xml /usr/src/app
 RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests
 
 # Etapa de producción
@@ -17,7 +17,6 @@ ENV DLL_AUTO="update"
 # Volumen para datos temporales y archivos multimedia
 VOLUME /tmp
 VOLUME /mediafiles
-RUN mkdir -p /mediafiles
 
 # Puerto expuesto
 EXPOSE 8080
@@ -25,8 +24,5 @@ EXPOSE 8080
 # Copiar el archivo JAR construido de la etapa de construcción
 COPY --from=builder /usr/src/app/target/StrattonApp-Backend-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# Establecer directorio de trabajo
-
 # Comando de inicio
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-

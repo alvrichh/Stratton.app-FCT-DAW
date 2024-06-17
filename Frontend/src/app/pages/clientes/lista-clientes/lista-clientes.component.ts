@@ -44,9 +44,7 @@ export class ListaClientesComponent implements OnInit {
         this.clientes = data;
       });
     } else {
-      this.clienteService
-        .obtenerClientesPorEmpleado(this.id)
-        .subscribe((data) => {
+      this.clienteService.obtenerClientesPorEmpleado(this.id).subscribe((data) => {
           this.clientes = data;
         });
     }

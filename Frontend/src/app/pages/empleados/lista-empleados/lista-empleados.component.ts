@@ -5,11 +5,12 @@ import { EmpleadoService } from '../empleado.service';
 import { Router, RouterLink } from '@angular/router';
 import swal from 'sweetalert2';
 import { AuthService } from '../../../auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lista-empleados',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './lista-empleados.component.html',
   styleUrl: './lista-empleados.component.css'
 })
@@ -17,6 +18,9 @@ export class ListaEmpleadosComponent implements OnInit{
 
   empleados: Empleado[];
   empleado: any;
+searchText: String = '';
+filteredEmpleados: Empleado[] = [];
+
 
   constructor(
     private empleadoServicio: EmpleadoService,
@@ -27,6 +31,8 @@ export class ListaEmpleadosComponent implements OnInit{
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
       this.obtenerEmpleados();
+      this.filteredEmpleados = [...this.empleados];
+
     }
   }
 
@@ -71,4 +77,22 @@ export class ListaEmpleadosComponent implements OnInit{
       this.empleados = dato;
     });
   }
+  
+
+  applyFilter(): void {
+    const searchText = this.searchText.toLowerCase().trim();
+    // Aplica la ordenación actual después del filtrado
+    if (searchText) {
+      this.empleados = this.empleados.filter(empleado =>
+        empleado.nombre.toLowerCase().includes(searchText) ||
+        empleado.apellidos.toLowerCase().includes(searchText) ||
+        empleado.username.toLowerCase().includes(searchText)
+      );
+    } else {
+      this.obtenerEmpleados(); // Vuelve a obtener todos los empleados si no hay texto de búsqueda
+      this.filteredEmpleados = [...this.empleados];
+
+    }
+  }
+  
 }

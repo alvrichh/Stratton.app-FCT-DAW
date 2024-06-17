@@ -4,6 +4,12 @@
 
 Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos del proyecto final de base de datos del año anterior, ampliándolo con las tecnologías que hemos aprendido este año, utilizando para la seguridad security springboot, y para el frontend angular 17
 
+#### Curso Escolar 2023-2024
+#### Autor: [Álvaro Rodríguez Molina](https://github.com/alvrichh)
+#### Tutor: [Juan Pablo Domínguez Mayo](https://github.com/profeInformatica101)
+#### Fecha de Inicio: 15/03/2024
+#### Fecha de Finalización: 12/06/2024
+
 ### Enlaces de interés:
 <a href="https://www.figma.com/file/abBcwX662jrvwuJvsCnbFK/Stratton.app?type=design&node-id=0%3A1&mode=design&t=w5RrKRyjNq5V1P3H-1">
 <img  height="70" src="https://static-00.iconduck.com/assets.00/apps-figma-icon-1024x1024-cb4t8vyj.png" alt="octocat" style="margin-right: 2rem;"/> 
@@ -27,10 +33,12 @@ La principal motivación del proyecto es poder gestionar mis propios clientes o 
 
 | Entidad   | Atributos                                      |
 |-----------|------------------------------------------------|
-| Empleado   | id, nombre, Correo, Contraseña, RolID  |
-| Cliente  | ClaseID, UsuarioID |
-| Suministro     | ClaseID, Nombre, Descripcion |
-| Asesoria     | TareaID, Titulo, Descripcion, Fecha_Entrega, Nota, ClaseID, UsuarioID |
+| Empleado   | id, nombre, apellidos, username, email, password, role, asesoria, clientes  |
+| Cliente  | idCliente, nombre, apellidos, dni, email, direccion, telefono, iban, asesoria, suministros, comercializadora, empleado |
+| Suministro     | cups, estado, direccion, mensaje, potencia, cliente, comercializadora |
+| Asesoria     | idAsesoria, direccion, valoracion, nombre, descripcion, clientes, empleados |
+| Comercializadora     | idCOmercializadora, companiaContratada, plan, suministros |
+
 
 
 ## Casos de uso

@@ -7,7 +7,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: strattonapp
  
   strattonapp_back:
@@ -22,7 +22,7 @@ services:
       BBDD_HOST: db
       BBDD_NAME: strattonapp
       DATABASE_USERNAME: root
-      DATABASE_PASSWORD: root
+      DATABASE_PASSWORD:  ""
       APP_PORT: 8080
       LOG_LEVEL: DEBUG
       DLL_AUTO: create

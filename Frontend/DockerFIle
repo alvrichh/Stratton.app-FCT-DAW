@@ -1,0 +1,18 @@
+# Imagen 
+FROM node:20.9.0 as build
+# Directorio
+WORKDIR /app
+# Copia los archivos menos el dockerfile
+COPY . .
+# Instala las dependencias
+RUN npm install
+# Construye la aplicación Angular
+RUN npm run build --prod
+# Usa una imagen de Nginx para servir la aplicación Angular
+FROM nginx:stable-alpine
+# Copia los archivos 
+COPY --from=build /app/dist/strattonapp-front/browser /usr/share/nginx/html
+
+EXPOSE 4200
+# Comando para iniciar Nginx
+CMD ["nginx", "-g", "daemon off;"]

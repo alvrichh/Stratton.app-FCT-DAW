@@ -1,84 +1,177 @@
 <div class="col-md-6 offset-md-3 mt-4">
-  <div class="card">
-    <div class="card-header">
-      <h3 class="text-center">Actualizar Cliente</h3>
-    </div>
-    <div class="card-body">
-      <form (ngSubmit)="onSubmit()" #clienteForm="ngForm">
-
-        <!-- Nombre y Apellidos -->
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="nombre">Nombre</label>
-            <input type="text" class="form-control" id="nombre" [(ngModel)]="cliente.nombre" name="nombre" required>
-          </div>
-          <div class="form-group col-md-6">
-            <label for="apellidos">Apellidos</label>
-            <input type="text" class="form-control" id="apellidos" [(ngModel)]="cliente.apellidos" name="apellidos" required>
-          </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="text-center">Editar cliente: {{cliente.nombre}}</h3>
         </div>
+        <div class="card-body">
+            <form (ngSubmit)="onSubmit()" #clienteForm="ngForm">
 
-        <!-- DNI y Email -->
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="dni">DNI</label>
-            <input type="text" class="form-control" id="dni" [(ngModel)]="cliente.dni" name="dni" required>
-          </div>
-          <div class="form-group col-md-6">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" [(ngModel)]="cliente.email" name="email" required>
-          </div>
-        </div>
+                <!-- Nombre y Apellidos -->
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" [(ngModel)]="cliente.nombre" name="nombre"
+                            required minlength="4" maxlength="50">
+                        <div class="alert alert-danger"
+                            *ngIf="clienteForm.controls['nombre'].invalid && (clienteForm.controls['nombre'].dirty || clienteForm.controls['nombre'].touched)">
+                            <div
+                                *ngIf="clienteForm.controls['nombre'].errors && clienteForm.controls['nombre'].errors['required']">
+                                Por favor, ingrese el nombre del cliente.
+                            </div>
+                            <div
+                                *ngIf="clienteForm.controls['nombre'].errors && clienteForm.controls['nombre'].errors['minlength']">
+                                El nombre debe tener al menos 4 caracteres.
+                            </div>
+                            <div
+                                *ngIf="clienteForm.controls['nombre'].errors && clienteForm.controls['nombre'].errors['maxlength']">
+                                El nombre no puede tener más de 50 caracteres.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" class="form-control" id="apellidos" [(ngModel)]="cliente.apellidos"
+                            name="apellidos" required minlength="4" maxlength="50">
+                        <div class="alert alert-danger"
+                            *ngIf="clienteForm.controls['apellidos'].invalid && (clienteForm.controls['apellidos'].dirty || clienteForm.controls['apellidos'].touched)">
+                            <div
+                                *ngIf="clienteForm.controls['apellidos'].errors && clienteForm.controls['apellidos'].errors['required']">
+                                Por favor, ingrese los apellidos del cliente.
+                            </div>
+                            <div
+                                *ngIf="clienteForm.controls['apellidos'].errors && clienteForm.controls['apellidos'].errors['minlength']">
+                                Los apellidos deben tener al menos 4 caracteres.
+                            </div>
+                            <div
+                                *ngIf="clienteForm.controls['apellidos'].errors && clienteForm.controls['apellidos'].errors['maxlength']">
+                                Los apellidos no pueden tener más de 50 caracteres.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- CUPS y Comercializadora -->
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="cups">CUPS</label>
-            <input type="text" class="form-control" id="cups" [(ngModel)]="cliente.cups" name="cups" required>
-          </div>
-          <div class="form-group col-md-6">
-            <label for="comercializadora">Comercializadora</label>
-            <select class="form-control" id="comercializadora" [(ngModel)]="cliente.companiaContratada" name="companiaContratada" required>
-              <option value="">Seleccionar...</option>
-              <option value="Endesa">Endesa</option>
-              <option value="Iberdrola">Iberdrola</option>
-              <option value="Naturgy">Naturgy</option>
-            </select>
-            <div class="mt-2">
-              <img *ngIf="cliente.companiaContratada === 'Endesa'" src="assets/images/endesa.png" alt="Endesa" class="img-thumbnail" width="100">
-              <img *ngIf="cliente.companiaContratada === 'Iberdrola'" src="assets/images/iberdrola.png" alt="Iberdrola" class="img-thumbnail" width="100">
-              <img *ngIf="cliente.companiaContratada === 'Naturgy'" src="assets/images/naturgy.png" alt="Naturgy" class="img-thumbnail" width="100">
-            </div>
-          </div>
-        </div>
+                <!-- DNI y Email -->
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="dni">DNI</label>
+                        <input type="text" class="form-control" id="dni" [(ngModel)]="cliente.dni" name="dni" required>
+                        <div class="alert alert-danger"
+                            *ngIf="clienteForm.controls['dni'].invalid && (clienteForm.controls['dni'].dirty || clienteForm.controls['dni'].touched)">
+                            <div
+                                *ngIf="clienteForm.controls['dni'].errors && clienteForm.controls['dni'].errors['required']">
+                                Por favor, ingrese el DNI del cliente.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" [(ngModel)]="cliente.email" name="email"
+                            required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                        <div class="alert alert-danger"
+                            *ngIf="clienteForm.controls['email'].invalid && (clienteForm.controls['email'].dirty || clienteForm.controls['email'].touched)">
+                            <div
+                                *ngIf="clienteForm.controls['email'].errors && clienteForm.controls['email'].errors['required']">
+                                Por favor, ingrese el email del cliente.
+                            </div>
+                            <div
+                                *ngIf="clienteForm.controls['email'].errors && clienteForm.controls['email'].errors['pattern']">
+                                El email no es válido.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Fecha de Subida del Contrato, IBAN y Dirección -->
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="fechaSubidaContrato">Fecha de Subida del Contrato</label>
-            <input type="date" class="form-control" id="fechaSubidaContrato" [(ngModel)]="cliente.fechaSubidaContrato" name="fechaSubidaContrato">
-          </div>
-          <div class="form-group col-md-6">
-            <label for="iban">IBAN</label>
-            <input type="text" class="form-control" id="iban" [(ngModel)]="cliente.iban" name="iban">
-          </div>
-        </div>
+                <!-- CUPS y Comercializadora -->
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="cups">CUPS</label>
+                        <input type="text" class="form-control" id="cups" [(ngModel)]="cliente.cups" name="cups"
+                            required minlength="10" maxlength="20">
+                        <div class="alert alert-danger"
+                            *ngIf="clienteForm.controls['cups'].invalid && (clienteForm.controls['cups'].dirty || clienteForm.controls['cups'].touched)">
+                            <div
+                                *ngIf="clienteForm.controls['cups'].errors && clienteForm.controls['cups'].errors['required']">
+                                Por favor, ingrese el CUPS del cliente.
+                            </div>
+                            <div
+                                *ngIf="clienteForm.controls['cups'].errors && clienteForm.controls['cups'].errors['minlength']">
+                                El CUPS debe tener al menos 10 caracteres.
+                            </div>
+                            <div
+                                *ngIf="clienteForm.controls['cups'].errors && clienteForm.controls['cups'].errors['maxlength']">
+                                El CUPS no puede tener más de 20 caracteres.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="comercializadora">Comercializadora</label>
+                        <select class="form-control" id="comercializadora" [(ngModel)]="cliente.companiaContratada"
+                            name="companiaContratada" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="Endesa">Endesa</option>
+                            <option value="Iberdrola">Iberdrola</option>
+                            <option value="Naturgy">Naturgy</option>
+                        </select>
+                        <div class="mt-2">
+                            <img *ngIf="cliente.companiaContratada === 'Endesa'" src="assets/images/endesa.png"
+                                alt="Endesa" class="img-thumbnail" width="100">
+                            <img *ngIf="cliente.companiaContratada === 'Iberdrola'" src="assets/images/iberdrola.png"
+                                alt="Iberdrola" class="img-thumbnail" width="100">
+                            <img *ngIf="cliente.companiaContratada === 'Naturgy'" src="assets/images/naturgy.png"
+                                alt="Naturgy" class="img-thumbnail" width="100">
+                        </div>
+                        <div class="alert alert-danger"
+                            *ngIf="clienteForm.controls['companiaContratada'].invalid && (clienteForm.controls['companiaContratada'].dirty || clienteForm.controls['companiaContratada'].touched)">
+                            <div
+                                *ngIf="clienteForm.controls['companiaContratada'].errors && clienteForm.controls['companiaContratada'].errors['required']">
+                                Por favor, seleccione una comercializadora.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Campo de Dirección -->
-        <div class="form-group">
-          <label for="direccion">Dirección</label>
-          <input type="text" class="form-control" id="direccion" [(ngModel)]="cliente.direccion" name="direccion">
-        </div>
+                <!-- Fecha de Subida del Contrato, IBAN y Dirección -->
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="fechaSubidaContrato">Fecha de Subida del Contrato</label>
+                        <input type="date" class="form-control" id="fechaSubidaContrato"
+                            [(ngModel)]="cliente.fechaSubidaContrato" name="fechaSubidaContrato">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="iban">IBAN</label>
+                        <input type="text" class="form-control" id="iban" [(ngModel)]="cliente.iban" name="iban">
+                    </div>
+                </div>
 
-        <!-- Subida de Archivo -->
-        <div class="form-group">
-          <label for="archivoCliente">Aportar Foto del Cliente</label>
-          <input type="file" class="form-control-file" id="archivoCliente" name="archivoCliente">
-        </div>
+                <!-- Campo de Dirección -->
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" class="form-control" id="direccion" [(ngModel)]="cliente.direccion"
+                        name="direccion">
+                </div>
 
-        <!-- Botón de submit -->
-        <button type="submit" class="btn btn-success" [disabled]="!clienteForm.valid">Actualizar Cliente</button>
-      </form>
-    </div>
-  </div>
-</div>
+                <!-- Campo de Teléfono -->
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" class="form-control" id="telefono" [(ngModel)]="cliente.telefono" name="telefono"
+                        required minlength="9" maxlength="15">
+                    <div class="alert alert-danger"
+                        *ngIf="clienteForm.controls['telefono'].invalid && (clienteForm.controls['telefono'].dirty || clienteForm.controls['telefono'].touched)">
+                        <div
+                            *ngIf="clienteForm.controls['telefono'].errors && clienteForm.controls['telefono'].errors['required']">
+                            Por favor, ingrese el número de teléfono
+                        </div>
+                        <div
+                            *ngIf="clienteForm.controls['telefono'].errors && clienteForm.controls['telefono'].errors['minlength']">
+                            El número de teléfono debe tener al menos 9 caracteres.
+                        </div>
+                        <div
+                            *ngIf="clienteForm.controls['telefono'].errors && clienteForm.controls['telefono'].errors['maxlength']">
+                            El número de teléfono no puede tener más de 15 caracteres.
+                        </div>
+                    </div>
+
+                    <!-- Botón de submit -->
+                    <button type="submit" class="btn btn-success mt-4" [disabled]="!clienteForm.valid">Guardar
+                        </button>
+                    <form>

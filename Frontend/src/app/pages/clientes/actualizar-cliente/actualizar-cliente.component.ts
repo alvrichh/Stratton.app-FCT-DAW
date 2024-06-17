@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 export class ActualizarClienteComponent implements OnInit {
   id: number;
   cliente: Cliente = new Cliente();
+selectComercializadora: any;
 
   constructor(
     private route: ActivatedRoute,

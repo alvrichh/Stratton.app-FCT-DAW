@@ -23,15 +23,16 @@ export class RegistrarEmpleadoComponent implements OnInit{
   constructor(private empleadoServicio:EmpleadoService, private router:Router){}
 
   ngOnInit(): void {
+    console.clear();
     console.log(this.empleado)
+    
   }
   onSubmit(){
-    console.log(this.empleado)
     this.guardarEmpleado();
   }
   guardarEmpleado(){
     this.empleadoServicio.registrarEmpleado(this.empleado).subscribe(dato => {
-      console.log(dato);
+      //console.log(dato);
       this.verListaEmpleados();
     }, error => console.log(error));
   }

@@ -21,7 +21,9 @@ export class RegistrarClienteComponent implements OnInit {
   constructor(private clienteService: ClienteService, private router: Router) { }
 
   ngOnInit(): void {
+    console.clear();
     console.log(this.cliente);
+
   }
 
   onSubmit(): void {

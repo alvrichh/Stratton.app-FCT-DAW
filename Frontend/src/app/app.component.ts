@@ -11,14 +11,11 @@ import { HeaderComponent } from './layout/header/header.component';
 //servicio
 import { CargarScriptsService } from './cargar-scripts.service';
 import { AuthService } from './auth.service';
-import { MaterialModule } from './modules/material.module';
-import { HomeComponent } from './layout/home/home.component';
-import { ToastrModule } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ListaEmpleadosComponent, CommonModule, RouterOutlet, RouterLink, FormsModule, ListaClientesComponent, PerfilEmpleadoComponent, RegisterComponent, HeaderComponent, FooterComponent, MaterialModule, HomeComponent, ToastrModule],
+  imports: [ListaEmpleadosComponent, CommonModule, RouterOutlet, RouterLink, FormsModule, ListaClientesComponent, PerfilEmpleadoComponent, RegisterComponent, HeaderComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

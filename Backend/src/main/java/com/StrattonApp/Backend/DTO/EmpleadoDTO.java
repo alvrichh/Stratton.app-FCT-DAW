@@ -88,4 +88,5 @@ public class EmpleadoDTO implements Serializable {
     public void setClientes(List<ClienteDTO> clientes) {
         this.clientes = clientes;
     }
+
 }

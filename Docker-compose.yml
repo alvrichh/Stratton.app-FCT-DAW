@@ -9,11 +9,13 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: strattonapp
- 
+    volumes:
+      - db_data:/var/lib/mysql
+
   strattonapp_back:
     build:
       context: ./Backend
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     container_name: strattonapp_back
     restart: unless-stopped
     ports:
@@ -22,22 +24,25 @@ services:
       BBDD_HOST: db
       BBDD_NAME: strattonapp
       DATABASE_USERNAME: root
-      DATABASE_PASSWORD:  ""
+      DATABASE_PASSWORD: ""
       APP_PORT: 8080
       LOG_LEVEL: DEBUG
       DLL_AUTO: create
     volumes:
-      - ./src/main/resources:/app/resources
+      - ./Backend/src/main/resources:/app/resources
     depends_on:
       - db
 
   strattonapp_front:
     build:
       context: ./Frontend
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     container_name: strattonapp_front
     restart: unless-stopped
     ports:
       - "80:80"
     depends_on:
       - strattonapp_back
+
+volumes:
+  db_data:

@@ -1,20 +1,30 @@
 # Etapa de construcción
 FROM node:20.9.0 AS build
+
 # Establece el directorio de trabajo
 WORKDIR /app
+
 # Copia los archivos del proyecto
-COPY . .
+COPY package*.json ./
+
 # Instala las dependencias
 RUN npm install --force
 RUN npm install sweetalert2 --force
+
+# Copia el resto de los archivos del proyecto
+COPY . .
+
 # Construye la aplicación Angular
 RUN npm run build --prod
+
 # Etapa de producción
 FROM nginx:stable-alpine
+
 # Copia los archivos construidos al directorio de Nginx
 COPY --from=build /app/dist/strattonapp-front/browser /usr/share/nginx/html
 
 # Expone el puerto 80
 EXPOSE 80
+
 # Comando para iniciar Nginx
 CMD ["nginx", "-g", "daemon off;"]

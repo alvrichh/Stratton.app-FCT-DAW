@@ -1,8 +1,15 @@
 # Etapa de construcción
 FROM maven:3-openjdk-17 as builder
-COPY pom.xml /usr/src/app/
-COPY src /usr/src/app/src
-RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests
+
+# Establece el directorio de trabajo
+WORKDIR /usr/src/app
+
+# Copia los archivos del proyecto
+COPY pom.xml .
+COPY src ./src
+
+# Construye el paquete de la aplicación
+RUN mvn clean package -DskipTests
 
 # Etapa de producción
 FROM openjdk:17-alpine
@@ -21,7 +28,7 @@ VOLUME /mediafiles
 # Puerto expuesto
 EXPOSE 8080
 
-# Copiar el archivo JAR construido de la etapa de construcción
+# Copia el archivo JAR construido de la etapa de construcción
 COPY --from=builder /usr/src/app/target/Backend-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # Comando de inicio

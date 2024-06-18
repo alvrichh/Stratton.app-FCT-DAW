@@ -51,7 +51,9 @@
   <div class="row">
     <div class="col-md-6">
       <h2>Ubicación</h2>
-      <img src="https://www.google.com/maps/vt/data=56s5aIAXubekNScHd6LmjI-88gO3sUSJ8-rc2Yk5A1Yb-3n0xlnAzAh4j2_GB0M-HUfoxaasAIiZGCdm9YqXSIh26zT8_fX2kgV9TOwZ6KMADjh1qIeka-OyMypjA2VMxUR7Kgcqb3TA9zJvrMnTx5DhWhxLwCtYbuBkVdRZsvBGq5XGNyQIi-rTfTTY3Xs9HSTRFeZGabje6gKMIVUYIv3BX4yYIFqqTxA48oFvPOmVpBeimiFHn1fF_JtMf6ke-bv_a0KqkauOCIppNgKLQz30WiigDRakldxflLxGyw" class="col-md-12">
+      <img
+        src="https://www.google.com/maps/vt/data=56s5aIAXubekNScHd6LmjI-88gO3sUSJ8-rc2Yk5A1Yb-3n0xlnAzAh4j2_GB0M-HUfoxaasAIiZGCdm9YqXSIh26zT8_fX2kgV9TOwZ6KMADjh1qIeka-OyMypjA2VMxUR7Kgcqb3TA9zJvrMnTx5DhWhxLwCtYbuBkVdRZsvBGq5XGNyQIi-rTfTTY3Xs9HSTRFeZGabje6gKMIVUYIv3BX4yYIFqqTxA48oFvPOmVpBeimiFHn1fF_JtMf6ke-bv_a0KqkauOCIppNgKLQz30WiigDRakldxflLxGyw"
+        class="col-md-12">
 
       <!--<div id="mapa" style="height: 400px;">
 
@@ -59,5 +61,98 @@
 
     </div>
   </div>
+  <br>
+  <h2>Compañías comercializadoras:</h2>
+  <!-- Contenedor de cartas desplegables -->
+  <div class="accordion" id="accordionExample">
 
+    <!-- Carta desplegable para Iberdrola -->
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <h2 class="mb-0">
+          <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+            aria-expanded="true" aria-controls="collapseOne">
+            <img src="assets/images/iberdrola.png" width="300px">
+          </button>
+        </h2>
+      </div>
+
+      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="card-body">
+          <h5>Precio:</h5>
+          <p>0,167 €/kWh. Con el 20% de descuento, el precio se queda en 0,127 €/kWh.</p>
+          <h5>Descripción:</h5>
+          <p>Ofrecen un pack inicial con un coste de 3,5 € los primeros 4 meses (50% de descuento), luego 9 €.</p>
+          <h5>Ventajas:</h5>
+          <ul>
+            <li>Regalo de una tarjeta de 50€ en Carrefour o Leroy Merlin si vives en Sevilla, Málaga o Badajoz.</li>
+            <li>No tiene permanencia ni costes de mantenimiento.</li>
+          </ul>
+          <h5>Desventajas:</h5>
+          <ul>
+            <li>El pack inicial tiene un coste.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carta desplegable para Naturgy -->
+    <div class="card">
+      <div class="card-header" id="headingTwo">
+        <h2 class="mb-0">
+          <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+            aria-expanded="false" aria-controls="collapseTwo">
+            <img src="assets/images/endesa.png" width="300px">
+          </button>
+        </h2>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+        <div class="card-body">
+          <h5>Precio:</h5>
+          <p>0,17 €/kWh. Con un descuento del 25%, el precio final es de 0,127 €/kWh.</p>
+          <h5>Descripción:</h5>
+          <p>Tienen la posibilidad de ofrecer un precio de 0,10 €/kWh, pero con permanencia de un año.</p>
+          <h5>Ventajas:</h5>
+          <ul>
+            <li>Descuento inicial del 25% durante dos años.</li>
+          </ul>
+          <h5>Desventajas:</h5>
+          <ul>
+            <li>Permanencia de un año.</li>
+            <li>Mantenimiento "obligatorio" con coste de 7 €/mes.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carta desplegable para Endesa -->
+    <div class="card">
+      <div class="card-header" id="headingThree">
+        <h2 class="mb-0">
+          <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree"
+            aria-expanded="false" aria-controls="collapseThree">
+            <img src="assets/images/naturgy.png" width="300px">
+          </button>
+        </h2>
+      </div>
+      <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+        <div class="card-body">
+          <h5>Precio:</h5>
+          <p>0,11 €/kWh. El precio no tiene descuentos.</p>
+          <h5>Descripción:</h5>
+          <p>No ofrecen descuentos, manteniendo el mismo precio en todo momento.</p>
+          <h5>Ventajas:</h5>
+          <ul>
+            <li>Precio constante sin variaciones.</li>
+          </ul>
+          <h5>Desventajas:</h5>
+          <ul>
+            <li>Cobro de 2 €/mes por la batería virtual.</li>
+            <li>Muchos mensajes de spam.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

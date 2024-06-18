@@ -39,9 +39,7 @@
             <button (click)="eliminarEmpleado(empleado.id)" class="btn btn-danger"><i class="bi bi-trash3"></i> Borrar</button>
           </td>
         </tr>
-        <tr *ngIf="filteredEmpleados.length === 0">
-          <td colspan="7" class="text-center">No se encontraron resultados</td>
-        </tr>
+    
       </tbody>
     </table>
   </div>

@@ -18,8 +18,8 @@ export class ListaEmpleadosComponent implements OnInit{
 
   empleados: Empleado[];
   empleado: any;
-searchText: String = '';
-filteredEmpleados: Empleado[] = [];
+  searchText: String = ''; 
+  filteredEmpleados: Empleado[] = [];
 
 
   constructor(

@@ -10,7 +10,7 @@
                     <form>
                         <div class="form-group">
                             <label for="username">Usuario</label>
-                            <input type="text" class="form-control" id="username" placeholder="Ingresa tu usuario" [(ngModel)]="username" name="username">
+                            <input type="text" class="form-control" id="username" placeholder="Ingresa tu usuario" [(ngModel)]="username" name="username" onkeydown="focusNextInput(event)">
                         </div>
                         <div class="form-group">
                             <label for="password">Contraseña</label>

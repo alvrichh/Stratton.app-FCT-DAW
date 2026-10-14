@@ -16,6 +16,9 @@ import com.StrattonApp.Backend.repository.SuministroRepository;
 /**
  * SEED_RESET=true sobre una base de datos ya poblada debe vaciarla respetando las claves foráneas
  * y volver a sembrar los datos de ejemplo.
+ *
+ * La base de datos H2 en memoria se comparte con el resto de tests (que pueden haber creado
+ * empleados o clientes), así que no se supone nada del estado inicial: solo que hay datos.
  */
 @SpringBootTest
 @DirtiesContext
@@ -34,15 +37,14 @@ class InicializarDatosTests {
 
     @Test
     void resetSobreBaseDeDatosPobladaVuelveASembrar() {
-        assertThat(empleadoRepository.count()).isEqualTo(3);
-        long clientesAntes = clienteRepository.count();
+        assertThat(empleadoRepository.count()).isPositive();
 
         inicializarDatos.setSeedReset(true);
         inicializarDatos.run();
 
         assertThat(empleadoRepository.count()).isEqualTo(3);
         assertThat(asesoriaRepository.count()).isEqualTo(2);
-        assertThat(clienteRepository.count()).isEqualTo(clientesAntes);
+        assertThat(clienteRepository.count()).isEqualTo(10);
         assertThat(suministroRepository.count()).isGreaterThan(10);
         assertThat(empleadoRepository.findByUsernameIgnoreCase("admin")).isPresent();
     }

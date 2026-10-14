@@ -42,10 +42,15 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- Base de datos: MySQL en producción, H2 para el perfil "h2" (desarrollo/tests sin MySQL) -->
+        <!-- Base de datos: MySQL (docker compose), PostgreSQL (Render) y H2 para el perfil "h2" (desarrollo/tests sin MySQL) -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>

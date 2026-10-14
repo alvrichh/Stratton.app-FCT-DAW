@@ -1,6 +1,13 @@
-# Blueprint de Render: backend (Spring Boot) y frontend (Angular + nginx) como servicios Docker.
-# La base de datos MySQL va aparte (Render solo ofrece PostgreSQL), por ejemplo en Aiven (gratis).
-# Uso: Render > New > Blueprint > este repositorio. Los valores con "sync: false" se piden al crear.
+# Blueprint de Render: PostgreSQL, backend (Spring Boot) y frontend (Angular + nginx) como servicios Docker.
+# En local se sigue usando MySQL (docker compose); en Render el backend se conecta a PostgreSQL
+# a través de SPRING_DATASOURCE_URL (el driver se deduce de la URL).
+# Uso: Render > New > Blueprint > este repositorio.
+databases:
+  - name: strattonapp-db
+    plan: free
+    databaseName: strattonapp
+    user: strattonapp
+
 services:
   - type: web
     name: strattonapp-back
@@ -13,19 +20,18 @@ services:
         value: "8080"
       - key: PORT
         value: "8080"
-      # Datos de conexión de la base de datos MySQL (Aiven > servicio > Overview > Connection information)
-      - key: BBDD_HOST
+      # URL JDBC de la base de datos: jdbc:postgresql://<host interno>:5432/strattonapp
+      # (Render la da como postgresql://...; hay que anteponer "jdbc:" y quitar usuario y contraseña)
+      - key: SPRING_DATASOURCE_URL
         sync: false
-      - key: BBDD_PORT
-        sync: false
-      - key: BBDD_NAME
-        value: strattonapp
       - key: DATABASE_USERNAME
-        sync: false
+        fromDatabase:
+          name: strattonapp-db
+          property: user
       - key: DATABASE_PASSWORD
-        sync: false
-      - key: BBDD_SSL_MODE
-        value: REQUIRED
+        fromDatabase:
+          name: strattonapp-db
+          property: password
       - key: DDL_AUTO
         value: update
       - key: SEED_DATA

@@ -235,14 +235,16 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         Suministro suministro;
+        boolean nuevo = false;
         if (existente != null) {
             suministro = existente;
         } else if (!cliente.getSuministros().isEmpty()) {
             // El cliente cambia el CUPS de su suministro principal: el CUPS es clave primaria,
-            // así que se sustituye el registro.
+            // así que se sustituye el registro conservando sus datos y su fecha de alta.
             Suministro principal = cliente.getSuministros().get(0);
             suministro = new Suministro(cups, principal.getEstado(), principal.getDireccion(), principal.getMensaje(),
                     principal.getPotencia(), cliente, principal.getComercializadora());
+            suministro.setFechaAlta(principal.getFechaAlta());
             cliente.removeSuministro(principal);
             suministroRepository.delete(principal);
             suministroRepository.flush();
@@ -251,12 +253,16 @@ public class ClienteServiceImpl implements ClienteService {
             suministro = new Suministro();
             suministro.setCups(cups);
             cliente.addSuministro(suministro);
+            nuevo = true;
         }
 
-        String direccion = request.getDireccion() != null && !request.getDireccion().isBlank()
-                ? request.getDireccion().trim()
-                : (suministro.getDireccion() != null ? suministro.getDireccion() : "Sin dirección");
-        suministro.setDireccion(direccion);
+        // La dirección del suministro solo se toma del cliente al crearlo; después se edita
+        // desde la ficha de suministros (no se pisa al actualizar los datos del cliente).
+        if (nuevo || suministro.getDireccion() == null || suministro.getDireccion().isBlank()) {
+            String direccion = request.getDireccion() != null && !request.getDireccion().isBlank()
+                    ? request.getDireccion().trim() : "Sin dirección";
+            suministro.setDireccion(direccion);
+        }
         if (request.getEstado() != null) {
             suministro.setEstado(request.getEstado());
         } else if (suministro.getEstado() == null) {

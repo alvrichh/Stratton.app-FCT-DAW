@@ -44,7 +44,7 @@ public class SuministroServiceImpl implements SuministroService {
     @Transactional(readOnly = true)
     public List<SuministroDTO> getSuministrosDeCliente(Long clienteId) {
         findClienteVisible(clienteId);
-        return suministroRepository.findByClienteIdClienteOrderByCupsAsc(clienteId).stream()
+        return suministroRepository.findByClienteIdClienteOrderByFechaAltaAscCupsAsc(clienteId).stream()
                 .map(SuministroDTO::from).collect(Collectors.toList());
     }
 

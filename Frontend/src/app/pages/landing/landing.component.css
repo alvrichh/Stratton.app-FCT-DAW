@@ -1,15 +1,27 @@
-/* Sección que se recorre con el scroll: su altura marca la duración del parallax */
+/* La landing empieza bajo la cabecera transparente (ver header.component) */
+:host {
+  display: block;
+  margin-top: calc(-1 * var(--st-header-h, 72px));
+}
+
+/*
+ * .hero mide 350vh:
+ *   - 150vh de recorrido para el parallax (la escena queda fija con position: sticky),
+ *   - 100vh en los que el contenido entra por encima (margin-top: -100vh en .contenido)
+ *     mientras el texto sigue quieto en el centro,
+ *   - 100vh de la propia escena.
+ */
 .hero {
   position: relative;
-  height: 200vh;
+  height: 350vh;
   background: #fff;
 }
 
-/* La escena ocupa todo el ancho y se queda pegada arriba mientras se recorre la sección */
 .escena {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100svh;
   overflow: hidden;
   background: #fff;
 }
@@ -24,7 +36,6 @@
   font-family: 'Montserrat', sans-serif;
   font-weight: 900;
   font-size: 99px;
-  text-anchor: start;
 }
 
 .arrow-btn {
@@ -32,21 +43,223 @@
   outline: none;
 }
 
-/* Contenido claro tras la escena (el fondo general de la app es oscuro) */
+/* ---------- Telón de contenido ---------- */
 .contenido {
-  background: #f8f9fa;
-  color: #212529;
+  position: relative;
+  z-index: 2;
+  margin-top: -100vh;
+  background: var(--st-bg);
+  border-radius: 2rem 2rem 0 0;
+  box-shadow: 0 -24px 48px -12px rgba(15, 23, 42, 0.25);
+  color: var(--st-fg);
+  padding-bottom: 1rem;
 }
 
-.contenido .card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.bloque {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem 0;
 }
 
-.contenido .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0.5rem 1.5rem rgba(22, 42, 67, 0.15) !important;
+.intro {
+  text-align: center;
+  max-width: 820px;
+  padding-top: 5rem;
 }
 
-.contenido h1 {
-  color: #162a43;
+.intro h1 {
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  line-height: 1.08;
+  margin: 1rem 0;
+}
+
+.intro .lead {
+  color: var(--st-muted);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: var(--st-accent-soft);
+  color: var(--st-accent-hover);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+/* Franja de comercializadoras */
+.logos {
+  max-width: 900px;
+  margin: 4rem auto 0;
+  padding: 0 1.25rem;
+  text-align: center;
+}
+
+.logos-titulo {
+  color: var(--st-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.logos-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem 3rem;
+}
+
+.logos-lista img {
+  height: 44px;
+  width: auto;
+  filter: grayscale(1);
+  opacity: 0.7;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.logos-lista img:hover {
+  filter: none;
+  opacity: 1;
+}
+
+.encabezado {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.encabezado h2 {
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem);
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+/* Cómo funciona */
+.pasos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  counter-reset: paso;
+}
+
+.paso {
+  position: relative;
+  padding: 1.75rem;
+  border-radius: var(--st-radius);
+  background: var(--st-card);
+  border: 1px solid var(--st-border);
+  box-shadow: var(--st-shadow-sm);
+}
+
+.paso h3 {
+  font-size: 1.1rem;
+  margin: 1rem 0 0.4rem;
+}
+
+.paso p {
+  color: var(--st-muted);
+  margin: 0;
+}
+
+.paso-numero {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--st-border);
+}
+
+.paso-icono,
+.ventaja-icono {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.85rem;
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-size: 1.35rem;
+}
+
+.ventaja {
+  transition: transform 0.2s var(--st-ease), box-shadow 0.2s var(--st-ease);
+}
+
+.ventaja:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--st-shadow-lg);
+}
+
+/* Llamada a la acción final */
+.cta-final {
+  max-width: 1140px;
+  margin: 4.5rem auto 2rem;
+  padding: 0 1.25rem;
+}
+
+.cta-final-caja {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 2.5rem;
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(40rem 20rem at 100% 0%, rgba(0, 180, 230, 0.35), transparent 60%),
+    linear-gradient(135deg, var(--st-navy-2), var(--st-navy));
+  color: #e2e8f0;
+}
+
+.cta-final-caja h2 {
+  color: #fff;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+}
+
+.cta-final-caja p {
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.cta-final-caja .cta {
+  margin-top: 0;
+}
+
+@media (max-width: 575.98px) {
+  .contenido {
+    border-radius: 1.25rem 1.25rem 0 0;
+  }
+  .bloque {
+    padding-top: 3.5rem;
+  }
+  .cta .btn {
+    width: 100%;
+  }
+  .cta-final-caja {
+    padding: 1.75rem;
+  }
 }

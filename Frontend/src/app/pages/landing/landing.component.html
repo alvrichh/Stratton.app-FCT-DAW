@@ -1,19 +1,19 @@
-<!-- Escena de parallax: la sección mide 200vh y la escena se queda fija (sticky) mientras se recorre -->
+<!-- Escena de parallax: la escena se queda fija (sticky) mientras se recorre la sección y,
+     al terminar, el contenido entra por encima como un telón. El texto queda siempre centrado. -->
 <section class="hero" #hero aria-label="Stratton Global">
-  <div class="escena">
-    <!-- En vertical se encuadra solo la zona del texto para que no se recorte (ver vertical en el componente) -->
-    <svg [attr.viewBox]="vertical ? '355 0 460 800' : '0 0 1200 800'"
-      [attr.preserveAspectRatio]="vertical ? 'xMidYMin meet' : 'xMidYMin slice'"
+  <div class="escena" #escena>
+    <svg [attr.viewBox]="vertical ? '355 0 460 800' : '0 0 1200 800'" preserveAspectRatio="xMidYMin slice"
       xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hero-titulo">
       <title id="hero-titulo">Stratton Global · StrattonApp</title>
       <mask id="m">
         <g class="cloud1">
-          <rect fill="#fff" width="1200" height="801" y="799" />
+          <rect fill="#fff" width="1200" height="1600" y="799" />
           <image href="assets/landing/cloud1Mask.jpg" width="1200" height="800" />
         </g>
       </mask>
 
-      <image class="sky" href="assets/landing/sky.jpg" width="1200" height="590" />
+      <!-- El cielo se alarga lo mismo que bajan las montañas para no dejar huecos -->
+      <image class="sky" href="assets/landing/sky.jpg" width="1200" [attr.height]="590 + desplazamiento + 200" preserveAspectRatio="none" />
       <image class="mountBg" href="assets/landing/mountBg.png" width="1200" height="800" />
       <image class="mountMg" href="assets/landing/mountMg.png" width="1200" height="800" />
       <image class="cloud2" href="assets/landing/cloud2.png" width="1200" height="800" />
@@ -21,58 +21,102 @@
       <image class="cloud1" href="assets/landing/cloud1.png" width="1200" height="800" />
       <image class="cloud3" href="assets/landing/cloud3.png" width="1200" height="800" />
 
-      <text fill="#fff" x="370" y="165">stratton</text>
-      <text fill="#fff" x="470" y="245">global</text>
-      <polyline class="arrow" fill="#fff" points="599,250 599,289 590,279 590,282 600,292 610,282 610,279 601,289 601,250" />
+      <g #textoBase [attr.transform]="transformTexto">
+        <text fill="#fff" x="800" y="165" text-anchor="end">stratton</text>
+        <text fill="#fff" x="800" y="245" text-anchor="end">global</text>
+      </g>
 
       <!-- Lo que queda por debajo de la nube se ve en azul y cambia a "stratton app" -->
       <g mask="url(#m)">
-        <rect fill="#fff" width="1200" height="800" />
-        <text fill="#162a43" x="370" y="165">stratton</text>
-        <text fill="#162a43" x="600" y="245">app</text>
+        <rect fill="#fff" y="-400" width="1200" height="1600" />
+        <g [attr.transform]="transformTexto">
+          <text fill="#162a43" x="800" y="165" text-anchor="end">stratton</text>
+          <text fill="#162a43" x="800" y="245" text-anchor="end">app</text>
+        </g>
       </g>
 
-      <rect class="arrow-btn" width="100" height="100" opacity="0" x="550" y="220"
-        role="button" tabindex="0" aria-label="Bajar al contenido"
-        (mouseenter)="flechaEncima()" (mouseleave)="flechaFuera()" (focus)="flechaEncima()" (blur)="flechaFuera()"
-        (click)="bajar()" (keydown.enter)="bajar()" (keydown.space)="bajar(); $event.preventDefault()" />
+      <g [attr.transform]="transformTexto">
+        <polyline class="arrow" fill="#fff" points="599,262 599,301 590,291 590,294 600,304 610,294 610,291 601,301 601,262" />
+        <rect class="arrow-btn" width="100" height="90" opacity="0" x="550" y="235"
+          role="button" tabindex="0" aria-label="Bajar al contenido"
+          (mouseenter)="flechaEncima()" (mouseleave)="flechaFuera()" (focus)="flechaEncima()" (blur)="flechaFuera()"
+          (click)="bajar()" (keydown.enter)="bajar()" (keydown.space)="bajar(); $event.preventDefault()" />
+      </g>
     </svg>
   </div>
 </section>
 
-<!-- Contenido tras la escena -->
-<section class="contenido" #contenido>
-  <div class="container py-5">
-    <div class="text-center mb-5">
-      <h1 class="display-5 fw-bold">Tu asesoría energética, organizada</h1>
-      <p class="lead text-secondary mx-auto" style="max-width: 640px;">
-        StrattonApp reúne clientes, contratos y puntos de suministro de Endesa, Iberdrola y Naturgy en un solo sitio,
-        para que cada asesor sepa en qué punto está cada contrato.
-      </p>
-
-      <div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
-        <ng-container *ngIf="authService.isLoggedIn(); else invitado">
-          <a [routerLink]="authService.rutaInicial()" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right"></i> Entrar a la aplicación</a>
-          <a routerLink="/registrar-cliente" class="btn btn-outline-primary btn-lg"><i class="bi bi-person-plus"></i> Nuevo cliente</a>
-        </ng-container>
-        <ng-template #invitado>
-          <a routerLink="/login" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right"></i> Iniciar sesión</a>
-          <a routerLink="/register" class="btn btn-outline-primary btn-lg"><i class="bi bi-person-plus"></i> Crear cuenta</a>
-        </ng-template>
-        <a routerLink="/inicio" class="btn btn-link btn-lg">Ver comercializadoras</a>
-      </div>
+<!-- Contenido: entra por encima de la escena -->
+<div class="contenido" #contenido>
+  <section class="bloque intro revelar" aria-labelledby="landing-titulo">
+    <span class="eyebrow">Para asesorías energéticas</span>
+    <h1 id="landing-titulo">Tu asesoría energética, organizada</h1>
+    <p class="lead">
+      StrattonApp reúne clientes, contratos y puntos de suministro de Endesa, Iberdrola y Naturgy en un solo sitio,
+      para que cada asesor sepa en qué punto está cada contrato.
+    </p>
+    <div class="cta">
+      <ng-container *ngIf="authService.isLoggedIn(); else invitado">
+        <a [routerLink]="authService.rutaInicial()" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> Entrar a la aplicación</a>
+        <a routerLink="/registrar-cliente" class="btn btn-outline-primary btn-lg"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo cliente</a>
+      </ng-container>
+      <ng-template #invitado>
+        <a routerLink="/login" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> Iniciar sesión</a>
+        <a routerLink="/register" class="btn btn-outline-primary btn-lg">Crear cuenta</a>
+      </ng-template>
     </div>
+  </section>
 
-    <div class="row g-4">
+  <section class="logos" aria-label="Comercializadoras con las que trabajamos">
+    <p class="logos-titulo">Trabajamos con</p>
+    <ul class="logos-lista revelar">
+      <li *ngFor="let c of comercializadoras"><img [src]="c.logo" [alt]="c.nombre" height="44"></li>
+    </ul>
+  </section>
+
+  <section class="bloque" aria-labelledby="pasos-titulo">
+    <div class="encabezado">
+      <h2 id="pasos-titulo">Cómo funciona</h2>
+      <p class="text-secondary">Del alta del cliente al seguimiento del contrato, en tres pasos.</p>
+    </div>
+    <ol class="pasos revelar">
+      <li *ngFor="let p of pasos; let i = index" class="paso">
+        <span class="paso-numero" aria-hidden="true">{{ i + 1 }}</span>
+        <span class="paso-icono" aria-hidden="true"><i class="bi {{ p.icono }}"></i></span>
+        <h3>{{ p.titulo }}</h3>
+        <p>{{ p.texto }}</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="bloque" aria-labelledby="ventajas-titulo">
+    <div class="encabezado">
+      <h2 id="ventajas-titulo">Pensada para el día a día del asesor</h2>
+    </div>
+    <div class="row g-4 revelar">
       <div class="col-md-4" *ngFor="let v of ventajas">
-        <div class="card h-100 border-0 shadow-sm">
+        <div class="card ventaja h-100">
           <div class="card-body p-4">
-            <i class="bi {{ v.icono }} fs-1 text-primary"></i>
-            <h2 class="h5 mt-3">{{ v.titulo }}</h2>
+            <span class="ventaja-icono" aria-hidden="true"><i class="bi {{ v.icono }}"></i></span>
+            <h3 class="h5 mt-3">{{ v.titulo }}</h3>
             <p class="mb-0 text-secondary">{{ v.texto }}</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section class="cta-final" aria-labelledby="cta-titulo">
+    <div class="cta-final-caja revelar">
+      <div>
+        <h2 id="cta-titulo">¿Empezamos?</h2>
+        <p>Entra con tu usuario o habla con un asesor de Stratton Global.</p>
+      </div>
+      <div class="cta">
+        <a *ngIf="!authService.isLoggedIn()" routerLink="/login" class="btn btn-light btn-lg">Iniciar sesión</a>
+        <a *ngIf="authService.isLoggedIn()" [routerLink]="authService.rutaInicial()" class="btn btn-light btn-lg">Ir a la aplicación</a>
+        <a href="https://wa.link/44bcfa" target="_blank" rel="noopener" class="btn btn-outline-light btn-lg"><i class="bi bi-whatsapp" aria-hidden="true"></i> Habla con un asesor</a>
+      </div>
+    </div>
+  </section>
+</div>

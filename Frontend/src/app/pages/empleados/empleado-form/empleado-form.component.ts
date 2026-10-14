@@ -50,10 +50,15 @@ export class EmpleadoFormComponent implements OnInit {
     return (this.empleado.password ?? '') === this.confirmPassword;
   }
 
+  /** true si hay que mostrar el aviso de contraseñas distintas (alguno de los dos campos tiene texto). */
+  get mostrarAvisoPassword(): boolean {
+    return !this.passwordsCoinciden && ((this.empleado.password ?? '') !== '' || this.confirmPassword !== '');
+  }
+
   get passwordValida(): boolean {
     const p = this.empleado.password ?? '';
-    if (this.modoEdicion && p === '') {
-      return true; // en edición, vacía = no cambiar
+    if (this.modoEdicion && p === '' && this.confirmPassword === '') {
+      return true; // en edición, ambos vacíos = no cambiar la contraseña
     }
     return p.length >= 6 && this.passwordsCoinciden;
   }
@@ -62,9 +67,8 @@ export class EmpleadoFormComponent implements OnInit {
     if (this.guardando || !this.passwordValida) {
       return;
     }
-    const datos: EmpleadoRequest = { ...this.empleado };
+    const datos: EmpleadoRequest = { ...this.empleado, asesoriaId: this.empleado.asesoriaId ?? null };
     if (!datos.password) { delete datos.password; }
-    if (!datos.asesoriaId) { delete datos.asesoriaId; }
     if (!datos.roles.length) { datos.roles = ['USER']; }
     this.guardar.emit(datos);
   }

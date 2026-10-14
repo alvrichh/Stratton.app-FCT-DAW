@@ -35,18 +35,18 @@
     <table class="table table-striped table-hover align-middle">
       <thead class="table-dark">
         <tr>
-          <th *ngIf="esJefe" class="sortable" (click)="sort('empleadoNombre')" scope="col">Asesor
+          <th *ngIf="esJefe" class="sortable" role="button" tabindex="0" (click)="sort('empleadoNombre')" (keydown.enter)="sort('empleadoNombre')" scope="col">Asesor
             <span *ngIf="orderBy === 'empleadoNombre'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th class="sortable" (click)="sort('apellidos')" scope="col">Nombre completo
+          <th class="sortable" role="button" tabindex="0" (click)="sort('apellidos')" (keydown.enter)="sort('apellidos')" scope="col">Nombre completo
             <span *ngIf="orderBy === 'apellidos'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th class="sortable" (click)="sort('dni')" scope="col">DNI
+          <th class="sortable" role="button" tabindex="0" (click)="sort('dni')" (keydown.enter)="sort('dni')" scope="col">DNI
             <span *ngIf="orderBy === 'dni'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th class="sortable" (click)="sort('telefono')" scope="col">Teléfono
+          <th class="sortable" role="button" tabindex="0" (click)="sort('telefono')" (keydown.enter)="sort('telefono')" scope="col">Teléfono
             <span *ngIf="orderBy === 'telefono'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
           <th scope="col">CUPS</th>
-          <th class="sortable" (click)="sort('companiaContratada')" scope="col">Comercializadora
+          <th class="sortable" role="button" tabindex="0" (click)="sort('companiaContratada')" (keydown.enter)="sort('companiaContratada')" scope="col">Comercializadora
             <span *ngIf="orderBy === 'companiaContratada'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th class="sortable" (click)="sort('fechaSubidaContrato')" scope="col">Fecha contrato
+          <th class="sortable" role="button" tabindex="0" (click)="sort('fechaSubidaContrato')" (keydown.enter)="sort('fechaSubidaContrato')" scope="col">Fecha contrato
             <span *ngIf="orderBy === 'fechaSubidaContrato'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
           <th scope="col">Acciones</th>
         </tr>

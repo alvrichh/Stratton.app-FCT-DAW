@@ -52,7 +52,7 @@ public class ClienteRequest {
     private LocalDate fechaNacimiento;
 
     /** CUPS del suministro principal (opcional). */
-    @Pattern(regexp = Suministro.CUPS_REGEX, message = "El CUPS no tiene un formato válido (ej. ES0031408000000000AA0F)")
+    @Pattern(regexp = Suministro.CUPS_REGEX_INPUT, message = "El CUPS no tiene un formato válido (ej. ES0031408000000000AA0F)")
     private String cups;
 
     /** Nombre de la comercializadora (Endesa, Iberdrola, Naturgy...). */

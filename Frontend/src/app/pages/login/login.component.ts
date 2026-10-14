@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -13,7 +13,8 @@ import { EnterNextDirective } from '../../core/enter-next.directive';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
+  @ViewChild('usernameInput') usernameInput?: ElementRef<HTMLInputElement>;
   username = '';
   password = '';
   cargando = false;
@@ -25,6 +26,10 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.sesionExpirada = this.route.snapshot.queryParamMap.has('expirada');
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.usernameInput?.nativeElement.focus());
   }
 
   login(): void {

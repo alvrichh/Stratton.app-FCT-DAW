@@ -9,15 +9,25 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (auth.isLoggedIn()) {
     return true;
   }
-  return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
+  return redirigirALogin(auth, router, state.url);
 };
+
+/** Redirige al login conservando la URL solicitada y avisando si la sesión ha caducado. */
+function redirigirALogin(auth: AuthService, router: Router, returnUrl: string) {
+  const queryParams: Record<string, string> = { returnUrl };
+  if (auth.tokenCaducado()) {
+    auth.logout();
+    queryParams['expirada'] = '1';
+  }
+  return router.createUrlTree(['/login'], { queryParams });
+}
 
 /** Solo administradores. */
 export const adminGuard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
   const router = inject(Router);
   if (!auth.isLoggedIn()) {
-    return router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });
+    return redirigirALogin(auth, router, state.url);
   }
   return auth.isAdmin() ? true : router.createUrlTree(['/clientes']);
 };

@@ -23,6 +23,8 @@ public class Suministro {
 
     /** Expresión regular del CUPS español: ES + 16 dígitos + 2 letras de control (+ 2 opcionales). */
     public static final String CUPS_REGEX = "^ES\\d{16}[A-Z]{2}(\\d[FPRCXYZ])?$";
+    /** Igual que {@link #CUPS_REGEX} pero admite minúsculas: las peticiones se normalizan a mayúsculas en los servicios. */
+    public static final String CUPS_REGEX_INPUT = "^(?i)ES\\d{16}[A-Z]{2}(\\d[FPRCXYZ])?$";
 
     @Id
     @NotBlank(message = "El CUPS no puede estar vacío.")

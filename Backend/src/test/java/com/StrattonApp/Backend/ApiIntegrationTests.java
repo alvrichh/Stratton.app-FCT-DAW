@@ -124,7 +124,7 @@ class ApiIntegrationTests {
         }
         mvc.perform(get("/api/v2/clientes").header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(10)))
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(10))))
                 .andExpect(jsonPath("$[0].cups", notNullValue()))
                 .andExpect(jsonPath("$[0].companiaContratada", notNullValue()))
                 .andExpect(jsonPath("$[0].fechaSubidaContrato", notNullValue()))
@@ -202,6 +202,62 @@ class ApiIntegrationTests {
                 .andExpect(status().isNoContent());
         mvc.perform(get("/api/v2/clientes/" + id).header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void cambiarElCupsPrincipalSustituyeElSuministro() throws Exception {
+        Map<String, Object> body = Map.of("nombre", "Cambio", "apellidos", "De Cups", "dni", "45678901B",
+                "email", "cups@example.com", "telefono", "655555555", "direccion", "Calle Cups 1",
+                "cups", "ES0031000000000099AA", "companiaContratada", "Endesa");
+        MvcResult res = mvc.perform(post("/api/v2/clientes")
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(body)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.cups", is("ES0031000000000099AA")))
+                .andReturn();
+        long id = json.readTree(res.getResponse().getContentAsString()).get("idCliente").asLong();
+
+        // El CUPS de otro cliente no se puede reutilizar -> 409
+        Map<String, Object> ajeno = new java.util.HashMap<>(body);
+        ajeno.put("cups", "ES0031000000000001BJ"); // CUPS del primer cliente de ejemplo
+        mvc.perform(put("/api/v2/clientes/" + id)
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(ajeno)))
+                .andExpect(status().isConflict());
+
+        // Cambiar el CUPS principal sustituye el suministro (misma comercializadora) sin duplicarlo
+        Map<String, Object> update = new java.util.HashMap<>(body);
+        update.put("cups", "ES0031000000000098ZZ");
+        mvc.perform(put("/api/v2/clientes/" + id)
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(update)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cups", is("ES0031000000000098ZZ")))
+                .andExpect(jsonPath("$.suministros", hasSize(1)))
+                .andExpect(jsonPath("$.suministros[0].companiaContratada", is("Endesa")));
+        mvc.perform(get("/api/v2/clientes/" + id + "/suministros").header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].cups", is("ES0031000000000098ZZ")));
+
+        // El CUPS antiguo queda libre: se puede dar de alta en otro cliente
+        Map<String, Object> otro = Map.of("nombre", "Otro", "apellidos", "Cliente", "dni", "56789012C",
+                "email", "otro@example.com", "telefono", "644444444", "cups", "ES0031000000000099AA");
+        res = mvc.perform(post("/api/v2/clientes")
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(otro)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.cups", is("ES0031000000000099AA")))
+                .andReturn();
+        long otroId = json.readTree(res.getResponse().getContentAsString()).get("idCliente").asLong();
+
+        // Limpieza: los tests comparten el contexto
+        mvc.perform(delete("/api/v2/clientes/" + id).header("Authorization", "Bearer " + adminToken)).andExpect(status().isNoContent());
+        mvc.perform(delete("/api/v2/clientes/" + otroId).header("Authorization", "Bearer " + adminToken)).andExpect(status().isNoContent());
     }
 
     @Test

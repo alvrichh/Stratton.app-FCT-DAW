@@ -24,6 +24,58 @@ Proyecto final de grado superior de desarrollo de aplicaciones web, partiremos d
 </a>
 
 
+## Puesta en marcha
+
+### Opción A: Docker (todo en uno)
+
+```bash
+cp .env.example .env            # opcional: cambia contraseñas y JWT_SECRET
+docker compose up --build
+```
+
+| Servicio | URL |
+|----------|-----|
+| Frontend (Angular + nginx) | http://localhost |
+| API REST | http://localhost/api (también http://localhost:8080/api) |
+| Swagger UI | http://localhost/swagger-ui.html |
+| MySQL | localhost:3306 (usuario `root`, contraseña `DATABASE_PASSWORD`) |
+
+nginx sirve la SPA y hace de proxy de `/api` hacia el backend, por lo que el navegador no necesita CORS.
+
+### Opción B: en local (desarrollo)
+
+Requisitos: JDK 17+, Maven 3.9+, Node 20+, y MySQL/MariaDB (o usa el perfil `h2`, que no necesita base de datos).
+
+```bash
+# Backend (http://localhost:8080) con MySQL en localhost:3306, usuario root sin contraseña
+cd Backend && mvn spring-boot:run
+#   ... o sin MySQL, con H2 en memoria:
+cd Backend && mvn spring-boot:run -Dspring-boot.run.profiles=h2
+
+# Frontend (http://localhost:4200)
+cd Frontend && npm install && npm start
+```
+
+Todas las propiedades del backend se configuran con variables de entorno (`BBDD_HOST`, `BBDD_PORT`, `BBDD_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `DDL_AUTO`, `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `SEED_DATA`, `SEED_RESET`...). Ver `Backend/src/main/resources/application.properties`.
+
+### Usuarios de ejemplo
+
+Al arrancar con la base de datos vacía se cargan datos de ejemplo (2 asesorías, 3 comercializadoras, 10 clientes con sus suministros) y estos usuarios:
+
+| Usuario | Contraseña | Rol | Qué puede hacer |
+|---------|------------|-----|-----------------|
+| `admin` | `admin` | ADMIN | Todo: gestiona empleados y los clientes de cualquier empleado |
+| `jefe` | `jefe` | MANAGER | Ve y gestiona los clientes de todos los empleados |
+| `usuario` | `usuario` | USER | Gestiona únicamente sus propios clientes y suministros |
+
+### Tests
+
+```bash
+cd Backend && mvn test          # 16 tests de integración (JUnit + MockMvc sobre H2)
+cd Frontend && npm test         # Karma/Jasmine en ChromeHeadless
+```
+
+
 ## Motivación:
 La principal motivación del proyecto es poder gestionar mis propios clientes o los clientes de una determinada asesoría energética como a sus empleados, para mejorar la gestión de los equipos comerciales y la organización de los clientes, pudiéndolos clasificar de manera clara y concisa. 
 
@@ -33,12 +85,11 @@ La principal motivación del proyecto es poder gestionar mis propios clientes o 
 
 | Entidad   | Atributos                                      |
 |-----------|------------------------------------------------|
-| Empleado   | id, nombre, apellidos, username, email, password, role, asesoria, clientes  |
-| Cliente  | idCliente, nombre, apellidos, dni, email, direccion, telefono, iban, asesoria, suministros, comercializadora, empleado |
-| Suministro     | cups, estado, direccion, mensaje, potencia, cliente, comercializadora |
-| Asesoria     | idAsesoria, direccion, valoracion, nombre, descripcion, clientes, empleados |
-| Comercializadora     | idCOmercializadora, companiaContratada, plan, suministros |
-
+| Empleado   | id, nombre, apellidos, username, email, password (BCrypt), roles (USER/MANAGER/ADMIN), asesoria, clientes  |
+| Cliente  | idCliente, nombre, apellidos, dni, email, direccion, telefono, iban, fechaSubidaContrato, fechaNacimiento, asesoria, comercializadora, empleado, suministros |
+| Suministro     | cups (PK), estado (ACTIVO/PENDIENTE/INACTIVO), direccion, mensaje, potencia, cliente, comercializadora |
+| Asesoria     | idAsesoria, nombre, direccion, descripcion, valoracion, clientes, empleados |
+| Comercializadora     | idComercializadora, companiaContratada, plan, logo, suministros, clientes |
 
 
 ## Casos de uso
@@ -175,97 +226,52 @@ Proporciona herramientas para reiniciar automáticamente la aplicación durante 
 Facilita la recarga en caliente de cambios en el código.
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/d7f7e791-db1d-44a3-9f43-d87c1953a5a3)
 
-# Entidades y sus Atributos
+# Definición de la API REST
 
-## Empleado
-| Atributo       | Tipo           | Descripción                              |
-|----------------|----------------|------------------------------------------|
-| idEmpleado     | Long           | Identificador único del empleado         |
-| nombre         | String         | Nombre del empleado                      |
-| apellidos      | String         | Apellidos del empleado                   |
-| dni            | String         | Documento Nacional de Identidad          |
-| email          | String         | Correo electrónico del empleado          |
-| telefono       | String         | Número de teléfono del empleado          |
-| fechaContratacion | Date        | Fecha de contratación                    |
-| rol            | String         | Rol del empleado en la empresa           |
-| mainRole       | String         | Rol principal del empleado               |
+Documentación interactiva (OpenAPI 3) en `http://localhost:8080/swagger-ui.html`. Todas las rutas salvo `/api/v1/auth/**` requieren la cabecera `Authorization: Bearer <token>`.
 
-## Cliente
-| Atributo               | Tipo           | Descripción                              |
-|------------------------|----------------|------------------------------------------|
-| idCliente              | Long           | Identificador único del cliente          |
-| nombre                 | String         | Nombre del cliente                       |
-| apellidos              | String         | Apellidos del cliente                    |
-| dni                    | String         | Documento Nacional de Identidad          |
-| email                  | String         | Correo electrónico del cliente           |
-| telefono               | String         | Número de teléfono del cliente           |
-| fechaSubidaContrato    | Date           | Fecha de subida del contrato             |
-| cups                   | String         | Código Universal de Punto de Suministro  |
-| companiaContratada     | String         | Compañía contratada por el cliente       |
-| empleado               | Empleado       | Empleado asociado al cliente             |
+| Endpoint | Método | Rol | Descripción |
+|----------|--------|-----|-------------|
+| `/api/v1/auth/login` | POST | público | Inicia sesión. Devuelve `token`, `role`, `roles`, `id`, `username`, `nombre` |
+| `/api/v1/auth/register` | POST | público | Registra un empleado con rol USER |
+| `/api/v2/empleados` | GET | ADMIN | Lista de empleados |
+| `/api/v2/empleados` | POST | ADMIN | Crea un empleado (contraseña cifrada, roles, asesoría) |
+| `/api/v2/empleados/{id}` | GET / PUT / DELETE | ADMIN | Detalle (con clientes), actualización y borrado en cascada |
+| `/api/v2/empleados/perfil` | GET | autenticado | Perfil del empleado autenticado con sus clientes |
+| `/api/v2/empleados/{id}/clientes` | GET / POST | ADMIN | Clientes del empleado / crear cliente para el empleado |
+| `/api/v2/empleados/{id}/total-clientes` | GET | ADMIN | Número de clientes |
+| `/api/v2/empleados/{id}/suministros-clientes` | GET | ADMIN | Suministros de todos sus clientes |
+| `/api/v2/clientes` | GET | autenticado | Clientes visibles (todos para ADMIN/MANAGER, propios para USER) |
+| `/api/v2/clientes` | POST | autenticado | Crea un cliente (con CUPS y comercializadora opcionales) |
+| `/api/v2/clientes/{id}` | GET / PUT / DELETE | autenticado (propietario o jefe) | Detalle, actualización y borrado |
+| `/api/v2/clientes/{empleadoId}/clientes` | GET / POST | autenticado (propio o jefe) | Clientes de un empleado / crear |
+| `/api/v2/clientes/{id}/suministros` | GET / POST | autenticado (propietario o jefe) | Suministros del cliente / añadir CUPS |
+| `/api/v2/suministros/{cups}` | PUT / DELETE | autenticado (propietario o jefe) | Actualizar o eliminar un suministro |
+| `/api/v2/comercializadoras` | GET | autenticado | Catálogo de comercializadoras |
+| `/api/v2/asesorias` | GET | autenticado | Catálogo de asesorías |
 
-## Suministro
-| Atributo               | Tipo           | Descripción                              |
-|------------------------|----------------|------------------------------------------|
-| cups                   | String         | Código Universal de Punto de Suministro  |
-| estado                 | Estado         | Estado del suministro                    |
-| direccion              | String         | Dirección del suministro                 |
-| mensaje                | String         | Mensaje asociado al suministro           |
-| potencia               | Double         | Potencia del suministro                  |
-| cliente                | Cliente        | Cliente asociado al suministro           |
-| comercializadora       | Comercializadora | Comercializadora asociada al suministro  |
+Los errores devuelven siempre JSON con `status`, `error`, `message`, `path` y, en validaciones, `errors` por campo (400 datos no válidos, 401 sin sesión, 403 sin permiso, 404 no encontrado, 409 duplicado).
 
-## Comercializadora
-| Atributo               | Tipo           | Descripción                              |
-|------------------------|----------------|------------------------------------------|
-| idComercializadora     | Long           | Identificador único de la comercializadora |
-| nombre                 | String         | Nombre de la comercializadora            |
-| direccion              | String         | Dirección de la comercializadora         |
-| telefono               | String         | Número de teléfono de la comercializadora |
-| email                  | String         | Correo electrónico de la comercializadora |
-| web                    | String         | Sitio web de la comercializadora         |
+## Reglas de negocio implementadas
 
-## Asesoria
-| Atributo               | Tipo           | Descripción                              |
-|------------------------|----------------|------------------------------------------|
-| idAsesoria             | Long           | Identificador único de la asesoría       |
-| descripcion            | String         | Descripción de la asesoría               |
-| fecha                  | Date           | Fecha de la asesoría                     |
-| cliente                | Cliente        | Cliente asociado a la asesoría           |
-| empleado               | Empleado       | Empleado que brinda la asesoría          |
-| suministro             | Suministro     | Suministro asociado a la asesoría        |
+- RN-1 (mayoría de edad): si se informa la fecha de nacimiento, el titular debe tener 18 años o más.
+- RN-2 (teléfono válido): 9 dígitos empezando por 6, 7, 8 o 9; además es único por cliente (RF-3).
+- RN-5/RN-6 (asignación coherente): un USER solo puede crear, ver, editar o borrar sus propios clientes; ADMIN y MANAGER pueden operar sobre los de cualquier empleado.
+- RN-7 (IBAN válido): formato español `ES` + 22 dígitos.
+- CUPS con formato oficial (`ES` + 16 dígitos + 2 letras de control) y único en el sistema; un cliente puede tener varios suministros (RF-5/RF-8).
+- Los DNI/NIE se validan por formato y son únicos.
 
+## Estado del proyecto
 
-## @TODO
-- Separación de Responsabilidades:
-    * Angular se encargará de la interfaz de usuario (UI) y la interacción con el usuario.
-    * Spring Boot se centrará en la lógica de negocio, la autenticación, la autorización y la comunicación con la base de datos.
-    * Mantén una clara separación entre estas dos partes para facilitar el mantenimiento y la escalabilidad.
-- API RESTful:
-    * Diseña una API RESTful en Spring Boot para que Angular pueda comunicarse con el backend.
-    * Define rutas (endpoints) para las operaciones CRUD (crear, leer, actualizar, eliminar) en tus entidades (clientes, empleados, contratos, etc.).
-- Autenticación y Autorización:
-    * Utiliza Spring Security para gestionar la autenticación y la autorización.
-    * Configura la autenticación basada en tokens (JWT) o mediante OAuth2 (si planeas integrar Google).
-    * Asegúrate de proteger las rutas relevantes (por ejemplo, las que requieren inicio de sesión).
--  Validación de Datos:
-    * Implementa validaciones en el backend para garantizar que los datos ingresados por el usuario sean válidos.
-    * Usa anotaciones de validación de Spring (como @NotNull, @Size, etc.) en tus modelos.
-- Manejo de Excepciones:
-    * Crea un manejo centralizado de excepciones para proporcionar respuestas claras y consistentes en caso de errores.
-    * Define excepciones personalizadas para situaciones específicas (por ejemplo, cliente no encontrado, acceso denegado, etc.).
--  Documentación de la API:
-    * Genera documentación para tu API (por ejemplo, utilizando Swagger o Springfox).
-    * Esto ayudará a los desarrolladores de frontend a comprender cómo interactuar con el backend.
-- CORS (Cross-Origin Resource Sharing):
-    * Configura CORS para permitir que Angular se comunique con el backend desde un dominio diferente.
-    * Define las políticas de acceso en tu aplicación Spring Boot.
-- Pruebas Unitarias y de Integración:
-    * Escribe pruebas unitarias y de integración para verificar el funcionamiento correcto de tus controladores, servicios y repositorios.
-    * Utiliza herramientas como JUnit y Mockito.
-- Seguridad en Producción:
-    * En producción, asegúrate de configurar correctamente las propiedades de seguridad (por ejemplo, cambiar las claves secretas, habilitar HTTPS, etc.).
-- Despliegue:
-    * Decide dónde y cómo desplegarás tu aplicación (por ejemplo, en un servidor local, en la nube, etc.).
-    * Considera opciones como Docker y Kubernetes para facilitar el despliegue y la escalabilidad.
+Octubre 2026: el proyecto se ha revisado y corregido por completo para que compile, arranque y los flujos principales funcionen de extremo a extremo.
 
+- Separación de responsabilidades: Angular (UI) + API REST en Spring Boot. Las plantillas Thymeleaf y el controlador `/api/v1/admin` duplicado se han eliminado.
+- Autenticación JWT con un único filtro, roles con prefijo `ROLE_`, `@EnableMethodSecurity`, reglas de autorización reales (antes todos los endpoints eran `permitAll`) y comprobación de propiedad de los clientes en los servicios.
+- Validación de datos con Bean Validation (DNI, teléfono, IBAN, CUPS, email, mayoría de edad) y manejo centralizado de excepciones con respuestas JSON uniformes.
+- Modelo de datos coherente: `fechaSubidaContrato`, CUPS y comercializadora se persisten de verdad (antes se devolvían valores falsos), los suministros se gestionan desde la ficha del cliente.
+- Documentación de la API con springdoc-openapi (Swagger UI).
+- CORS configurable por variable de entorno; frontend con interceptor `Authorization`, guards de ruta y `environment` por entorno.
+- Pruebas de integración del backend (JUnit 5 + MockMvc + H2) y tests unitarios del frontend.
+- Despliegue con Docker Compose (MySQL con healthcheck, backend configurado por variables de entorno, nginx con fallback SPA y proxy `/api`).
+
+Pendiente / ideas futuras: autenticación con Google (OAuth2), gestión de contratos de gas diferenciada de luz, ubicación por código postal (RF-4), avisos de fin de contrato.

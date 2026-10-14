@@ -62,7 +62,7 @@ Todas las propiedades del backend se configuran con variables de entorno (`BBDD_
 
 ### Usuarios de ejemplo
 
-Al arrancar con la base de datos vacía se cargan datos de ejemplo (2 asesorías, 3 comercializadoras, 10 clientes con sus suministros) y estos usuarios:
+Al arrancar con la base de datos vacía se cargan datos de ejemplo (2 asesorías, 15 comercializadoras, 10 clientes con sus suministros) y estos usuarios:
 
 | Usuario | Contraseña | Rol | Qué puede hacer |
 |---------|------------|-----|-----------------|
@@ -74,8 +74,27 @@ Al arrancar con la base de datos vacía se cargan datos de ejemplo (2 asesorías
 
 ```bash
 cd Backend && mvn test          # 21 tests de integración (JUnit + MockMvc sobre H2)
-cd Frontend && npm test         # 25 tests unitarios (Karma/Jasmine en ChromeHeadless)
+cd Frontend && npm test         # 28 tests unitarios (Karma/Jasmine en ChromeHeadless)
 ```
+
+### Publicarlo en internet (Render + MySQL en Aiven, gratis)
+
+Render ejecuta el backend y el frontend como servicios Docker con el plan gratuito; como Render
+solo ofrece PostgreSQL, la base de datos MySQL va en [Aiven](https://aiven.io/free-mysql-database) (plan gratuito, 1 GB).
+
+1. **Base de datos:** crea una cuenta en Aiven > *Create service* > MySQL > plan *Free*. Cuando
+   esté *Running*, anota *Host*, *Port*, *User* y *Password* de *Connection information*.
+2. **Servicios:** en Render, *New > Blueprint* y elige este repositorio y la rama a publicar.
+   Render lee [`render.yaml`](render.yaml) y crea `strattonapp-back` y `strattonapp-front`;
+   te pedirá `BBDD_HOST`, `BBDD_PORT`, `DATABASE_USERNAME` y `DATABASE_PASSWORD` (los de Aiven).
+   `JWT_SECRET` lo genera Render.
+3. **URLs:** si Render asigna a los servicios una URL distinta de `https://strattonapp-front.onrender.com`
+   y `https://strattonapp-back.onrender.com`, corrige `CORS_ALLOWED_ORIGINS` (backend) y
+   `BACKEND_URL` (frontend) en *Environment* y vuelve a desplegar.
+4. Entra en la URL del frontend con `admin`/`admin` y **cambia las contraseñas de ejemplo**.
+
+En el plan gratuito los servicios se duermen tras 15 minutos sin visitas: la primera petición
+después tarda alrededor de un minuto en responder.
 
 
 ## Motivación:

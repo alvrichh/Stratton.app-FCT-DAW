@@ -1,0 +1,58 @@
+# Servidor de la SPA de Angular con proxy a la API.
+# Variables (las sustituye la imagen de nginx al arrancar, ver Dockerfile):
+#   PORT         puerto en el que escucha nginx (80 en docker-compose; Render pone el suyo)
+#   BACKEND_URL  URL del backend: http://backend:8080 en docker-compose,
+#                https://<tu-backend>.onrender.com en Render
+server {
+    listen ${PORT};
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Necesario cuando el backend va por HTTPS (SNI)
+    proxy_ssl_server_name on;
+
+    # Proxy de la API hacia el backend (misma URL de origen para el navegador).
+    # Host no se reenvía: el backend recibe el suyo propio (necesario en Render).
+    location ^~ /api/ {
+        proxy_pass ${BACKEND_URL}/api/;
+        proxy_http_version 1.1;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        # En planes gratuitos el backend se duerme y tarda en despertar
+        proxy_read_timeout 180s;
+    }
+
+    # Documentación de la API (Swagger UI)
+    # (^~ evita que la location de estáticos por extensión capture los .js/.css de Swagger)
+    location ^~ /swagger-ui/ { proxy_pass ${BACKEND_URL}/swagger-ui/; }
+    location = /swagger-ui.html { proxy_pass ${BACKEND_URL}/swagger-ui.html; }
+    location ^~ /v3/api-docs { proxy_pass ${BACKEND_URL}/v3/api-docs; }
+
+    # Fallback SPA: cualquier ruta de Angular devuelve index.html.
+    # index.html no se guarda en caché: así el navegador siempre carga la última versión
+    # (los JS/CSS que referencia llevan un hash en el nombre y sí pueden cachearse).
+    location / {
+        add_header Cache-Control "no-cache" always;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location = /index.html {
+        add_header Cache-Control "no-cache" always;
+    }
+
+    # JS y CSS generados por Angular (nombre con hash): inmutables, caché de un año
+    location ~* "-[A-Z0-9]{8}\.(js|css)$" {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files $uri =404;
+    }
+
+    # Resto de estáticos (imágenes, vídeo, fuentes) sin hash: caché de un día
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff2?|mp4)$ {
+        add_header Cache-Control "public, max-age=86400";
+        try_files $uri =404;
+    }
+}

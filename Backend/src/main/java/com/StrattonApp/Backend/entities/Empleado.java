@@ -62,6 +62,7 @@ public class Empleado implements UserDetails {
 
     @NotBlank(message = "El correo electrónico no puede estar en blanco")
     @Email(message = "El formato del correo electrónico no es válido")
+    @Size(max = 100)
     @Column(name = "correo", unique = true, nullable = false, length = 100)
     private String email;
 

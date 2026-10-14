@@ -13,9 +13,14 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
+import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,6 +63,32 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest req) {
         return build(HttpStatus.BAD_REQUEST, ex.getMessage(), req, null);
+    }
+
+    @ExceptionHandler({ MethodArgumentTypeMismatchException.class, MissingServletRequestParameterException.class })
+    public ResponseEntity<ApiError> handleBadParameter(Exception ex, HttpServletRequest req) {
+        return build(HttpStatus.BAD_REQUEST, "Parámetro de la petición no válido", req, null);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiError> handleMethod(HttpRequestMethodNotSupportedException ex, HttpServletRequest req) {
+        return build(HttpStatus.METHOD_NOT_ALLOWED, "Método no permitido para esta ruta", req, null);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ApiError> handleMediaType(HttpMediaTypeNotSupportedException ex, HttpServletRequest req) {
+        return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Content-Type no soportado: usa application/json", req, null);
+    }
+
+    /** Validación de entidad al confirmar la transacción (por ejemplo en actualizaciones). */
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<ApiError> handleTransaction(TransactionSystemException ex, HttpServletRequest req) {
+        Throwable causa = ex.getMostSpecificCause();
+        if (causa instanceof ConstraintViolationException cve) {
+            return handleConstraint(cve, req);
+        }
+        log.error("Error de transacción en {} {}", req.getMethod(), req.getRequestURI(), ex);
+        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor", req, null);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

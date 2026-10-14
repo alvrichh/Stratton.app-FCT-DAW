@@ -57,6 +57,7 @@ public class Cliente {
 
     @NotBlank(message = "El email del cliente no puede estar vacío.")
     @Email(message = "El formato del email no es válido.")
+    @Size(max = 100)
     @Column(name = "email", length = 100, nullable = false)
     private String email;
 
@@ -86,8 +87,9 @@ public class Cliente {
     @JsonIgnore
     private Asesoria asesoria;
 
+    /** Suministros ordenados por fecha de alta: el primero es el principal. */
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("cups ASC")
+    @OrderBy("fechaAlta ASC, cups ASC")
     @JsonIgnore
     private List<Suministro> suministros = new ArrayList<>();
 

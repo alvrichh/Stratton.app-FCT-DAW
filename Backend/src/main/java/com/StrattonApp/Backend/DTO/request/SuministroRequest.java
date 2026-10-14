@@ -32,7 +32,7 @@ public class SuministroRequest {
     private Long comercializadoraId;
 
     public String getCups() { return cups; }
-    public void setCups(String cups) { this.cups = cups; }
+    public void setCups(String cups) { this.cups = cups == null ? null : cups.trim().toUpperCase(); }
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
     public Estado getEstado() { return estado; }

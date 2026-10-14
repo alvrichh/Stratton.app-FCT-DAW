@@ -50,6 +50,11 @@ public class InicializarDatos implements CommandLineRunner {
     @Value("${app.seed.reset:false}")
     private boolean seedReset;
 
+    /** Permite forzar el reseteo desde los tests. */
+    public void setSeedReset(boolean seedReset) {
+        this.seedReset = seedReset;
+    }
+
     public InicializarDatos(EmpleadoRepository empleadoRepository, AsesoriaRepository asesoriaRepository,
             ClienteRepository clienteRepository, SuministroRepository suministroRepository,
             ComercializadoraRepository comercializadoraRepository, PasswordEncoder passwordEncoder) {
@@ -134,12 +139,16 @@ public class InicializarDatos implements CommandLineRunner {
                 empleadoRepository.count(), clienteRepository.count(), suministroRepository.count());
     }
 
+    /** Vacía las tablas respetando las claves foráneas (hijos antes que padres, con flush entre pasos). */
     private void limpiarTablas() {
         suministroRepository.deleteAllInBatch();
         clienteRepository.deleteAllInBatch();
+        // deleteAll() (no en batch) para que Hibernate borre también la tabla usuario_rol
         empleadoRepository.deleteAll();
+        empleadoRepository.flush();
         asesoriaRepository.deleteAllInBatch();
         comercializadoraRepository.deleteAllInBatch();
+        comercializadoraRepository.flush();
     }
 
     private Empleado crearEmpleado(String nombre, String apellidos, String username, String email, String password,

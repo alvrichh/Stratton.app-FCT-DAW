@@ -38,7 +38,9 @@ services:
       DDL_AUTO: ${DDL_AUTO:-update}
       SEED_DATA: ${SEED_DATA:-true}
       SEED_RESET: ${SEED_RESET:-false}
-      JWT_SECRET: ${JWT_SECRET:-G5pE3i4e0A1vUN/z0MutEqgxlbLLXgX+QEV8HDlyH1E=}
+      # Vacío = clave aleatoria en cada arranque. Define JWT_SECRET en .env para producción.
+      JWT_SECRET: ${JWT_SECRET:-}
+      REGISTRO_ABIERTO: ${REGISTRO_ABIERTO:-true}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:80,http://localhost:4200}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
     ports:

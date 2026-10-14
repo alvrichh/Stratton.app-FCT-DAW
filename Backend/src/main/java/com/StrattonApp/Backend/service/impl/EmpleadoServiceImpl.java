@@ -74,6 +74,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         if (request.getPassword() == null || request.getPassword().isBlank()) {
             throw new GlobalException("La contraseña es obligatoria al crear un empleado");
         }
+        validarPassword(request.getPassword());
         if (empleadoRepository.existsByUsernameIgnoreCase(request.getUsername())) {
             throw new ConflictException("El nombre de usuario ya está en uso");
         }
@@ -97,14 +98,19 @@ public class EmpleadoServiceImpl implements EmpleadoService {
                 .filter(otro -> !otro.getId().equals(id))
                 .ifPresent(otro -> { throw new ConflictException("El correo electrónico ya está en uso"); });
 
+        // Sin "roles" en la petición se conservan los actuales
+        if (request.getRoles() == null) {
+            request.setRoles(new HashSet<>(empleado.getRoles()));
+        }
         // Un administrador no puede quitarse a sí mismo el rol ADMIN
         Empleado actual = SecurityUtils.currentEmpleado();
-        if (actual.getId().equals(id) && request.getRoles() != null && !request.getRoles().contains(Role.ADMIN)) {
+        if (actual.getId().equals(id) && !request.getRoles().contains(Role.ADMIN)) {
             throw new GlobalException("No puedes quitarte a ti mismo el rol de administrador");
         }
 
         aplicar(empleado, request);
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            validarPassword(request.getPassword());
             empleado.setPassword(passwordEncoder.encode(request.getPassword()));
         }
         return EmpleadoDTO.from(empleadoRepository.save(empleado), true);
@@ -131,12 +137,18 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     @Transactional(readOnly = true)
     public List<SuministroDTO> getSuministrosDeClientes(Long empleadoId) {
         findEmpleado(empleadoId);
-        return suministroRepository.findByClienteEmpleadoIdOrderByCupsAsc(empleadoId).stream()
+        return suministroRepository.findByClienteEmpleadoIdOrderByFechaAltaAscCupsAsc(empleadoId).stream()
                 .map(SuministroDTO::from)
                 .collect(Collectors.toList());
     }
 
     // ----- helpers -----------------------------------------------------------
+
+    private void validarPassword(String password) {
+        if (password.length() < 6) {
+            throw new GlobalException("La contraseña debe tener al menos 6 caracteres");
+        }
+    }
 
     private Empleado findEmpleado(Long id) {
         return empleadoRepository.findById(id)

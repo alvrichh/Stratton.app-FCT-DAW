@@ -1,5 +1,7 @@
 package com.StrattonApp.Backend.entities;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -9,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -46,6 +49,10 @@ public class Suministro {
     @Column(name = "potencia")
     private Double potencia;
 
+    /** Fecha de alta del suministro: define cuál es el principal (el más antiguo) del cliente. */
+    @Column(name = "fecha_alta")
+    private LocalDateTime fechaAlta = LocalDateTime.now();
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "idCliente", nullable = false)
     @JsonIgnore
@@ -69,6 +76,13 @@ public class Suministro {
         this.comercializadora = comercializadora;
     }
 
+    @PrePersist
+    void prePersist() {
+        if (fechaAlta == null) {
+            fechaAlta = LocalDateTime.now();
+        }
+    }
+
     public String getCups() { return cups; }
     public void setCups(String cups) { this.cups = cups; }
     public Estado getEstado() { return estado; }
@@ -79,6 +93,8 @@ public class Suministro {
     public void setMensaje(String mensaje) { this.mensaje = mensaje; }
     public Double getPotencia() { return potencia; }
     public void setPotencia(Double potencia) { this.potencia = potencia; }
+    public LocalDateTime getFechaAlta() { return fechaAlta; }
+    public void setFechaAlta(LocalDateTime fechaAlta) { this.fechaAlta = fechaAlta; }
     public Cliente getCliente() { return cliente; }
     public void setCliente(Cliente cliente) { this.cliente = cliente; }
     public Comercializadora getComercializadora() { return comercializadora; }

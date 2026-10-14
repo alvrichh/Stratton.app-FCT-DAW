@@ -1,271 +1,176 @@
 package com.StrattonApp.Backend.config;
 
-import com.StrattonApp.Backend.entities.*;
-import com.StrattonApp.Backend.repository.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.StrattonApp.Backend.entities.Asesoria;
+import com.StrattonApp.Backend.entities.Cliente;
+import com.StrattonApp.Backend.entities.Comercializadora;
+import com.StrattonApp.Backend.entities.Empleado;
+import com.StrattonApp.Backend.entities.Estado;
+import com.StrattonApp.Backend.entities.Role;
+import com.StrattonApp.Backend.entities.Suministro;
+import com.StrattonApp.Backend.repository.AsesoriaRepository;
+import com.StrattonApp.Backend.repository.ClienteRepository;
+import com.StrattonApp.Backend.repository.ComercializadoraRepository;
+import com.StrattonApp.Backend.repository.EmpleadoRepository;
+import com.StrattonApp.Backend.repository.SuministroRepository;
+
 /**
- * Clase que inicializa los datos de la aplicación al arrancar.
+ * Carga datos de ejemplo al arrancar, SOLO si la base de datos está vacía
+ * (o si {@code app.seed.reset=true}, en cuyo caso la vacía primero).
+ * <p>
+ * Usuarios de ejemplo: {@code admin/admin} (ADMIN), {@code jefe/jefe} (MANAGER) y {@code usuario/usuario} (USER).
  */
 @Component
 public class InicializarDatos implements CommandLineRunner {
 
+    private static final Logger log = LoggerFactory.getLogger(InicializarDatos.class);
+
     private final EmpleadoRepository empleadoRepository;
     private final AsesoriaRepository asesoriaRepository;
     private final ClienteRepository clienteRepository;
-    private final PasswordEncoder passwordEncoder;
     private final SuministroRepository suministroRepository;
     private final ComercializadoraRepository comercializadoraRepository;
-    
-    final Asesoria asesoria1 = new Asesoria();
-    final Asesoria asesoria2 = new Asesoria();
-    final Comercializadora iberdrola = new Comercializadora();
-    final Comercializadora naturgy = new Comercializadora();
-    final Comercializadora endesa = new Comercializadora();
+    private final PasswordEncoder passwordEncoder;
 
-    
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    @Value("${app.seed.enabled:true}")
+    private boolean seedEnabled;
 
-    /**
-     * Constructor que inyecta las dependencias necesarias.
-     * 
-     * @param empleadoRepository         el repositorio de empleados
-     * @param asesoriaRepository         el repositorio de asesorías
-     * @param clienteRepository          el repositorio de clientes
-     * @param passwordEncoder            el codificador de contraseñas
-     * @param suministroRepository       el repositorio de suministros
-     * @param comercializadoraRepository el repositorio de comercializadoras
-     */
+    @Value("${app.seed.reset:false}")
+    private boolean seedReset;
+
     public InicializarDatos(EmpleadoRepository empleadoRepository, AsesoriaRepository asesoriaRepository,
-            ClienteRepository clienteRepository, PasswordEncoder passwordEncoder,
-            SuministroRepository suministroRepository, ComercializadoraRepository comercializadoraRepository) {
+            ClienteRepository clienteRepository, SuministroRepository suministroRepository,
+            ComercializadoraRepository comercializadoraRepository, PasswordEncoder passwordEncoder) {
         this.empleadoRepository = empleadoRepository;
         this.asesoriaRepository = asesoriaRepository;
         this.clienteRepository = clienteRepository;
-        this.passwordEncoder = passwordEncoder;
         this.suministroRepository = suministroRepository;
         this.comercializadoraRepository = comercializadoraRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Método que se ejecuta al arrancar la aplicación y llama a los métodos para
-     * inicializar los datos.
-     * 
-     * @param args argumentos de la línea de comandos
-     * @throws Exception si ocurre un error durante la inicialización
-     */
     @Override
-    public void run(String... args) throws Exception {
-        limpiarTablas();
-		jdbcTemplate.execute("ALTER TABLE empleados AUTO_INCREMENT = 1");
-		jdbcTemplate.execute("ALTER TABLE clientes AUTO_INCREMENT = 1");
-		jdbcTemplate.execute("ALTER TABLE suministros AUTO_INCREMENT = 1");
-        inicializarAsesorias();
-        inicializarEmpleados();
-        inicializarComercializadoras();
-        inicializarClientes();
-        inicializarSuministros();
-    }
-
-    /**
-     * Limpia las tablas de la base de datos.
-     */
-    private void limpiarTablas() {
-        suministroRepository.deleteAll();
-        clienteRepository.deleteAll();
-        empleadoRepository.deleteAll();
-        asesoriaRepository.deleteAll();
-        comercializadoraRepository.deleteAll();
-    }
-
-    /**
-     * Inicializa los empleados en la base de datos.
-     */
-
-    private void inicializarEmpleados() {
-
-        if (empleadoRepository.count() == 0) {
-            Set<Role> rolesAdmin = new HashSet<>();
-            rolesAdmin.add(Role.ADMIN);
-
-            Set<Role> rolesUsuario = new HashSet<>();
-            rolesUsuario.add(Role.USER);
-
-            Empleado admin = new Empleado();
-            admin.setNombre("Admin");
-            admin.setApellidos("Admin");
-            admin.setUsername("admin");
-            admin.setEmail("admin@example.com");
-            admin.setPassword(passwordEncoder.encode("admin"));
-            admin.setRoles(rolesAdmin);
-            admin.setAsesoria(asesoria1);
-            empleadoRepository.save(admin);
-
-            Empleado usuario = new Empleado();
-            usuario.setNombre("Usuario");
-            usuario.setApellidos("Usuario");
-            usuario.setUsername("usuario");
-            usuario.setEmail("usuario@example.com");
-            usuario.setPassword(passwordEncoder.encode("usuario"));
-            usuario.setRoles(rolesUsuario);
-            usuario.setAsesoria(asesoria2);
-            empleadoRepository.save(usuario);
+    @Transactional
+    public void run(String... args) {
+        if (!seedEnabled) {
+            log.info("Carga de datos de ejemplo desactivada (app.seed.enabled=false)");
+            return;
         }
-    }
-
-    /**
-     * Inicializa las asesorías en la base de datos.
-     */
-    private void inicializarAsesorias() {
-        if (asesoriaRepository.count() == 0) {
-            asesoria1.setNombre("Asesoría 1");
-            asesoria1.setDescripcion("Descripción de la asesoría 1");
-            asesoria1.setDireccion("Edificio pasarela, Mairena del aljarafe");
-            asesoriaRepository.save(asesoria1);
-
-            asesoria2.setNombre("Asesoría 2");
-            asesoria2.setDescripcion("Descripción de la asesoría 2");
-            asesoria2.setDireccion("Calle Nobel 7, Mairena del aljarafe");
-            asesoriaRepository.save(asesoria2);
+        if (seedReset) {
+            log.warn("app.seed.reset=true: vaciando la base de datos antes de sembrar");
+            limpiarTablas();
         }
-    }
-
-    /**
-     * Inicializa los clientes en la base de datos.
-     */
-    private void inicializarClientes() {
-        if (clienteRepository.count() == 0) {
-            Empleado admin = empleadoRepository.findByUsername("admin").orElse(null);
-            Empleado usuario = empleadoRepository.findByUsername("usuario").orElse(null);
-
-            if (admin != null && usuario != null) {
-                for (int i = 0; i < 10; i++) {
-                    Cliente cliente = new Cliente();
-                    cliente.setNombre("Cliente" + (i + 1));
-                    cliente.setApellidos("Apellido" + (i + 1));
-                    cliente.setDni(generarDNI());
-                    cliente.setEmail("cliente" + (i + 1) + "@example.com");
-                    cliente.setDireccion("Dirección " + (i + 1));
-                    cliente.setTelefono(generarTelefono());
-                    cliente.setIban(generarIBAN());
-                    cliente.setEmpleado(i % 2 == 0 ? admin : usuario);
-                    cliente.setAsesoria(asesoria1);
-                    cliente.setComercializadora(endesa);
-                    clienteRepository.save(cliente);
-                }
-            }
+        if (empleadoRepository.count() > 0) {
+            log.info("La base de datos ya contiene datos: no se cargan datos de ejemplo");
+            return;
         }
-    }
+        log.info("Base de datos vacía: cargando datos de ejemplo");
 
-    /**
-     * Inicializa las comercializadoras en la base de datos.
-     */
-    private void inicializarComercializadoras() {
-        if (comercializadoraRepository.count() == 0) {
-            iberdrola.setCompaniaContratada("Iberdrola");
-            iberdrola.setPlan("Plan Iberdrola");
-            comercializadoraRepository.save(iberdrola);
+        Asesoria asesoria1 = asesoriaRepository.save(new Asesoria("Stratton Global Sevilla",
+                "Edificio Pasarela, Mairena del Aljarafe", "Asesoría energética para particulares y pymes", 5));
+        Asesoria asesoria2 = asesoriaRepository.save(new Asesoria("Stratton Global Aljarafe",
+                "Calle Nobel 7, Mairena del Aljarafe", "Oficina comercial del Aljarafe", 4));
 
-            naturgy.setCompaniaContratada("Naturgy");
-            naturgy.setPlan("Plan Naturgy");
-            comercializadoraRepository.save(naturgy);
+        Comercializadora iberdrola = comercializadoraRepository.save(new Comercializadora("Iberdrola", "Plan Estable", "assets/images/iberdrola.png"));
+        Comercializadora naturgy = comercializadoraRepository.save(new Comercializadora("Naturgy", "Tarifa Por Uso Luz", "assets/images/naturgy.png"));
+        Comercializadora endesa = comercializadoraRepository.save(new Comercializadora("Endesa", "One Luz", "assets/images/endesa.png"));
+        List<Comercializadora> comercializadoras = List.of(iberdrola, naturgy, endesa);
 
-            endesa.setCompaniaContratada("Endesa");;
-            endesa.setPlan("Plan Endesa");
-            comercializadoraRepository.save(endesa);
-        }
-    }
+        Empleado admin = crearEmpleado("Admin", "Stratton", "admin", "admin@strattonapp.com", "admin", Set.of(Role.ADMIN), asesoria1);
+        Empleado jefe = crearEmpleado("Marta", "Jefa de Equipo", "jefe", "jefe@strattonapp.com", "jefe", Set.of(Role.MANAGER), asesoria1);
+        Empleado usuario = crearEmpleado("Usuario", "Asesor", "usuario", "usuario@strattonapp.com", "usuario", Set.of(Role.USER), asesoria2);
+        List<Empleado> empleados = List.of(admin, jefe, usuario);
 
-    /**
-     * Inicializa los suministros en la base de datos.
-     */
-    private void inicializarSuministros() {
-        Iterable<Cliente> clientes = clienteRepository.findAll();
-        Iterable<Comercializadora> comercializadoras = comercializadoraRepository.findAll();
+        String[] nombres = { "Juan", "María", "Pedro", "Lucía", "Carlos", "Ana", "Javier", "Laura", "Miguel", "Elena" };
+        String[] apellidos = { "Pérez López", "García Ruiz", "Martínez Sanz", "Rodríguez Gil", "Sánchez Mora",
+                "Fernández Vega", "Gómez Castro", "Díaz Ortega", "Romero Navarro", "Torres Prieto" };
+        Random random = new Random(42);
+        int cupsSeq = 1;
 
-        for (Cliente cliente : clientes) {
-            Set<Suministro> suministros = new HashSet<>();
+        for (int i = 0; i < nombres.length; i++) {
+            Empleado empleado = empleados.get(i % empleados.size());
+            Comercializadora comercializadora = comercializadoras.get(i % comercializadoras.size());
 
-            for (int i = 0; i < 3; i++) {
+            Cliente cliente = new Cliente();
+            cliente.setNombre(nombres[i]);
+            cliente.setApellidos(apellidos[i]);
+            cliente.setDni(generarDNI(10000000 + i * 1234567));
+            cliente.setEmail(nombres[i].toLowerCase().replace("í", "i").replace("é", "e") + (i + 1) + "@example.com");
+            cliente.setTelefono(String.valueOf(600000000 + i * 1111111));
+            cliente.setDireccion("Calle Ejemplo " + (i + 1) + ", Sevilla");
+            cliente.setIban(generarIBAN(random));
+            cliente.setFechaSubidaContrato(LocalDate.now().minusDays(i * 7L));
+            cliente.setFechaNacimiento(LocalDate.of(1970 + i * 3, 1 + i, 10));
+            cliente.setEmpleado(empleado);
+            cliente.setAsesoria(empleado.getAsesoria());
+            cliente.setComercializadora(comercializadora);
+
+            int numSuministros = 1 + (i % 3);
+            for (int s = 0; s < numSuministros; s++) {
                 Suministro suministro = new Suministro();
-                suministro.setCups("CUPS-" + cliente.getIdCliente() + "-" + i);
-                suministro.setEstado(Estado.ACTIVO);
-                suministro.setDireccion(cliente.getDireccion());
-                suministro.setMensaje("Mensaje de ejemplo para suministro " + i);
-                suministro.setPotencia(10.0);
-
-                suministro.setCliente(cliente);
-                suministro.setComercializadora(comercializadoras.iterator().next());
-
-                suministros.add(suministro);
+                suministro.setCups(generarCUPS(cupsSeq++));
+                suministro.setEstado(Estado.values()[(i + s) % Estado.values().length]);
+                suministro.setDireccion(s == 0 ? cliente.getDireccion() : "Calle Secundaria " + s + ", Sevilla");
+                suministro.setMensaje(s == 0 ? "Contrato principal" : "Segundo punto de suministro");
+                suministro.setPotencia(3.45 + s * 1.15);
+                suministro.setComercializadora(comercializadoras.get((i + s) % comercializadoras.size()));
+                cliente.addSuministro(suministro);
             }
-
-            suministroRepository.saveAll(suministros);
-
-            cliente.setSuministros(suministros);
             clienteRepository.save(cliente);
         }
+        log.info("Datos de ejemplo cargados: {} empleados, {} clientes, {} suministros",
+                empleadoRepository.count(), clienteRepository.count(), suministroRepository.count());
     }
 
-    /**
-     * Genera un CUPS aleatorio de ejemplo.
-     * No se utiliza pero se mantiene en el código para futuras actualizaciones
-     * @return un CUPS aleatorio
-     */
-    private String generarCUPS() {
-        Random random = new Random();
-        StringBuilder cups = new StringBuilder();
-        String caracteres = "ES00311000000000000000";
-        for (int i = 0; i < 16; i++) {
-            cups.append(caracteres.charAt(random.nextInt(caracteres.length())));
-        }
-        return cups.toString();
+    private void limpiarTablas() {
+        suministroRepository.deleteAllInBatch();
+        clienteRepository.deleteAllInBatch();
+        empleadoRepository.deleteAll();
+        asesoriaRepository.deleteAllInBatch();
+        comercializadoraRepository.deleteAllInBatch();
     }
 
-    /**
-     * Genera un DNI aleatorio de ejemplo.
-     * 
-     * @return un DNI aleatorio
-     */
-    private String generarDNI() {
-        Random random = new Random();
-        StringBuilder dni = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
-            dni.append(random.nextInt(10));
-        }
-        char letra = "TRWAGMYFPDXBNJZSQVHLCKE".charAt(Integer.parseInt(dni.toString()) % 23);
-        dni.append(letra);
-        return dni.toString();
+    private Empleado crearEmpleado(String nombre, String apellidos, String username, String email, String password,
+            Set<Role> roles, Asesoria asesoria) {
+        Empleado e = new Empleado();
+        e.setNombre(nombre);
+        e.setApellidos(apellidos);
+        e.setUsername(username);
+        e.setEmail(email);
+        e.setPassword(passwordEncoder.encode(password));
+        e.setRoles(new java.util.HashSet<>(roles));
+        e.setAsesoria(asesoria);
+        return empleadoRepository.save(e);
     }
 
-    /**
-     * Genera un teléfono aleatorio de ejemplo.
-     * 
-     * @return un número de teléfono aleatorio
-     */
-    private int generarTelefono() {
-        Random random = new Random();
-        return random.nextInt(1000000000) + 600000000;
+    /** CUPS de ejemplo con formato válido: ES + 16 dígitos + 2 letras de control. */
+    static String generarCUPS(int seq) {
+        String digitos = String.format("%016d", 31000000000000L + seq);
+        String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        long numero = Long.parseLong(digitos);
+        int resto = (int) (numero % 529);
+        return "ES" + digitos + letras.charAt(resto / 23) + letras.charAt(resto % 23);
     }
 
-    /**
-     * Genera un IBAN aleatorio de ejemplo.
-     * 
-     * @return un IBAN aleatorio
-     */
-    private String generarIBAN() {
-        Random random = new Random();
+    /** DNI con letra de control correcta. */
+    static String generarDNI(int numero) {
+        return String.format("%08d", numero) + "TRWAGMYFPDXBNJZSQVHLCKE".charAt(numero % 23);
+    }
+
+    /** IBAN español de ejemplo (ES + 22 dígitos). */
+    private static String generarIBAN(Random random) {
         StringBuilder iban = new StringBuilder("ES");
         for (int i = 0; i < 22; i++) {
             iban.append(random.nextInt(10));

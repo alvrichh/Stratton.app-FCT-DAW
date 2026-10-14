@@ -1,20 +1,24 @@
 package com.StrattonApp.Backend.entities;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+
 /**
- * Entidad que representa una comercializadora en el sistema.
+ * Compañía comercializadora de energía (Endesa, Iberdrola, Naturgy...).
  */
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "comercializadoras")
 public class Comercializadora {
 
     @Id
@@ -22,86 +26,43 @@ public class Comercializadora {
     private Long idComercializadora;
 
     @NotBlank(message = "El nombre de la comercializadora no puede estar vacío.")
+    @Column(nullable = false, unique = true, length = 60)
     private String companiaContratada;
 
+    @Column(length = 100)
     private String plan;
 
-    // Relación con Suministros (una comercializadora puede tener varios suministros)
+    /** Ruta del logotipo que muestra el frontend (relativa a assets/). */
+    @Column(length = 150)
+    private String logo;
+
     @OneToMany(mappedBy = "comercializadora")
-    private List<Suministro> suministros;
+    @JsonIgnore
+    private List<Suministro> suministros = new ArrayList<>();
 
-    /**
-     * Obtiene el ID de la comercializadora.
-     *
-     * @return ID de la comercializadora
-     */
-    public Long getIdComercializadora() {
-        return idComercializadora;
+    @OneToMany(mappedBy = "comercializadora")
+    @JsonIgnore
+    private List<Cliente> clientes = new ArrayList<>();
+
+    public Comercializadora() {
     }
 
-    /**
-     * Establece el ID de la comercializadora.
-     *
-     * @param idComercializadora ID de la comercializadora a establecer
-     */
-    public void setIdComercializadora(Long idComercializadora) {
-        this.idComercializadora = idComercializadora;
-    }
-
-    /**
-     * Obtiene el nombre de la comercializadora.
-     *
-     * @return Nombre de la comercializadora
-     */
- 
-    public String getCompaniaContratada() {
-  		return companiaContratada;
-  	}
-    /**
-     * Establece el nombre de la comercializadora.
-     *
-     * @param nombre Nombre de la comercializadora a establecer
-     */
-    public void setCompaniaContratada(String companiaContratada) {
-		this.companiaContratada = companiaContratada;
-	}
-
-    /**
-     * Obtiene el plan ofrecido por la comercializadora.
-     *
-     * @return Plan ofrecido por la comercializadora
-     */
-    public String getPlan() {
-        return plan;
-    }
-
-  
-
-
-	/**
-     * Establece el plan ofrecido por la comercializadora.
-     *
-     * @param plan Plan ofrecido por la comercializadora a establecer
-     */
-    public void setPlan(String plan) {
+    public Comercializadora(String companiaContratada, String plan, String logo) {
+        this.companiaContratada = companiaContratada;
         this.plan = plan;
+        this.logo = logo;
     }
 
-    /**
-     * Obtiene los suministros asociados a la comercializadora.
-     *
-     * @return Lista de suministros asociados a la comercializadora
-     */
-    public List<Suministro> getSuministros() {
-        return suministros;
-    }
-
-    /**
-     * Establece los suministros asociados a la comercializadora.
-     *
-     * @param suministros Lista de suministros a establecer
-     */
-    public void setSuministros(List<Suministro> suministros) {
-        this.suministros = suministros;
-    }
+    public Long getIdComercializadora() { return idComercializadora; }
+    public void setIdComercializadora(Long idComercializadora) { this.idComercializadora = idComercializadora; }
+    public String getCompaniaContratada() { return companiaContratada; }
+    public void setCompaniaContratada(String companiaContratada) { this.companiaContratada = companiaContratada; }
+    public String getPlan() { return plan; }
+    public void setPlan(String plan) { this.plan = plan; }
+    public String getLogo() { return logo; }
+    public void setLogo(String logo) { this.logo = logo; }
+    public List<Suministro> getSuministros() { return suministros; }
+    public void setSuministros(List<Suministro> suministros) { this.suministros = suministros; }
+    public List<Cliente> getClientes() { return clientes; }
+    public void setClientes(List<Cliente> clientes) { this.clientes = clientes; }
 }

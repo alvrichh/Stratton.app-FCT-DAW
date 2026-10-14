@@ -1,30 +1,30 @@
 package com.StrattonApp.Backend.service;
 
-import com.StrattonApp.Backend.DTO.ClienteDTO;
-import com.StrattonApp.Backend.entities.Cliente;
-
 import java.util.List;
 
+import com.StrattonApp.Backend.DTO.ClienteDTO;
+import com.StrattonApp.Backend.DTO.request.ClienteRequest;
+
+/**
+ * Gestión de clientes. Un USER solo ve y modifica sus propios clientes;
+ * ADMIN y MANAGER ven los de todos los empleados.
+ */
 public interface ClienteService {
 
-    // Obtener todos los clientes y mapearlos a DTOs
-    List<ClienteDTO> getAllClientes();
+    /** Clientes visibles para el usuario autenticado. */
+    List<ClienteDTO> getClientesVisibles();
 
-    // Obtener un cliente por su ID y mapearlo a un DTO
-    ClienteDTO getClienteById(Long clienteId);
-
-    // Obtener clientes por el ID del empleado asociado y mapearlos a DTOs
     List<ClienteDTO> getClientesByEmpleadoId(Long empleadoId);
 
-    // Guardar un nuevo cliente y devolver su DTO correspondiente
-    ClienteDTO guardarCliente(Cliente cliente);
+    ClienteDTO getClienteById(Long clienteId);
 
-    // Actualizar los detalles de un cliente existente y devolver su DTO actualizado
-    ClienteDTO actualizarCliente(Long clienteId, Cliente detallesCliente);
+    /** Crea un cliente asignado al empleado autenticado (o al indicado en la petición si es jefe). */
+    ClienteDTO crearCliente(ClienteRequest request);
 
-    // Eliminar un cliente por su ID
+    /** Crea un cliente asignado al empleado indicado. */
+    ClienteDTO crearClienteParaEmpleado(Long empleadoId, ClienteRequest request);
+
+    ClienteDTO actualizarCliente(Long clienteId, ClienteRequest request);
+
     void eliminarCliente(Long clienteId);
-
-	ClienteDTO guardarClientePorEmpleado(Long empleadoId, Cliente cliente);
-
 }

@@ -11,10 +11,12 @@ import { DetallesClienteComponent } from './pages/clientes/detalles-cliente/deta
 import { ActualizarClienteComponent } from './pages/clientes/actualizar-cliente/actualizar-cliente.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { InicioComponent } from './pages/inicio/inicio.component';
+import { LandingComponent } from './pages/landing/landing.component';
 import { adminGuard, authGuard, guestGuard } from './core/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+  // Landing pública con la escena de parallax; /inicio sigue siendo la portada con las comercializadoras
+  { path: '', component: LandingComponent, pathMatch: 'full' },
   { path: 'inicio', component: InicioComponent },
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
@@ -32,5 +34,5 @@ export const routes: Routes = [
   { path: 'actualizar-empleado/:id', component: ActualizarEmpleadoComponent, canActivate: [adminGuard] },
   { path: 'detalles-empleado/:id', component: DetallesEmpleadoComponent, canActivate: [adminGuard] },
 
-  { path: '**', redirectTo: 'inicio' },
+  { path: '**', redirectTo: '' },
 ];

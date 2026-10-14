@@ -1,0 +1,78 @@
+<!-- Escena de parallax: la sección mide 200vh y la escena se queda fija (sticky) mientras se recorre -->
+<section class="hero" #hero aria-label="Stratton Global">
+  <div class="escena">
+    <!-- En vertical se encuadra solo la zona del texto para que no se recorte (ver vertical en el componente) -->
+    <svg [attr.viewBox]="vertical ? '355 0 460 800' : '0 0 1200 800'"
+      [attr.preserveAspectRatio]="vertical ? 'xMidYMin meet' : 'xMidYMin slice'"
+      xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="hero-titulo">
+      <title id="hero-titulo">Stratton Global · StrattonApp</title>
+      <mask id="m">
+        <g class="cloud1">
+          <rect fill="#fff" width="1200" height="801" y="799" />
+          <image href="assets/landing/cloud1Mask.jpg" width="1200" height="800" />
+        </g>
+      </mask>
+
+      <image class="sky" href="assets/landing/sky.jpg" width="1200" height="590" />
+      <image class="mountBg" href="assets/landing/mountBg.png" width="1200" height="800" />
+      <image class="mountMg" href="assets/landing/mountMg.png" width="1200" height="800" />
+      <image class="cloud2" href="assets/landing/cloud2.png" width="1200" height="800" />
+      <image class="mountFg" href="assets/landing/mountFg.png" width="1200" height="800" />
+      <image class="cloud1" href="assets/landing/cloud1.png" width="1200" height="800" />
+      <image class="cloud3" href="assets/landing/cloud3.png" width="1200" height="800" />
+
+      <text fill="#fff" x="370" y="165">stratton</text>
+      <text fill="#fff" x="470" y="245">global</text>
+      <polyline class="arrow" fill="#fff" points="599,250 599,289 590,279 590,282 600,292 610,282 610,279 601,289 601,250" />
+
+      <!-- Lo que queda por debajo de la nube se ve en azul y cambia a "stratton app" -->
+      <g mask="url(#m)">
+        <rect fill="#fff" width="1200" height="800" />
+        <text fill="#162a43" x="370" y="165">stratton</text>
+        <text fill="#162a43" x="600" y="245">app</text>
+      </g>
+
+      <rect class="arrow-btn" width="100" height="100" opacity="0" x="550" y="220"
+        role="button" tabindex="0" aria-label="Bajar al contenido"
+        (mouseenter)="flechaEncima()" (mouseleave)="flechaFuera()" (focus)="flechaEncima()" (blur)="flechaFuera()"
+        (click)="bajar()" (keydown.enter)="bajar()" (keydown.space)="bajar(); $event.preventDefault()" />
+    </svg>
+  </div>
+</section>
+
+<!-- Contenido tras la escena -->
+<section class="contenido" #contenido>
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <h1 class="display-5 fw-bold">Tu asesoría energética, organizada</h1>
+      <p class="lead text-secondary mx-auto" style="max-width: 640px;">
+        StrattonApp reúne clientes, contratos y puntos de suministro de Endesa, Iberdrola y Naturgy en un solo sitio,
+        para que cada asesor sepa en qué punto está cada contrato.
+      </p>
+
+      <div class="d-flex flex-wrap justify-content-center gap-2 mt-4">
+        <ng-container *ngIf="authService.isLoggedIn(); else invitado">
+          <a [routerLink]="authService.rutaInicial()" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right"></i> Entrar a la aplicación</a>
+          <a routerLink="/registrar-cliente" class="btn btn-outline-primary btn-lg"><i class="bi bi-person-plus"></i> Nuevo cliente</a>
+        </ng-container>
+        <ng-template #invitado>
+          <a routerLink="/login" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right"></i> Iniciar sesión</a>
+          <a routerLink="/register" class="btn btn-outline-primary btn-lg"><i class="bi bi-person-plus"></i> Crear cuenta</a>
+        </ng-template>
+        <a routerLink="/inicio" class="btn btn-link btn-lg">Ver comercializadoras</a>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let v of ventajas">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body p-4">
+            <i class="bi {{ v.icono }} fs-1 text-primary"></i>
+            <h2 class="h5 mt-3">{{ v.titulo }}</h2>
+            <p class="mb-0 text-secondary">{{ v.texto }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

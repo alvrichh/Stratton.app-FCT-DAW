@@ -1,168 +1,72 @@
 <div class="container mt-4">
-  <!-- Contenedor de video antes de las filas -->
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <div class="embed-responsive embed-responsive-16by9">
-        <video class="embed-responsive-item" controls>
+  <div class="row mb-4 align-items-center">
+    <div class="col-lg-7">
+      <div class="ratio ratio-16x9 rounded overflow-hidden shadow">
+        <video controls preload="metadata" aria-label="Vídeo de presentación de Stratton Global">
           <source src="assets/images/Stratton_Global_Sin.mp4" type="video/mp4">
-          Tu navegador no soporta la reproducción de video.
+          Tu navegador no soporta la reproducción de vídeo.
         </video>
       </div>
     </div>
-  </div>
-
-  <!-- Contenedor de reseñas -->
-  <div class="row">
-    <div class="col-md-12">
-      <h2>Reseñas de Google</h2>
+    <div class="col-lg-5 mt-4 mt-lg-0">
+      <h1 class="display-6">StrattonApp</h1>
+      <p class="lead">Gestión de clientes, empleados y puntos de suministro para tu asesoría energética.</p>
+      <ng-container *ngIf="authService.isLoggedIn(); else accesoInvitado">
+        <p>Hola, <strong>{{ authService.getNombre() }}</strong>. ¿Qué quieres hacer?</p>
+        <div class="d-flex flex-wrap gap-2">
+          <a routerLink="/clientes" class="btn btn-primary"><i class="bi bi-people"></i> Mis clientes</a>
+          <a routerLink="/registrar-cliente" class="btn btn-success"><i class="bi bi-person-plus"></i> Nuevo cliente</a>
+          <a *ngIf="authService.isAdmin()" routerLink="/empleados" class="btn btn-warning"><i class="bi bi-headset"></i> Empleados</a>
+        </div>
+      </ng-container>
+      <ng-template #accesoInvitado>
+        <div class="d-flex flex-wrap gap-2">
+          <a routerLink="/login" class="btn btn-primary"><i class="bi bi-box-arrow-in-right"></i> Iniciar sesión</a>
+          <a routerLink="/register" class="btn btn-outline-light"><i class="bi bi-person-plus"></i> Registrarse</a>
+        </div>
+      </ng-template>
     </div>
   </div>
 
-  <div class="row">
-    <!-- Iteración sobre las reseñas -->
-    <div class="col-md-4" *ngFor="let review of googleReviews">
-      <div class="card mb-4">
-        <div class="card-body d-flex align-items-center">
-          <!-- Imagen o avatar del autor de la reseña en un círculo -->
-          <div class="avatar-container">
-            <img class="img-fluid rounded-circle" [src]="review.authorAvatar" alt="Avatar">
-          </div>
-          <!-- Contenido a la derecha de la imagen -->
-          <div class="ml-3">
-            <!-- Nombre del autor -->
-            <h5 class="card-title">{{ review.authorName }}</h5>
-            <!-- Calificación de la reseña -->
-            <p class="card-text">Calificación:
-              <span *ngFor="let star of stars(review.rating)">
-                &#9733; <!-- Emoticono de estrella rellena -->
-              </span>
-            </p>
-            <!-- Contenido de la reseña -->
-            <p class="card-text">{{ review.content }}</p>
-            <!-- Fecha de la reseña -->
-            <p class="card-text"><small class="text-muted">{{ review.date }}</small></p>
-          </div>
+  <h2 class="mt-5">Compañías comercializadoras</h2>
+  <p class="text-white-50">Comparativa de las ofertas con las que trabajamos.</p>
+  <div class="accordion" id="accordionOfertas">
+    <div class="accordion-item" *ngFor="let oferta of ofertas; let i = index">
+      <h2 class="accordion-header" [id]="'heading' + i">
+        <button class="accordion-button" [class.collapsed]="i !== 0" type="button" data-bs-toggle="collapse"
+          [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="i === 0" [attr.aria-controls]="'collapse' + i">
+          <img [src]="oferta.logo" class="img-fluid me-3" style="max-width: 160px;" [alt]="'Logo ' + oferta.nombre">
+          <span class="fw-semibold">{{ oferta.nombre }}</span>
+        </button>
+      </h2>
+      <div [id]="'collapse' + i" class="accordion-collapse collapse" [class.show]="i === 0" data-bs-parent="#accordionOfertas">
+        <div class="accordion-body">
+          <h5>Precio</h5>
+          <p>{{ oferta.precio }}</p>
+          <h5>Descripción</h5>
+          <p>{{ oferta.descripcion }}</p>
+          <h5>Ventajas</h5>
+          <ul><li *ngFor="let v of oferta.ventajas">{{ v }}</li></ul>
+          <h5>Desventajas</h5>
+          <ul class="mb-0"><li *ngFor="let d of oferta.desventajas">{{ d }}</li></ul>
         </div>
       </div>
     </div>
   </div>
 
- 
-  <br>
-  <h2>Compañías comercializadoras:</h2>
-  <!-- Contenedor de cartas desplegables -->
-  <div class="accordion" id="accordionExample">
-
-    <!-- Carta desplegable para Iberdrola -->
-    <div class="card">
-      <div class="card-header" id="headingOne">
-        <h2 class="mb-0">
-          <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-            aria-expanded="true" aria-controls="collapseOne">
-            <img src="assets/images/iberdrola.png" class="img-fluid" style="max-width: 200px;" alt="Logo Iberdrola">
-            <i class="bi bi-caret-down-fill ml-3"></i>
-          </button>
-        </h2>
-      </div>
-
-      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-        <div class="card-body">
-          <h5>Precio:</h5>
-          <p>0,167 €/kWh. Con el 20% de descuento, el precio se queda en 0,127 €/kWh.</p>
-          <h5>Descripción:</h5>
-          <p>Ofrecen un pack inicial con un coste de 3,5 € los primeros 4 meses (50% de descuento), luego 9 €.</p>
-          <h5>Ventajas:</h5>
-          <ul>
-            <li>Regalo de una tarjeta de 50€ en Carrefour o Leroy Merlin si vives en Sevilla, Málaga o Badajoz.</li>
-            <li>No tiene permanencia ni costes de mantenimiento.</li>
-          </ul>
-          <h5>Desventajas:</h5>
-          <ul>
-            <li>El pack inicial tiene un coste.</li>
-          </ul>
-        </div>
-      </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <h2>Dónde estamos</h2>
+      <p class="mb-1"><i class="bi bi-geo-alt"></i> Edificio Pasarela, Mairena del Aljarafe (Sevilla)</p>
+      <a class="btn btn-outline-light btn-sm" href="https://www.google.com/maps/search/?api=1&query=Edificio+Pasarela+Mairena+del+Aljarafe" target="_blank" rel="noopener">
+        <i class="bi bi-map"></i> Ver en Google Maps
+      </a>
     </div>
-
-    <!-- Carta desplegable para Endesa -->
-    <div class="card">
-      <div class="card-header" id="headingTwo">
-        <h2 class="mb-0">
-          <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-            aria-expanded="false" aria-controls="collapseTwo">
-            <img src="assets/images/endesa.png" class="img-fluid" style="max-width: 200px;" alt="Logo Endesa">
-            <i class="bi bi-caret-down-fill ml-3"></i>
-          </button>
-        </h2>
-      </div>
-      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-        <div class="card-body">
-          <h5>Precio:</h5>
-          <p>0,17 €/kWh. Con un descuento del 25%, el precio final es de 0,127 €/kWh.</p>
-          <h5>Descripción:</h5>
-          <p>Tienen la posibilidad de ofrecer un precio de 0,10 €/kWh, pero con permanencia de un año.</p>
-          <h5>Ventajas:</h5>
-          <ul>
-            <li>Descuento inicial del 25% durante dos años.</li>
-          </ul>
-          <h5>Desventajas:</h5>
-          <ul>
-            <li>Permanencia de un año.</li>
-            <li>Mantenimiento "obligatorio" con coste de 7 €/mes.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- Carta desplegable para Naturgy -->
-    <div class="card">
-      <div class="card-header" id="headingThree">
-        <h2 class="mb-0">
-          <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree"
-            aria-expanded="false" aria-controls="collapseThree">
-            <img src="assets/images/naturgy.png" class="img-fluid" style="max-width: 200px;" alt="Logo Naturgy">
-            <i class="bi bi-caret-down-fill ml-3"></i>
-          </button>
-        </h2>
-      </div>
-      <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-        <div class="card-body">
-          <h5>Precio:</h5>
-          <p>0,11 €/kWh. El precio no tiene descuentos.</p>
-          <h5>Descripción:</h5>
-          <p>No ofrecen descuentos, manteniendo el mismo precio en todo momento.</p>
-          <h5>Ventajas:</h5>
-          <ul>
-            <li>Precio constante sin variaciones.</li>
-          </ul>
-          <h5>Desventajas:</h5>
-          <ul>
-            <li>Cobro de 2 €/mes por la batería virtual.</li>
-            <li>Muchos mensajes de spam.</li>
-          </ul>
-        </div>
-      </div>
+    <div class="col-md-6 text-md-end mt-4 mt-md-0">
+      <h2>Contacta con tu asesor</h2>
+      <a href="https://wa.link/44bcfa" target="_blank" rel="noopener" class="btn btn-success btn-lg rounded-circle" title="Contacta por WhatsApp">
+        <i class="bi bi-whatsapp" style="font-size: 2rem;"></i>
+      </a>
     </div>
   </div>
-  
-
-  <div class="m-3 text-md-right" title="contacta con tu asesor">
-    <a href="https://wa.link/44bcfa" target="_blank" class="btn btn-success btn-lg rounded-circle">
-      <i class="bi bi-whatsapp" style="font-size: 2rem;"></i>
-    </a>
-  </div>
- <!-- Mapa -->
- <div class="row">
-  <div class="col-md-6">
-    <h2>Ubicación</h2>
-    <img
-      src="https://www.google.com/maps/vt/data=56s5aIAXubekNScHd6LmjI-88gO3sUSJ8-rc2Yk5A1Yb-3n0xlnAzAh4j2_GB0M-HUfoxaasAIiZGCdm9YqXSIh26zT8_fX2kgV9TOwZ6KMADjh1qIeka-OyMypjA2VMxUR7Kgcqb3TA9zJvrMnTx5DhWhxLwCtYbuBkVdRZsvBGq5XGNyQIi-rTfTTY3Xs9HSTRFeZGabje6gKMIVUYIv3BX4yYIFqqTxA48oFvPOmVpBeimiFHn1fF_JtMf6ke-bv_a0KqkauOCIppNgKLQz30WiigDRakldxflLxGyw"
-      class="col-md-12">
-
-    <!--<div id="mapa" style="height: 400px;">
-
-    </div>-->
-
-  </div>
-</div>
 </div>

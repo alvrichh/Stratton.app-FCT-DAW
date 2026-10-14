@@ -4,28 +4,33 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegistrarEmpleadoComponent } from './pages/empleados/registrar-empleado/registrar-empleado.component';
 import { ActualizarEmpleadoComponent } from './pages/empleados/actualizar-empleado/actualizar-empleado.component';
 import { DetallesEmpleadoComponent } from './pages/empleados/detalles-empleado/detalles-empleado.component';
+import { PerfilEmpleadoComponent } from './pages/empleados/perfil-empleado/perfil-empleado.component';
 import { RegistrarClienteComponent } from './pages/clientes/registrar-cliente/registrar-cliente.component';
 import { ListaClientesComponent } from './pages/clientes/lista-clientes/lista-clientes.component';
-import { RegisterComponent } from './pages/register/register.component';
 import { DetallesClienteComponent } from './pages/clientes/detalles-cliente/detalles-cliente.component';
 import { ActualizarClienteComponent } from './pages/clientes/actualizar-cliente/actualizar-cliente.component';
+import { RegisterComponent } from './pages/register/register.component';
 import { InicioComponent } from './pages/inicio/inicio.component';
+import { adminGuard, authGuard, guestGuard } from './core/auth.guard';
 
 export const routes: Routes = [
-    // Redirecciona al componente
-    { path: 'empleados', component: ListaEmpleadosComponent, data: { role: 'ADMIN' } },
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent},
-    { path: 'registrar-empleado', component: RegistrarEmpleadoComponent },
-    { path: 'actualizar-empleado/:id', component: ActualizarEmpleadoComponent },
-    { path: 'detalles-empleado/:id', component: DetallesEmpleadoComponent },
-    { path: 'registrar-cliente', component: RegistrarClienteComponent },
-    { path: 'clientes', component: ListaClientesComponent }, // Agrega la ruta para ListaClientesComponent
-    { path: 'inicio', component: InicioComponent },
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'detalles-cliente/:id', component: DetallesClienteComponent },
-    { path: 'actualizar-cliente/:id', component: ActualizarClienteComponent },
+  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
+  { path: 'inicio', component: InicioComponent },
+  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
 
+  // Clientes: cualquier empleado autenticado (un USER solo ve los suyos)
+  { path: 'clientes', component: ListaClientesComponent, canActivate: [authGuard] },
+  { path: 'registrar-cliente', component: RegistrarClienteComponent, canActivate: [authGuard] },
+  { path: 'detalles-cliente/:id', component: DetallesClienteComponent, canActivate: [authGuard] },
+  { path: 'actualizar-cliente/:id', component: ActualizarClienteComponent, canActivate: [authGuard] },
+  { path: 'perfil', component: PerfilEmpleadoComponent, canActivate: [authGuard] },
 
+  // Empleados: solo ADMIN
+  { path: 'empleados', component: ListaEmpleadosComponent, canActivate: [adminGuard] },
+  { path: 'registrar-empleado', component: RegistrarEmpleadoComponent, canActivate: [adminGuard] },
+  { path: 'actualizar-empleado/:id', component: ActualizarEmpleadoComponent, canActivate: [adminGuard] },
+  { path: 'detalles-empleado/:id', component: DetallesEmpleadoComponent, canActivate: [adminGuard] },
 
+  { path: '**', redirectTo: 'inicio' },
 ];

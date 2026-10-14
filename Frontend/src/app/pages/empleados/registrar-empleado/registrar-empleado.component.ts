@@ -1,50 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { Empleado } from '../empleado';
-import { FormsModule } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
-import { EmpleadoService } from '../empleado.service';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { EmpleadoRequest, empleadoVacio } from '../empleado';
+import { EmpleadoService } from '../empleado.service';
+import { Alertas } from '../../../core/alertas';
+import { EmpleadoFormComponent } from '../empleado-form/empleado-form.component';
 
 @Component({
   selector: 'app-registrar-empleado',
   standalone: true,
-  imports: [FormsModule, NgIf, CommonModule],
+  imports: [CommonModule, EmpleadoFormComponent],
   templateUrl: './registrar-empleado.component.html',
   styleUrl: './registrar-empleado.component.css'
 })
-export class RegistrarEmpleadoComponent implements OnInit{
+export class RegistrarEmpleadoComponent {
 
+  empleado: EmpleadoRequest = empleadoVacio();
+  guardando = false;
 
-  empleado: Empleado = new Empleado();
-  username: any;
-  rolesDisponibles: string[] = ["ADMIN", "USER"];  // Correcta definición del array de roles
-  empleadoForm: any;
-  confirmPassword: string;
-  constructor(private empleadoServicio:EmpleadoService, private router:Router){}
+  constructor(private empleadoServicio: EmpleadoService, private router: Router) {}
 
-  ngOnInit(): void {
-    console.clear();
-    console.log(this.empleado)
-    
+  guardarEmpleado(datos: EmpleadoRequest): void {
+    this.guardando = true;
+    this.empleadoServicio.registrarEmpleado(datos).subscribe({
+      next: (creado) => {
+        this.guardando = false;
+        Alertas.exito('Empleado creado', `${creado.nombre} ${creado.apellidos} ya puede iniciar sesión`);
+        this.router.navigate(['/empleados']);
+      },
+      error: (error) => {
+        this.guardando = false;
+        Alertas.error(error, 'No se pudo crear el empleado');
+      }
+    });
   }
-  onSubmit(){
-    this.guardarEmpleado();
+
+  volver(): void {
+    this.router.navigate(['/empleados']);
   }
-  guardarEmpleado(){
-    this.empleadoServicio.registrarEmpleado(this.empleado).subscribe(dato => {
-      //console.log(dato);
-      this.verListaEmpleados();
-    }, error => console.log(error));
-  }
-  verListaEmpleados(){
-    this.router.navigate(["/empleados"]);
-  }
-  validatePasswordConfirmation() {
-    if (this.empleado.password !== this.confirmPassword) {
-      this.empleadoForm.controls['confirmPassword'].setErrors({ 'passwordMismatch': true });
-    } else {
-      this.empleadoForm.controls['confirmPassword'].setErrors(null);
-    }
-  }
-  
 }

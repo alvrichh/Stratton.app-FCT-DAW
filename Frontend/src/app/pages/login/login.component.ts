@@ -1,48 +1,47 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import swal from 'sweetalert2';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth.service';
-import { RegisterComponent } from '../register/register.component';
+import { Alertas } from '../../core/alertas';
+import { EnterNextDirective } from '../../core/enter-next.directive';
 
 @Component({
-  selector: 'app-signin',
+  selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RegisterComponent, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, EnterNextDirective],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  username: string;
-  password: string;
+export class LoginComponent implements OnInit {
+  username = '';
+  password = '';
+  cargando = false;
+  sesionExpirada = false;
+  private returnUrl: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
-  login() {
-    this.authService.login(this.username, this.password).subscribe({
-      next: (response: any) => {
-        const token = response.token;
-        this.authService.saveToken(token);
-
-        const employeeId = this.authService.getEmpleadoId();
-        console.log('Empleado ID después de iniciar sesión:', employeeId);
-
-        swal('Inicio de sesión exitoso', 'Has iniciado sesión correctamente', 'success');
-        this.verDashboard(response.role);
-      },
-      error: (error: any) => {
-        console.error('Error al iniciar sesión:', error);
-        swal('Error al iniciar sesión', 'Usuario no encontrado o credenciales incorrectas', 'error');
-      }
-    });
+  ngOnInit(): void {
+    this.sesionExpirada = this.route.snapshot.queryParamMap.has('expirada');
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
   }
 
-  verDashboard(role: string) {
-    if (role === 'ADMIN') {
-      this.router.navigate(['/empleados']);
-    } else if (role === 'USER') {
-      this.router.navigate([`/clientes`]);
+  login(): void {
+    if (!this.username || !this.password || this.cargando) {
+      return;
     }
+    this.cargando = true;
+    this.authService.login(this.username.trim(), this.password).subscribe({
+      next: (res) => {
+        this.cargando = false;
+        Alertas.exito('Inicio de sesión correcto', `Bienvenido/a, ${res.nombre}`);
+        this.router.navigateByUrl(this.returnUrl || this.authService.rutaInicial());
+      },
+      error: (error) => {
+        this.cargando = false;
+        Alertas.error(error, 'No se pudo iniciar sesión');
+      }
+    });
   }
 }

@@ -2,53 +2,29 @@ package com.StrattonApp.Backend.service;
 
 import java.util.List;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
-
 import com.StrattonApp.Backend.DTO.EmpleadoDTO;
-import com.StrattonApp.Backend.DTO.ClienteDTO;
-import com.StrattonApp.Backend.entities.Cliente;
-import com.StrattonApp.Backend.entities.Empleado;
+import com.StrattonApp.Backend.DTO.SuministroDTO;
+import com.StrattonApp.Backend.DTO.request.EmpleadoRequest;
 
 /**
- * Interfaz que define operaciones relacionadas con usuarios en el sistema.
+ * Operaciones de gestión de empleados (ADMIN).
  */
 public interface EmpleadoService {
 
-    /**
-     * Obtiene un servicio de detalles de usuario para la autenticación.
-     *
-     * @return Un servicio de detalles de usuario.
-     */
-    UserDetailsService userDetailsService();
+    List<EmpleadoDTO> getAllEmpleados();
 
-    /**
-     * Obtiene una lista de todos los usuarios en el sistema.
-     *
-     * @return Lista de objetos EmpleadoDTO que representan a todos los usuarios.
-     */
-    List<EmpleadoDTO> getAllUsers();
+    EmpleadoDTO getEmpleadoById(Long id);
 
-    /**
-     * Obtiene un usuario por su ID.
-     *
-     * @param userId El ID del usuario a buscar.
-     * @return Lista de usuarios encontrados (puede contener uno o ningún usuario).
-     */
-    EmpleadoDTO getUserById(Long userId);
+    /** Perfil del empleado autenticado, con sus clientes. */
+    EmpleadoDTO getPerfil();
 
-    /**
-     * Obtiene los detalles de un cliente por su ID.
-     *
-     * @param clienteId El ID del cliente a buscar.
-     * @return El ClienteDTO con los detalles del cliente.
-     */
-    ClienteDTO getClienteDetallesById(Long clienteId);
+    EmpleadoDTO crearEmpleado(EmpleadoRequest request);
 
-	EmpleadoDTO convertToDTO(Empleado empleado);
+    EmpleadoDTO actualizarEmpleado(Long id, EmpleadoRequest request);
 
-	Cliente agregarClienteAEmpleado(Long id, Cliente cliente);
+    void eliminarEmpleado(Long id);
 
-	Cliente agregarClienteAEmpleado(Long id, ClienteDTO clienteDTO);
+    long contarClientes(Long empleadoId);
 
-
+    List<SuministroDTO> getSuministrosDeClientes(Long empleadoId);
 }

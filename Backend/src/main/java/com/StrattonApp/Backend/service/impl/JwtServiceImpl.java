@@ -1,138 +1,86 @@
 package com.StrattonApp.Backend.service.impl;
 
-import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.StrattonApp.Backend.service.JwtService;
 import com.StrattonApp.Backend.entities.Empleado;
+import com.StrattonApp.Backend.entities.Role;
+import com.StrattonApp.Backend.service.JwtService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-
 /**
- * Implementación de {@link JwtService} para la generación, validación y extracción de tokens JWT.
+ * Implementación de {@link JwtService} con jjwt 0.12 (HMAC-SHA256).
+ * El token incluye los claims {@code id}, {@code role} (rol principal), {@code roles} y {@code nombre}.
  */
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    @Value("${jwt.secret}")
-    private String jwtSigningKey;
+    private final SecretKey signingKey;
+    private final long expirationMs;
 
+    public JwtServiceImpl(@Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration-ms:36000000}") long expirationMs) {
+        this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        this.expirationMs = expirationMs;
+    }
 
-    /**
-     * Extrae el nombre de usuario desde el token JWT.
-     *
-     * @param token Token JWT
-     * @return Nombre de usuario extraído del token
-     */
-    
     @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-
-    /**
-     * Extrae el rol del usuario desde el token JWT.
-     *	
-     * @param token Token JWT
-     * @return Rol del usuario extraído del token
-     */
-    public String extractUserRole(String token) {
-        return extractClaim(token, claims -> claims.get("role", String.class));
-    }
-    /*@Override
-    public String extractPassword(String token) {
-        return extractClaim(token, claims -> claims.get("password", String.class));
-    }*/
-
-    /**
-     * Genera un token JWT basado en los detalles del usuario.
-     *
-     * @param userDetails Detalles del usuario
-     * @return Token JWT generado
-     */
     @Override
     public String generateToken(UserDetails userDetails) {
-        Empleado empleado = (Empleado) userDetails; // Cast a Empleado si userDetails es de tipo Empleado
-        
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("role", empleado.getMainRole()); // Añadir el rol a los claims
-        extraClaims.put("id", empleado.getId()); // Añadir el ID del empleado a los claims
-
-        return generateToken(extraClaims, userDetails);
-    }
-    /**
-     * Valida si un token JWT es válido para el usuario dado.
-     *
-     * @param token       Token JWT
-     * @param userDetails Detalles del usuario
-     * @return `true` si el token es válido, `false` si no
-     */
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String userName = extractUserName(token);
-        final Integer userId = extractUserId(token);
-
-        // Verificar que el nombre de usuario y el ID del usuario coincidan con los del token
-        return (userName.equals(userDetails.getUsername()) && userId.equals(((Empleado) userDetails).getId())) && !isTokenExpired(token);
-    }
-
-    private Integer extractUserId(String token) {
-        return extractClaim(token, claims -> (Integer) claims.get("id"));
-    }
-
-
-    // Método genérico para extraer un claim del token
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    // Genera un token JWT con los claims especificados y los detalles del usuario
-    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        Map<String, Object> extraClaims = new LinkedHashMap<>();
+        if (userDetails instanceof Empleado empleado) {
+            extraClaims.put("id", empleado.getId());
+            extraClaims.put("role", empleado.getMainRole());
+            extraClaims.put("roles", empleado.getRoles().stream().map(Role::name).sorted().collect(Collectors.toList()));
+            extraClaims.put("nombre", empleado.getNombreCompleto());
+        }
+        long now = System.currentTimeMillis();
         return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Token expira en 10 horas
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .claims(extraClaims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(now))
+                .expiration(new Date(now + expirationMs))
+                .signWith(signingKey)
                 .compact();
     }
 
-    // Valida si el token JWT ha expirado
+    @Override
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String userName = extractUserName(token);
+        return userName != null && userName.equalsIgnoreCase(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        Date exp = extractClaim(token, Claims::getExpiration);
+        return exp != null && exp.before(new Date());
     }
 
-    // Extrae la fecha de expiración del token JWT
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    private <T> T extractClaim(String token, Function<Claims, T> resolver) {
+        return resolver.apply(extractAllClaims(token));
     }
 
-    // Extrae todos los claims del token JWT
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(getSigningKey())
+                .verifyWith(signingKey)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
-
-    // Obtiene la clave de firma a partir de la clave secreta configurada
-    private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-    
 }

@@ -1,124 +1,41 @@
-/*
- * Paquete de respuestas del jwt.
- */
 package com.StrattonApp.Backend.DTO.response;
 
+import java.util.List;
+
 /**
- * Respuesta de autenticación JWT que contiene el token JWT generado.
+ * Respuesta de autenticación: token JWT y datos básicos del empleado autenticado.
  */
 public class JwtAuthenticationResponse {
 
-    /**
-     * Token JWT.
-     */
     private String token;
-
-    /**
-     * Rol del usuario autenticado.
-     */
     private String role;
+    private List<String> roles;
+    private Long id;
+    private String username;
+    private String nombre;
 
-    /**
-     * Constructor para crear una nueva instancia de JwtAuthenticationResponse con el token y el rol proporcionados.
-     *
-     * @param token Token JWT.
-     * @param role  Rol del usuario autenticado.
-     */
-    public JwtAuthenticationResponse(String token, String role) {
+    public JwtAuthenticationResponse() {
+    }
+
+    public JwtAuthenticationResponse(String token, String role, List<String> roles, Long id, String username, String nombre) {
         this.token = token;
         this.role = role;
+        this.roles = roles;
+        this.id = id;
+        this.username = username;
+        this.nombre = nombre;
     }
 
-    /**
-     * Obtiene el token JWT.
-     *
-     * @return Token JWT.
-     */
-    public String getToken() {
-        return token;
-    }
-
-    /**
-     * Establece el token JWT.
-     *
-     * @param token Token JWT.
-     */
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    /**
-     * Obtiene el rol del usuario autenticado.
-     *
-     * @return Rol del usuario autenticado.
-     */
-    public String getRole() {
-        return role;
-    }
-
-    /**
-     * Establece el rol del usuario autenticado.
-     *
-     * @param role Rol del usuario autenticado.
-     */
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    /**
-     * Crea un nuevo constructor de JwtAuthenticationResponse.
-     *
-     * @return Constructor de JwtAuthenticationResponse.
-     */
-    public static JwtAuthenticationResponseBuilder builder() {
-        return new JwtAuthenticationResponseBuilder();
-    }
-
-    /**
-     * Constructor interno para facilitar la construcción de instancias de JwtAuthenticationResponse.
-     */
-    public static class JwtAuthenticationResponseBuilder {
-
-        /**
-         * Token JWT.
-         */
-        private String token;
-
-        /**
-         * Rol del usuario autenticado.
-         */
-        private String role;
-
-        /**
-         * Establece el token JWT.
-         *
-         * @param token Token JWT.
-         * @return Constructor actualizado.
-         */
-        public JwtAuthenticationResponseBuilder token(String token) {
-            this.token = token;
-            return this;
-        }
-
-        /**
-         * Establece el rol del usuario autenticado.
-         *
-         * @param role Rol del usuario autenticado.
-         * @return Constructor actualizado.
-         */
-        public JwtAuthenticationResponseBuilder role(String role) {
-            this.role = role;
-            return this;
-        }
-
-        /**
-         * Construye una instancia de JwtAuthenticationResponse con los atributos proporcionados.
-         *
-         * @return Instancia de JwtAuthenticationResponse construida.
-         */
-        public JwtAuthenticationResponse build() {
-            return new JwtAuthenticationResponse(token, role);
-        }
-        
-    }
+    public String getToken() { return token; }
+    public void setToken(String token) { this.token = token; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+    public List<String> getRoles() { return roles; }
+    public void setRoles(List<String> roles) { this.roles = roles; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 }

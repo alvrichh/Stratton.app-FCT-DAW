@@ -1,16 +1,26 @@
-/*
- * Paquete de control de excepciones.
- */
 package com.StrattonApp.Backend.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class GlobalException extends RuntimeException{
-	
-	public GlobalException (String msg) {
-		super(msg);
-	}
+/**
+ * Excepción genérica de la aplicación con el código HTTP que debe devolverse.
+ */
+public class GlobalException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
+    private final HttpStatus status;
+
+    public GlobalException(String msg) {
+        this(msg, HttpStatus.BAD_REQUEST);
+    }
+
+    public GlobalException(String msg, HttpStatus status) {
+        super(msg);
+        this.status = status;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
 }

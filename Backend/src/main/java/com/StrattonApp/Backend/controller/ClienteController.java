@@ -2,107 +2,100 @@ package com.StrattonApp.Backend.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.StrattonApp.Backend.DTO.ClienteDTO;
-import com.StrattonApp.Backend.entities.Cliente;
+import com.StrattonApp.Backend.DTO.SuministroDTO;
+import com.StrattonApp.Backend.DTO.request.ClienteRequest;
+import com.StrattonApp.Backend.DTO.request.SuministroRequest;
 import com.StrattonApp.Backend.service.ClienteService;
+import com.StrattonApp.Backend.service.SuministroService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 /**
- * Controlador RESTful para operaciones CRUD relacionadas con clientes.
- * Proporciona endpoints para listar, obtener, guardar, actualizar y eliminar clientes.
+ * CRUD de clientes y de sus suministros. Un USER solo accede a sus propios clientes;
+ * ADMIN y MANAGER a los de todos.
  */
 @RestController
 @RequestMapping("/api/v2/clientes")
-@CrossOrigin(origins = "http://localhost:80")
+@Tag(name = "Clientes")
 public class ClienteController {
 
-    @Autowired
-    private ClienteService clienteService;
+    private final ClienteService clienteService;
+    private final SuministroService suministroService;
 
-    /**
-     * Obtiene todos los clientes.
-     *
-     * @return Una lista de todos los clientes.
-     */
+    public ClienteController(ClienteService clienteService, SuministroService suministroService) {
+        this.clienteService = clienteService;
+        this.suministroService = suministroService;
+    }
+
+    @Operation(summary = "Clientes visibles para el usuario autenticado (todos si es ADMIN/MANAGER)")
     @GetMapping
-    public List<ClienteDTO> listarTodosLosClientes() {
-        return clienteService.getAllClientes();
+    public List<ClienteDTO> listarClientes() {
+        return clienteService.getClientesVisibles();
     }
 
-    /**
-     * Obtiene un cliente por su ID.
-     *
-     * @param id El ID del cliente.
-     * @return El cliente correspondiente al ID, envuelto en ResponseEntity.
-     */
+    @Operation(summary = "Detalle de un cliente")
     @GetMapping("/{id}")
-    public ResponseEntity<ClienteDTO> obtenerClientePorId(@PathVariable Long id) {
-        ClienteDTO cliente = clienteService.getClienteById(id);
-        return ResponseEntity.ok(cliente);
+    public ClienteDTO obtenerCliente(@PathVariable Long id) {
+        return clienteService.getClienteById(id);
     }
 
-    /**
-     * Obtiene todos los clientes asociados a un empleado por su ID.
-     *
-     * @param empleadoId El ID del empleado.
-     * @return Una lista de todos los clientes asociados al empleado, envuelto en ResponseEntity.
-     */
+    @Operation(summary = "Clientes de un empleado")
     @GetMapping("/{empleadoId}/clientes")
-    public List<ClienteDTO> obtenerClientesPorEmpleadoId(@PathVariable Long empleadoId) {
+    public List<ClienteDTO> clientesPorEmpleado(@PathVariable Long empleadoId) {
         return clienteService.getClientesByEmpleadoId(empleadoId);
     }
 
-
-    /**
-     * Guarda un nuevo cliente.
-     *
-     * @param cliente Los detalles del cliente a guardar.
-     * @return El cliente guardado, envuelto en ResponseEntity.
-     */
+    @Operation(summary = "Crea un cliente asignado al usuario autenticado")
     @PostMapping
-    public ResponseEntity<?> guardarCliente(@RequestBody Cliente cliente) {
-        ClienteDTO clienteDTO = clienteService.guardarCliente(cliente);
-        return ResponseEntity.ok(clienteDTO);
+    public ResponseEntity<ClienteDTO> crearCliente(@Valid @RequestBody ClienteRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.crearCliente(request));
     }
 
-    /**
-     * Guarda un nuevo cliente asociado a un empleado específico.
-     *
-     * @param empleadoId El ID del empleado.
-     * @param cliente Los detalles del cliente a guardar.
-     * @return El cliente guardado, envuelto en ResponseEntity.
-     */
+    @Operation(summary = "Crea un cliente asignado a un empleado concreto")
     @PostMapping("/{empleadoId}/clientes")
-    public ResponseEntity<?> guardarClientePorEmpleado(@PathVariable Long empleadoId, @RequestBody Cliente cliente) {
-        ClienteDTO clienteDTO = clienteService.guardarClientePorEmpleado(empleadoId, cliente);
-        return ResponseEntity.ok(clienteDTO);
+    public ResponseEntity<ClienteDTO> crearClienteParaEmpleado(@PathVariable Long empleadoId,
+            @Valid @RequestBody ClienteRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.crearClienteParaEmpleado(empleadoId, request));
     }
 
-    /**
-     * Actualiza un cliente existente por su ID.
-     *
-     * @param id             El ID del cliente a actualizar.
-     * @param detallesCliente Los detalles actualizados del cliente.
-     * @return El cliente actualizado, envuelto en ResponseEntity.
-     */
+    @Operation(summary = "Actualiza un cliente")
     @PutMapping("/{id}")
-    public ResponseEntity<ClienteDTO> actualizarCliente(@PathVariable Long id, @RequestBody Cliente detallesCliente) {
-        ClienteDTO clienteDTO = clienteService.actualizarCliente(id, detallesCliente);
-        return ResponseEntity.ok(clienteDTO);
+    public ClienteDTO actualizarCliente(@PathVariable Long id, @Valid @RequestBody ClienteRequest request) {
+        return clienteService.actualizarCliente(id, request);
     }
 
-    /**
-     * Elimina un cliente por su ID.
-     *
-     * @param id El ID del cliente a eliminar.
-     * @return ResponseEntity indicando éxito o fallo de la operación.
-     */
+    @Operation(summary = "Elimina un cliente y sus suministros")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarCliente(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
         clienteService.eliminarCliente(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    // ----- Suministros del cliente ---------------------------------------------
+
+    @Operation(summary = "Suministros (CUPS) de un cliente")
+    @GetMapping("/{id}/suministros")
+    public List<SuministroDTO> suministros(@PathVariable Long id) {
+        return suministroService.getSuministrosDeCliente(id);
+    }
+
+    @Operation(summary = "Añade un suministro a un cliente")
+    @PostMapping("/{id}/suministros")
+    public ResponseEntity<SuministroDTO> crearSuministro(@PathVariable Long id, @Valid @RequestBody SuministroRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(suministroService.crearSuministro(id, request));
     }
 }

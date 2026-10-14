@@ -5,6 +5,7 @@ import { EmpleadoService } from '../empleado.service';
 import { Empleado } from '../empleado';
 import { Suministro } from '../../clientes/suministro';
 import { Alertas } from '../../../core/alertas';
+import { iniciales, rolLegible } from '../../../core/formato';
 
 @Component({
   selector: 'app-detalles-empleado',
@@ -14,6 +15,8 @@ import { Alertas } from '../../../core/alertas';
   styleUrl: './detalles-empleado.component.css'
 })
 export class DetallesEmpleadoComponent implements OnInit {
+  readonly iniciales = iniciales;
+  readonly rolLegible = rolLegible;
 
   id!: number;
   empleado?: Empleado;

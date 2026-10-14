@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   username = '';
   password = '';
   cargando = false;
+  mostrarPassword = false;
   sesionExpirada = false;
   private returnUrl: string | null = null;
 

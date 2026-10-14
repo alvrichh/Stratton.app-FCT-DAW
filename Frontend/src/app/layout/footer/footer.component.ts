@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Alertas } from '../../core/alertas';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css'
 })
@@ -19,7 +20,7 @@ export class FooterComponent {
       Alertas.error(new Error('Introduce una dirección de correo válida.'), 'Correo no válido');
       return;
     }
-    Alertas.info('¡Enhorabuena! 🎉', `Te has suscrito a nuestra newsletter con ${this.email}. ¡Gracias por unirte!`);
+    Alertas.exito('Suscripción completada', `Te enviaremos las novedades a ${this.email}.`);
     this.email = '';
   }
 }

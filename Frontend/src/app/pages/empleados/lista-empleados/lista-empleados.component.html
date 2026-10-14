@@ -1,54 +1,78 @@
-<div class="container-fluid px-4">
-  <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 mb-3 gap-2">
-    <h2 class="mb-0"><i class="bi bi-headset"></i> Empleados <span class="badge bg-secondary fs-6 align-middle">{{ filteredEmpleados.length }}</span></h2>
-    <a class="btn btn-warning" routerLink="/registrar-empleado"><i class="bi bi-person-plus-fill"></i> Añadir empleado</a>
+<div class="container-xl">
+  <header class="page-header">
+    <div>
+      <h1>Empleados<span class="contador" aria-label="empleados mostrados">{{ filteredEmpleados.length }}</span></h1>
+      <p class="subtitulo">Equipo comercial de la asesoría, con sus roles y su cartera de clientes.</p>
+    </div>
+    <div class="acciones">
+      <a class="btn btn-primary" routerLink="/registrar-empleado"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo empleado</a>
+    </div>
+  </header>
+
+  <div class="toolbar" role="search">
+    <div class="input-group busqueda">
+      <span class="input-group-text"><i class="bi bi-search" aria-hidden="true"></i></span>
+      <input type="search" class="form-control" [(ngModel)]="searchText" (input)="applyFilter()"
+        placeholder="Nombre, usuario, email, rol o asesoría" aria-label="Buscar empleados">
+    </div>
   </div>
 
-  <div class="input-group mb-3" style="max-width: 520px;">
-    <span class="input-group-text"><i class="bi bi-search"></i></span>
-    <input type="search" class="form-control" [(ngModel)]="searchText" (input)="applyFilter()"
-      placeholder="Buscar por nombre, usuario, email, rol o asesoría..." aria-label="Buscar empleados">
-  </div>
+  <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</div>
 
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div class="tabla-card" *ngIf="!error">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <caption class="visually-hidden">Listado de empleados</caption>
+        <thead>
+          <tr>
+            <th scope="col">Empleado</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Asesoría</th>
+            <th scope="col" class="text-end">Clientes</th>
+            <th scope="col" class="text-end"><span class="visually-hidden">Acciones</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="cargando">
+            <tr *ngFor="let _ of [1, 2, 3]" aria-hidden="true"><td colspan="6"><span class="skeleton"></span></td></tr>
+          </ng-container>
 
-  <div *ngIf="cargando" class="text-center py-5">
-    <div class="spinner-border text-light" role="status"><span class="visually-hidden">Cargando...</span></div>
-  </div>
-
-  <div class="table-responsive" *ngIf="!cargando && !error">
-    <table class="table table-striped table-hover align-middle">
-      <thead class="table-dark">
-        <tr>
-          <th>Nombre</th>
-          <th>Apellidos</th>
-          <th>Email</th>
-          <th>Usuario</th>
-          <th>Roles</th>
-          <th>Asesoría</th>
-          <th class="text-center">Clientes</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let empleado of filteredEmpleados">
-          <td>{{ empleado.nombre }} <span *ngIf="esYoMismo(empleado)" class="badge bg-primary">tú</span></td>
-          <td>{{ empleado.apellidos }}</td>
-          <td>{{ empleado.email }}</td>
-          <td>{{ empleado.username }}</td>
-          <td><span *ngFor="let rol of empleado.roles" class="badge me-1" [class.bg-danger]="rol === 'ADMIN'" [class.bg-warning]="rol === 'MANAGER'" [class.text-dark]="rol === 'MANAGER'" [class.bg-secondary]="rol === 'USER'">{{ rol }}</span></td>
-          <td>{{ empleado.asesoria || '—' }}</td>
-          <td class="text-center">{{ empleado.totalClientes }}</td>
-          <td class="text-nowrap">
-            <button (click)="verEmpleado(empleado.id)" class="btn btn-info btn-sm me-1"><i class="bi bi-eye"></i> Ver</button>
-            <button (click)="actualizarEmpleado(empleado.id)" class="btn btn-warning btn-sm me-1"><i class="bi bi-pencil-square"></i> Editar</button>
-            <button (click)="eliminarEmpleado(empleado)" class="btn btn-danger btn-sm" [disabled]="esYoMismo(empleado)" title="No puedes eliminar tu propio usuario"><i class="bi bi-trash3"></i> Borrar</button>
-          </td>
-        </tr>
-        <tr *ngIf="filteredEmpleados.length === 0">
-          <td colspan="8" class="text-center py-4">No se encontraron empleados.</td>
-        </tr>
-      </tbody>
-    </table>
+          <ng-container *ngIf="!cargando">
+            <tr *ngFor="let empleado of filteredEmpleados">
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  <span class="mini-avatar" aria-hidden="true">{{ iniciales(empleado.nombre + ' ' + empleado.apellidos) }}</span>
+                  <div>
+                    <a class="celda-principal enlace-fila" [routerLink]="['/detalles-empleado', empleado.id]">{{ empleado.nombre }} {{ empleado.apellidos }}</a>
+                    <span *ngIf="esYoMismo(empleado)" class="badge badge-rol ms-1">Tú</span>
+                    <span class="celda-secundaria">{{ empleado.email }}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="text-nowrap">{{ empleado.username }}</td>
+              <td><span *ngFor="let rol of empleado.roles" class="badge badge-rol badge-rol-{{ rol }} me-1">{{ rolLegible(rol) }}</span></td>
+              <td>{{ empleado.asesoria || '—' }}</td>
+              <td class="text-end fw-semibold">{{ empleado.totalClientes }}</td>
+              <td class="text-end text-nowrap">
+                <button (click)="verEmpleado(empleado.id)" class="btn btn-icon" [attr.aria-label]="'Ver ' + empleado.nombre + ' ' + empleado.apellidos" title="Ver detalle"><i class="bi bi-eye" aria-hidden="true"></i></button>
+                <button (click)="actualizarEmpleado(empleado.id)" class="btn btn-icon" [attr.aria-label]="'Editar ' + empleado.nombre + ' ' + empleado.apellidos" title="Editar"><i class="bi bi-pencil" aria-hidden="true"></i></button>
+                <button (click)="eliminarEmpleado(empleado)" class="btn btn-icon btn-icon-danger" [disabled]="esYoMismo(empleado)"
+                  [attr.aria-label]="esYoMismo(empleado) ? 'No puedes eliminar tu propio usuario' : 'Eliminar ' + empleado.nombre + ' ' + empleado.apellidos"
+                  [title]="esYoMismo(empleado) ? 'No puedes eliminar tu propio usuario' : 'Eliminar'"><i class="bi bi-trash3" aria-hidden="true"></i></button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredEmpleados.length === 0">
+              <td colspan="6">
+                <div class="estado-vacio">
+                  <i class="bi bi-search" aria-hidden="true"></i>
+                  <p class="mb-0">Ningún empleado coincide con la búsqueda.</p>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

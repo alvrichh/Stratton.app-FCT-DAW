@@ -1,14 +1,14 @@
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="text-center mb-0"><i class="bi bi-person-badge"></i> Registro de empleado</h3>
-        </div>
-        <div class="card-body">
-          <app-empleado-form [empleado]="empleado" [guardando]="guardando" (guardar)="guardarEmpleado($event)" (cancelar)="volver()"></app-empleado-form>
-        </div>
-      </div>
+<div class="container-xl">
+  <a routerLink="/empleados" class="volver"><i class="bi bi-arrow-left" aria-hidden="true"></i> Empleados</a>
+  <header class="page-header pt-3">
+    <div>
+      <h1>Nuevo empleado</h1>
+      <p class="subtitulo">Podrá iniciar sesión en cuanto lo guardes.</p>
+    </div>
+  </header>
+  <div class="card form-card">
+    <div class="card-body p-4">
+      <app-empleado-form [empleado]="empleado" [guardando]="guardando" (guardar)="guardarEmpleado($event)" (cancelar)="volver()"></app-empleado-form>
     </div>
   </div>
 </div>

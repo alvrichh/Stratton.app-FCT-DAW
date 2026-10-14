@@ -1,74 +1,86 @@
-<div class="container mt-4">
-  <h2 class="mb-4 text-center">Detalles del empleado</h2>
+<div class="container-xl">
+  <a routerLink="/empleados" class="volver"><i class="bi bi-arrow-left" aria-hidden="true"></i> Empleados</a>
 
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  <div *ngIf="!empleado && !error" class="text-center py-5">
-    <div class="spinner-border text-light" role="status"><span class="visually-hidden">Cargando...</span></div>
+  <div *ngIf="error" class="alert alert-danger mt-3" role="alert">{{ error }}</div>
+  <div *ngIf="!empleado && !error" class="py-4" aria-busy="true">
+    <span class="skeleton mb-3" style="height: 4rem; max-width: 420px;"></span>
+    <span class="skeleton" style="height: 12rem;"></span>
   </div>
 
   <ng-container *ngIf="empleado">
-    <div class="card">
-      <div class="row g-0">
-        <div class="col-md-3 d-flex align-items-center justify-content-center p-3">
-          <img src="assets/images/avatar.svg" class="img-fluid rounded-circle avatar" [alt]="'Foto de ' + empleado.nombre">
-        </div>
-        <div class="col-md-5">
-          <div class="card-body">
-            <h3 class="card-title">{{ empleado.nombre }} {{ empleado.apellidos }}</h3>
-            <p class="card-text mb-1"><strong>ID:</strong> {{ empleado.id }}</p>
-            <p class="card-text mb-1"><strong>Email:</strong> {{ empleado.email }}</p>
-            <p class="card-text mb-1"><strong>Usuario:</strong> {{ empleado.username }}</p>
-            <p class="card-text mb-1"><strong>Asesoría:</strong> {{ empleado.asesoria || 'Sin asignar' }}</p>
-            <p class="card-text mb-1"><strong>Roles:</strong>
-              <span *ngFor="let rol of empleado.roles" class="badge bg-secondary me-1">{{ rol }}</span>
-            </p>
-            <p class="card-text mb-1"><strong>Clientes:</strong> {{ empleado.totalClientes }}</p>
-          </div>
-        </div>
-        <div class="col-md-4 p-3">
-          <div class="bg-success text-white p-2 rounded mb-2"><small>Suministros activos</small><h4 class="mb-0">{{ contar('ACTIVO') }}</h4></div>
-          <div class="bg-warning text-dark p-2 rounded mb-2"><small>Suministros pendientes</small><h4 class="mb-0">{{ contar('PENDIENTE') }}</h4></div>
-          <div class="bg-danger text-white p-2 rounded"><small>Suministros K.O.</small><h4 class="mb-0">{{ contar('INACTIVO') }}</h4></div>
+    <header class="page-header pt-3">
+      <div class="d-flex align-items-center gap-3">
+        <span class="avatar-iniciales" aria-hidden="true">{{ iniciales(empleado.nombre + ' ' + empleado.apellidos) }}</span>
+        <div>
+          <h1>{{ empleado.nombre }} {{ empleado.apellidos }}</h1>
+          <p class="subtitulo">{{ rolLegible(empleado.role) }} · {{ empleado.asesoria || 'Sin asesoría' }}</p>
         </div>
       </div>
-      <div class="card-footer d-flex flex-wrap gap-2">
-        <a class="btn btn-secondary" routerLink="/empleados"><i class="bi bi-arrow-left"></i> Volver</a>
-        <a class="btn btn-warning" [routerLink]="['/actualizar-empleado', empleado.id]"><i class="bi bi-pencil-square"></i> Editar</a>
-        <button type="button" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#clientesModal">
-          <i class="bi bi-people"></i> Ver clientes ({{ empleado.clientes.length }})
-        </button>
+      <div class="acciones">
+        <a class="btn btn-outline-secondary" [routerLink]="['/actualizar-empleado', empleado.id]"><i class="bi bi-pencil" aria-hidden="true"></i> Editar</a>
       </div>
-    </div>
+    </header>
 
-    <!-- Modal con los clientes del empleado -->
-    <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content text-dark">
-          <div class="modal-header">
-            <h5 class="modal-title" id="clientesModalLabel">Clientes de {{ empleado.nombre }} {{ empleado.apellidos }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-          </div>
-          <div class="modal-body">
-            <p *ngIf="!empleado.clientes.length" class="text-muted mb-0">Este empleado todavía no tiene clientes.</p>
-            <table *ngIf="empleado.clientes.length" class="table table-sm align-middle mb-0">
-              <thead><tr><th>Cliente</th><th>DNI</th><th>Teléfono</th><th>Comercializadora</th><th>CUPS</th><th></th></tr></thead>
-              <tbody>
-                <tr *ngFor="let cliente of empleado.clientes">
-                  <td>{{ cliente.nombre }} {{ cliente.apellidos }}</td>
-                  <td>{{ cliente.dni }}</td>
-                  <td>{{ cliente.telefono }}</td>
-                  <td>{{ cliente.companiaContratada || '—' }}</td>
-                  <td><code>{{ cliente.cups || '—' }}</code></td>
-                  <td><a [routerLink]="['/detalles-cliente', cliente.idCliente]" class="btn btn-info btn-sm" data-bs-dismiss="modal"><i class="bi bi-eye"></i></a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <div class="row g-4">
+      <section class="col-lg-8" aria-labelledby="datos-titulo">
+        <div class="card h-100">
+          <div class="card-header"><h2 id="datos-titulo" class="h5">Datos del empleado</h2></div>
+          <div class="card-body">
+            <dl class="ficha">
+              <div><dt>Usuario</dt><dd>{{ empleado.username }}</dd></div>
+              <div><dt>Email</dt><dd><a [href]="'mailto:' + empleado.email">{{ empleado.email }}</a></dd></div>
+              <div><dt>Asesoría</dt><dd>{{ empleado.asesoria || 'Sin asignar' }}</dd></div>
+              <div><dt>Rol</dt><dd><span *ngFor="let rol of empleado.roles" class="badge badge-rol badge-rol-{{ rol }} me-1">{{ rolLegible(rol) }}</span></dd></div>
+              <div><dt>Clientes</dt><dd>{{ empleado.totalClientes }}</dd></div>
+            </dl>
           </div>
         </div>
-      </div>
+      </section>
+      <section class="col-lg-4" aria-labelledby="estado-titulo">
+        <div class="card h-100">
+          <div class="card-header"><h2 id="estado-titulo" class="h5">Suministros de su cartera</h2></div>
+          <div class="card-body metricas">
+            <div class="metrica metrica-ACTIVO">
+              <span class="icono"><i class="bi bi-check-circle" aria-hidden="true"></i></span>
+              <div><div class="valor">{{ contar('ACTIVO') }}</div><div class="etiqueta">Suministros activos</div></div>
+            </div>
+            <div class="metrica metrica-PENDIENTE">
+              <span class="icono"><i class="bi bi-hourglass-split" aria-hidden="true"></i></span>
+              <div><div class="valor">{{ contar('PENDIENTE') }}</div><div class="etiqueta">Pendientes</div></div>
+            </div>
+            <div class="metrica metrica-INACTIVO">
+              <span class="icono"><i class="bi bi-x-circle" aria-hidden="true"></i></span>
+              <div><div class="valor">{{ contar('INACTIVO') }}</div><div class="etiqueta">Inactivos / K.O.</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="col-12" aria-labelledby="clientes-titulo">
+        <div class="card">
+          <div class="card-header"><h2 id="clientes-titulo" class="h5">Clientes <span class="contador">{{ empleado.clientes.length }}</span></h2></div>
+          <div class="card-body p-0">
+            <div class="table-responsive" *ngIf="empleado.clientes.length; else sinClientes">
+              <table class="table table-hover align-middle">
+                <caption class="visually-hidden">Clientes de {{ empleado.nombre }}</caption>
+                <thead><tr><th scope="col">Cliente</th><th scope="col">DNI</th><th scope="col">Teléfono</th><th scope="col">Suministro</th><th scope="col" class="text-end"><span class="visually-hidden">Acciones</span></th></tr></thead>
+                <tbody>
+                  <tr *ngFor="let cliente of empleado.clientes">
+                    <td><a class="celda-principal text-decoration-none" [routerLink]="['/detalles-cliente', cliente.idCliente]">{{ cliente.nombre }} {{ cliente.apellidos }}</a>
+                      <span class="celda-secundaria">{{ cliente.email }}</span></td>
+                    <td class="text-nowrap">{{ cliente.dni }}</td>
+                    <td class="text-nowrap">{{ cliente.telefono }}</td>
+                    <td><span class="cups">{{ cliente.cups || '—' }}</span><span class="celda-secundaria">{{ cliente.companiaContratada || 'Sin comercializadora' }}</span></td>
+                    <td class="text-end"><a [routerLink]="['/detalles-cliente', cliente.idCliente]" class="btn btn-icon" [attr.aria-label]="'Ver ' + cliente.nombre + ' ' + cliente.apellidos" title="Ver detalle"><i class="bi bi-eye" aria-hidden="true"></i></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ng-template #sinClientes>
+              <div class="estado-vacio"><i class="bi bi-people" aria-hidden="true"></i><p class="mb-0">Todavía no tiene clientes asignados.</p></div>
+            </ng-template>
+          </div>
+        </div>
+      </section>
     </div>
   </ng-container>
 </div>

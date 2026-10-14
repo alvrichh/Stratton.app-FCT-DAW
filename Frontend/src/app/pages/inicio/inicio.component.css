@@ -1,5 +1,72 @@
-.accordion-button img {
-  background: #fff;
-  border-radius: 4px;
-  padding: 4px 8px;
+.eyebrow {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: var(--st-accent-soft);
+  color: var(--st-accent-hover);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.video {
+  border-radius: var(--st-radius);
+  overflow: hidden;
+  box-shadow: var(--st-shadow-lg);
+  background: var(--st-navy);
+}
+
+.oferta {
+  transition: transform 0.2s var(--st-ease), box-shadow 0.2s var(--st-ease);
+}
+
+.oferta:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--st-shadow-lg);
+}
+
+.oferta-logo {
+  display: flex;
+  align-items: center;
+  height: 56px;
+}
+
+.oferta-logo img {
+  max-width: 170px;
+  object-fit: contain;
+}
+
+.precio {
+  font-weight: 600;
+  color: var(--st-navy);
+}
+
+.lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.75rem;
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.925rem;
+}
+
+.lista li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.lista i {
+  margin-top: 0.15rem;
+}
+
+.lista-pros i {
+  color: var(--st-success);
+}
+
+.lista-contras i {
+  color: #94a3b8;
+}
+
+.contacto {
+  background: linear-gradient(135deg, #ffffff, var(--st-accent-soft));
 }

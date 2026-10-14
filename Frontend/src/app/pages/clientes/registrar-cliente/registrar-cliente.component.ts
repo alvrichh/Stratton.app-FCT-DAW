@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ClienteService } from '../cliente.service';
 import { ClienteRequest, clienteVacio } from '../cliente';
 import { Alertas } from '../../../core/alertas';
@@ -9,7 +9,7 @@ import { ClienteFormComponent } from '../cliente-form/cliente-form.component';
 @Component({
   selector: 'app-registrar-cliente',
   standalone: true,
-  imports: [CommonModule, ClienteFormComponent],
+  imports: [CommonModule, RouterLink, ClienteFormComponent],
   templateUrl: './registrar-cliente.component.html',
   styleUrls: ['./registrar-cliente.component.css']
 })

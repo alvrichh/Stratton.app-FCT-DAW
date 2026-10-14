@@ -62,6 +62,14 @@ export class ListaClientesComponent implements OnInit {
     });
   }
 
+  /** Valor de aria-sort de una columna para lectores de pantalla. */
+  ariaSort(columna: ColumnaOrden): 'ascending' | 'descending' | null {
+    if (this.orderBy !== columna) {
+      return null;
+    }
+    return this.order === 'asc' ? 'ascending' : 'descending';
+  }
+
   /** Normaliza texto para buscar sin tildes ni mayúsculas. */
   private normalizar(texto: unknown): string {
     return String(texto ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();

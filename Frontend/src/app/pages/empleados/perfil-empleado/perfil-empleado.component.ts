@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Empleado } from '../empleado';
 import { Alertas } from '../../../core/alertas';
+import { iniciales, rolLegible } from '../../../core/formato';
 
 /** Perfil del empleado autenticado, con sus clientes. */
 @Component({
@@ -14,6 +15,8 @@ import { Alertas } from '../../../core/alertas';
   styleUrls: ['./perfil-empleado.component.css'],
 })
 export class PerfilEmpleadoComponent implements OnInit {
+  readonly iniciales = iniciales;
+  readonly rolLegible = rolLegible;
 
   empleado?: Empleado;
   error: string | null = null;

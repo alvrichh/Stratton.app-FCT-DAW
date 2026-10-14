@@ -67,11 +67,20 @@
     </div>
   </section>
 
-  <section class="logos" aria-label="Comercializadoras con las que trabajamos">
-    <p class="logos-titulo">Trabajamos con</p>
-    <ul class="logos-lista revelar">
-      <li *ngFor="let c of comercializadoras"><img [src]="c.logo" [alt]="c.nombre" height="44"></li>
-    </ul>
+  <section class="logos" aria-labelledby="logos-titulo">
+    <p id="logos-titulo" class="logos-titulo">Trabajamos con {{ comercializadoras.length }} comercializadoras</p>
+    <!-- Cinta en movimiento: se detiene con el ratón o el foco y es estática con movimiento reducido.
+         La segunda copia solo sirve para el bucle continuo y se oculta a los lectores de pantalla. -->
+    <div class="cinta" tabindex="0" aria-label="Comercializadoras colaboradoras">
+      <div class="cinta-pista">
+        <ul class="cinta-lista">
+          <li *ngFor="let c of comercializadoras">{{ c }}</li>
+        </ul>
+        <ul class="cinta-lista" aria-hidden="true">
+          <li *ngFor="let c of comercializadoras">{{ c }}</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
   <section class="bloque" aria-labelledby="pasos-titulo">

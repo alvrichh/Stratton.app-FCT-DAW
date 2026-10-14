@@ -66,16 +66,40 @@ public class InicializarDatos implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Comercializadoras con las que trabaja la asesoría: {nombre, plan de referencia, logo}.
+     * Se sincronizan en cada arranque (se añaden las que falten), haya o no datos de ejemplo.
+     */
+    static final String[][] CATALOGO_COMERCIALIZADORAS = {
+        { "Iberdrola", "Plan Estable", "assets/images/iberdrola.png" },
+        { "Endesa", "One Luz", "assets/images/endesa.png" },
+        { "Naturgy", "Tarifa Por Uso Luz", "assets/images/naturgy.png" },
+        { "TotalEnergies", "A Tu Aire Luz", null },
+        { "Repsol", "Tarifa Ahorro Plus", null },
+        { "Plenitude", "Fix Luz", null },
+        { "Niva Energía", "Tarifa Fija", null },
+        { "Gana Energía", "Tarifa Fija 24h", null },
+        { "Fox Energía", "Tarifa Fox", null },
+        { "CHC Energía", "Tarifa Fija", null },
+        { "Holaluz", "Tarifa Justa", null },
+        { "Octopus Energy", "Octopus Relax", null },
+        { "Audax Renovables", "Tarifa Fija", null },
+        { "Factor Energía", "Tarifa Fija", null },
+        { "Aldro Energía", "Tarifa Fija", null },
+        { "Som Energia", "Tarifa 2.0TD", null },
+    };
+
     @Override
     @Transactional
     public void run(String... args) {
+        if (seedEnabled && seedReset) {
+            log.warn("app.seed.reset=true: vaciando la base de datos antes de sembrar");
+            limpiarTablas();
+        }
+        sincronizarComercializadoras();
         if (!seedEnabled) {
             log.info("Carga de datos de ejemplo desactivada (app.seed.enabled=false)");
             return;
-        }
-        if (seedReset) {
-            log.warn("app.seed.reset=true: vaciando la base de datos antes de sembrar");
-            limpiarTablas();
         }
         if (empleadoRepository.count() > 0) {
             log.info("La base de datos ya contiene datos: no se cargan datos de ejemplo");
@@ -88,10 +112,8 @@ public class InicializarDatos implements CommandLineRunner {
         Asesoria asesoria2 = asesoriaRepository.save(new Asesoria("Stratton Global Aljarafe",
                 "Calle Nobel 7, Mairena del Aljarafe", "Oficina comercial del Aljarafe", 4));
 
-        Comercializadora iberdrola = comercializadoraRepository.save(new Comercializadora("Iberdrola", "Plan Estable", "assets/images/iberdrola.png"));
-        Comercializadora naturgy = comercializadoraRepository.save(new Comercializadora("Naturgy", "Tarifa Por Uso Luz", "assets/images/naturgy.png"));
-        Comercializadora endesa = comercializadoraRepository.save(new Comercializadora("Endesa", "One Luz", "assets/images/endesa.png"));
-        List<Comercializadora> comercializadoras = List.of(iberdrola, naturgy, endesa);
+        List<Comercializadora> comercializadoras = List.of(
+                comercializadora("Iberdrola"), comercializadora("Naturgy"), comercializadora("Endesa"));
 
         Empleado admin = crearEmpleado("Admin", "Stratton", "admin", "admin@strattonapp.com", "admin", Set.of(Role.ADMIN), asesoria1);
         Empleado jefe = crearEmpleado("Marta", "Jefa de Equipo", "jefe", "jefe@strattonapp.com", "jefe", Set.of(Role.MANAGER), asesoria1);
@@ -137,6 +159,25 @@ public class InicializarDatos implements CommandLineRunner {
         }
         log.info("Datos de ejemplo cargados: {} empleados, {} clientes, {} suministros",
                 empleadoRepository.count(), clienteRepository.count(), suministroRepository.count());
+    }
+
+    /** Añade al catálogo las comercializadoras que falten (no modifica las existentes). */
+    private void sincronizarComercializadoras() {
+        int nuevas = 0;
+        for (String[] c : CATALOGO_COMERCIALIZADORAS) {
+            if (comercializadoraRepository.findByCompaniaContratadaIgnoreCase(c[0]).isEmpty()) {
+                comercializadoraRepository.save(new Comercializadora(c[0], c[1], c[2]));
+                nuevas++;
+            }
+        }
+        if (nuevas > 0) {
+            log.info("Catálogo de comercializadoras: {} añadidas ({} en total)", nuevas, comercializadoraRepository.count());
+        }
+    }
+
+    private Comercializadora comercializadora(String nombre) {
+        return comercializadoraRepository.findByCompaniaContratadaIgnoreCase(nombre)
+                .orElseThrow(() -> new IllegalStateException("Falta la comercializadora " + nombre + " en el catálogo"));
     }
 
     /** Vacía las tablas respetando las claves foráneas (hijos antes que padres, con flush entre pasos). */

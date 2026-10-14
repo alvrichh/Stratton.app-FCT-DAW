@@ -66,10 +66,11 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     { icono: 'bi-headset', titulo: 'Equipo comercial', texto: 'Alta de empleados, asignación de asesoría y reparto de clientes entre el equipo.' },
   ];
 
+  /** Comercializadoras colaboradoras (mismo catálogo que InicializarDatos en el backend). */
   readonly comercializadoras = [
-    { nombre: 'Iberdrola', logo: 'assets/images/iberdrola.png' },
-    { nombre: 'Endesa', logo: 'assets/images/endesa.png' },
-    { nombre: 'Naturgy', logo: 'assets/images/naturgy.png' },
+    'Iberdrola', 'Endesa', 'Naturgy', 'TotalEnergies', 'Repsol', 'Plenitude', 'Niva Energía', 'Gana Energía',
+    'Fox Energía', 'CHC Energía', 'Holaluz', 'Octopus Energy', 'Audax Renovables', 'Factor Energía',
+    'Aldro Energía', 'Som Energia',
   ];
 
   constructor(public authService: AuthService, private zone: NgZone) {}

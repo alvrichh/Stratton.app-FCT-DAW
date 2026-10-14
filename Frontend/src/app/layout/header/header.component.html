@@ -1,46 +1,57 @@
 <header class="header sticky-top">
-  <nav class="navbar navbar-expand-md navbar-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/">
-        <img src="assets/images/StrattonAPPlogo2.png" alt="StrattonApp" class="logo">
+  <nav class="navbar navbar-expand-lg navbar-dark" aria-label="Navegación principal">
+    <div class="container-xl">
+      <a class="navbar-brand" routerLink="/" aria-label="StrattonApp, página principal">
+        <img src="assets/images/StrattonAPPlogo2.png" alt="" class="logo" width="96" height="40">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Mostrar menú">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-        <ul class="navbar-nav">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto gap-lg-1">
           <li class="nav-item">
-            <a routerLink="/inicio" routerLinkActive="active" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show"><i class="bi bi-house"></i> Inicio</a>
+            <a routerLink="/inicio" routerLinkActive="active" ariaCurrentWhenActive="page" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show">
+              <i class="bi bi-house" aria-hidden="true"></i> Inicio</a>
           </li>
           <li *ngIf="authService.isLoggedIn()" class="nav-item">
-            <a routerLink="/clientes" routerLinkActive="active" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show"><i class="bi bi-people"></i> Clientes</a>
-          </li>
-          <li *ngIf="authService.isLoggedIn()" class="nav-item">
-            <a routerLink="/registrar-cliente" routerLinkActive="active" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show"><i class="bi bi-person-plus"></i> Nuevo cliente</a>
+            <a routerLink="/clientes" routerLinkActive="active" ariaCurrentWhenActive="page" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show">
+              <i class="bi bi-people" aria-hidden="true"></i> Clientes</a>
           </li>
           <li *ngIf="authService.isAdmin()" class="nav-item">
-            <a routerLink="/empleados" routerLinkActive="active" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show"><i class="bi bi-headset"></i> Empleados</a>
-          </li>
-          <li *ngIf="authService.isAdmin()" class="nav-item">
-            <a routerLink="/registrar-empleado" routerLinkActive="active" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show"><i class="bi bi-person-badge"></i> Nuevo empleado</a>
+            <a routerLink="/empleados" routerLinkActive="active" ariaCurrentWhenActive="page" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show">
+              <i class="bi bi-headset" aria-hidden="true"></i> Empleados</a>
           </li>
         </ul>
-        <ul class="navbar-nav">
+
+        <ul class="navbar-nav align-items-lg-center gap-2">
           <ng-container *ngIf="authService.isLoggedIn(); else loginLink">
             <li class="nav-item">
-              <a routerLink="/perfil" routerLinkActive="active" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show">
-                <i class="bi bi-person-circle"></i> {{ authService.getNombre() }}
-                <span class="badge bg-secondary ms-1">{{ authService.getMainRole() }}</span>
+              <a routerLink="/registrar-cliente" class="btn btn-primary btn-sm px-3" data-bs-toggle="collapse" data-bs-target="#navbarNav.show">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo cliente</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/perfil" routerLinkActive="active" ariaCurrentWhenActive="page" class="nav-link usuario" data-bs-toggle="collapse" data-bs-target="#navbarNav.show"
+                [attr.aria-label]="'Mi perfil: ' + authService.getNombre()">
+                <span class="iniciales" aria-hidden="true">{{ iniciales }}</span>
+                <span class="d-flex flex-column lh-sm">
+                  <span class="nombre">{{ authService.getNombre() }}</span>
+                  <span class="rol">{{ rolLegible }}</span>
+                </span>
               </a>
             </li>
             <li class="nav-item">
-              <button type="button" (click)="logout()" class="logout-btn nav-link btn btn-link text-decoration-none"><i class="bi bi-power"></i> Cerrar sesión</button>
+              <button type="button" (click)="logout()" class="nav-link logout-btn" aria-label="Cerrar sesión" title="Cerrar sesión">
+                <i class="bi bi-box-arrow-right" aria-hidden="true"></i><span class="d-lg-none ms-2">Cerrar sesión</span>
+              </button>
             </li>
           </ng-container>
           <ng-template #loginLink>
             <li class="nav-item">
-              <a routerLink="/login" routerLinkActive="active" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show"><i class="bi bi-box-arrow-in-right"></i> Iniciar sesión</a>
+              <a routerLink="/login" routerLinkActive="active" class="nav-link" data-bs-toggle="collapse" data-bs-target="#navbarNav.show">Iniciar sesión</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/register" class="btn btn-primary btn-sm px-3" data-bs-toggle="collapse" data-bs-target="#navbarNav.show">Crear cuenta</a>
             </li>
           </ng-template>
         </ul>

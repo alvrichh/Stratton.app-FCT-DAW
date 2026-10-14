@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClienteRequest, PATRON_CUPS, PATRON_DNI, PATRON_IBAN, PATRON_TELEFONO, fechaLocal } from '../cliente';
 import { MaxDateDirective } from '../../../core/max-date.directive';
+import { estadoLegible } from '../../../core/formato';
 import { ESTADOS_SUMINISTRO } from '../suministro';
 import { CatalogoService } from '../../../services/catalogo.service';
 import { Comercializadora } from '../../../services/catalogo.model';
@@ -32,6 +33,7 @@ export class ClienteFormComponent implements OnInit {
   comercializadoras: Comercializadora[] = [];
   empleados: Empleado[] = [];
   estados = ESTADOS_SUMINISTRO;
+  readonly estadoLegible = estadoLegible;
   readonly patronDni = PATRON_DNI;
   readonly patronTelefono = PATRON_TELEFONO;
   readonly patronIban = PATRON_IBAN;

@@ -1,118 +1,164 @@
-<div class="container mt-4">
-  <h2 class="mb-4 text-center">Detalles del cliente</h2>
+<div class="container-xl">
+  <a routerLink="/clientes" class="volver"><i class="bi bi-arrow-left" aria-hidden="true"></i> Clientes</a>
 
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div *ngIf="error" class="alert alert-danger mt-3" role="alert">{{ error }}</div>
 
-  <div *ngIf="!cliente && !error" class="text-center py-5">
-    <div class="spinner-border text-light" role="status"><span class="visually-hidden">Cargando...</span></div>
+  <div *ngIf="!cliente && !error" class="py-4" aria-busy="true">
+    <span class="skeleton mb-3" style="height: 4rem; max-width: 420px;"></span>
+    <span class="skeleton" style="height: 12rem;"></span>
   </div>
 
   <ng-container *ngIf="cliente">
-    <div class="card mb-4">
-      <div class="row g-0">
-        <div class="col-md-3 d-flex flex-column align-items-center justify-content-center p-3">
-          <img src="assets/images/avatar.svg" class="img-fluid rounded-circle avatar" alt="Avatar del cliente">
-          <img *ngIf="cliente.logo" [src]="cliente.logo" [alt]="cliente.companiaContratada" class="logo-comercializadora mt-3" style="max-height: 48px;">
+    <header class="page-header pt-3">
+      <div class="d-flex align-items-center gap-3">
+        <span class="avatar-iniciales" aria-hidden="true">{{ iniciales(cliente.nombre + ' ' + cliente.apellidos) }}</span>
+        <div>
+          <h1>{{ cliente.nombre }} {{ cliente.apellidos }}</h1>
+          <p class="subtitulo">
+            Asesor: {{ cliente.empleadoNombre || 'sin asignar' }}<span *ngIf="cliente.asesoriaNombre"> · {{ cliente.asesoriaNombre }}</span>
+          </p>
         </div>
-        <div class="col-md-6">
+      </div>
+      <div class="acciones">
+        <a class="btn btn-outline-secondary" [routerLink]="['/actualizar-cliente', cliente.idCliente]"><i class="bi bi-pencil" aria-hidden="true"></i> Editar</a>
+        <button class="btn btn-outline-danger" (click)="eliminarCliente()"><i class="bi bi-trash3" aria-hidden="true"></i> Eliminar</button>
+      </div>
+    </header>
+
+    <div class="row g-4">
+      <section class="col-lg-8" aria-labelledby="datos-titulo">
+        <div class="card h-100">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h2 id="datos-titulo" class="h5">Datos del cliente</h2>
+            <img *ngIf="cliente.logo" [src]="cliente.logo" [alt]="cliente.companiaContratada" class="logo-comercializadora">
+          </div>
           <div class="card-body">
-            <h3 class="card-title">{{ cliente.nombre }} {{ cliente.apellidos }}</h3>
-            <p class="card-text mb-1"><strong>DNI:</strong> {{ cliente.dni }}</p>
-            <p class="card-text mb-1"><strong>Teléfono:</strong> <a [href]="'tel:' + cliente.telefono">{{ cliente.telefono }}</a></p>
-            <p class="card-text mb-1"><strong>Email:</strong> <a [href]="'mailto:' + cliente.email">{{ cliente.email }}</a></p>
-            <p class="card-text mb-1"><strong>Dirección:</strong> {{ cliente.direccion || '—' }}</p>
-            <p class="card-text mb-1"><strong>Fecha de nacimiento:</strong> {{ cliente.fechaNacimiento ? (cliente.fechaNacimiento | date:'dd/MM/yyyy') : '—' }}</p>
-            <p class="card-text mb-1"><strong>IBAN:</strong> {{ cliente.iban || '—' }}</p>
-            <p class="card-text mb-1"><strong>Comercializadora:</strong> {{ cliente.companiaContratada || '—' }}</p>
-            <p class="card-text mb-1"><strong>Fecha de subida del contrato:</strong> {{ cliente.fechaSubidaContrato ? (cliente.fechaSubidaContrato | date:'dd/MM/yyyy') : '—' }}</p>
-            <p class="card-text mb-1"><strong>Asesor:</strong> {{ cliente.empleadoNombre || '—' }} <span *ngIf="cliente.asesoriaNombre" class="text-muted">({{ cliente.asesoriaNombre }})</span></p>
+            <dl class="ficha">
+              <div><dt>DNI / NIE</dt><dd>{{ cliente.dni }}</dd></div>
+              <div><dt>Teléfono</dt><dd><a [href]="'tel:' + cliente.telefono">{{ cliente.telefono }}</a></dd></div>
+              <div><dt>Email</dt><dd><a [href]="'mailto:' + cliente.email">{{ cliente.email }}</a></dd></div>
+              <div><dt>Dirección</dt><dd>{{ cliente.direccion || '—' }}</dd></div>
+              <div><dt>Fecha de nacimiento</dt><dd>{{ cliente.fechaNacimiento ? (cliente.fechaNacimiento | date:'dd/MM/yyyy') : '—' }}</dd></div>
+              <div><dt>IBAN</dt><dd class="cups">{{ cliente.iban || '—' }}</dd></div>
+              <div><dt>Comercializadora</dt><dd>{{ cliente.companiaContratada || '—' }}</dd></div>
+              <div><dt>Subida del contrato</dt><dd>{{ cliente.fechaSubidaContrato ? (cliente.fechaSubidaContrato | date:'dd/MM/yyyy') : '—' }}</dd></div>
+            </dl>
           </div>
         </div>
-        <div class="col-md-3 p-3">
-          <div class="bg-success text-white p-2 rounded mb-2"><small>Suministros activos</small><h4 class="mb-0">{{ totalPorEstado['ACTIVO'] }}</h4></div>
-          <div class="bg-warning text-dark p-2 rounded mb-2"><small>Pendientes</small><h4 class="mb-0">{{ totalPorEstado['PENDIENTE'] }}</h4></div>
-          <div class="bg-danger text-white p-2 rounded"><small>Inactivos / K.O.</small><h4 class="mb-0">{{ totalPorEstado['INACTIVO'] }}</h4></div>
-        </div>
-      </div>
-      <div class="card-footer d-flex flex-wrap gap-2">
-        <button class="btn btn-secondary" (click)="regresar()"><i class="bi bi-arrow-left"></i> Volver</button>
-        <a class="btn btn-warning" [routerLink]="['/actualizar-cliente', cliente.idCliente]"><i class="bi bi-pencil-square"></i> Editar</a>
-        <button class="btn btn-danger ms-auto" (click)="eliminarCliente()"><i class="bi bi-trash3"></i> Eliminar cliente</button>
-      </div>
-    </div>
+      </section>
 
-    <div class="card mb-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h4 class="mb-0"><i class="bi bi-lightning-charge"></i> Puntos de suministro ({{ cliente.suministros.length }})</h4>
-        <button class="btn btn-success btn-sm" (click)="nuevoSuministro()" *ngIf="!mostrarFormulario"><i class="bi bi-plus-lg"></i> Añadir CUPS</button>
-      </div>
-      <div class="card-body">
-        <form *ngIf="mostrarFormulario" (ngSubmit)="guardarSuministro()" #sumForm="ngForm" appEnterNext class="border rounded p-3 mb-3 bg-light">
-          <h5>{{ editandoCups ? 'Editar suministro ' + editandoCups : 'Nuevo suministro' }}</h5>
-          <div class="row g-2">
-            <div class="col-md-4">
-              <label class="form-label" for="s-cups">CUPS *</label>
-              <input id="s-cups" type="text" class="form-control text-uppercase" [(ngModel)]="nuevo.cups" name="cups" required
-                [pattern]="patronCups" [readonly]="!!editandoCups" placeholder="ES0031408000000000AA0F" #cups="ngModel" [class.is-invalid]="cups.invalid && cups.touched">
-              <div class="invalid-feedback">Formato: ES + 16 dígitos + 2 letras.</div>
+      <section class="col-lg-4" aria-labelledby="estado-titulo">
+        <div class="card h-100">
+          <div class="card-header"><h2 id="estado-titulo" class="h5">Estado de los suministros</h2></div>
+          <div class="card-body metricas">
+            <div class="metrica metrica-ACTIVO">
+              <span class="icono"><i class="bi bi-check-circle" aria-hidden="true"></i></span>
+              <div><div class="valor">{{ totalPorEstado['ACTIVO'] }}</div><div class="etiqueta">Activos</div></div>
             </div>
-            <div class="col-md-4">
-              <label class="form-label" for="s-direccion">Dirección *</label>
-              <input id="s-direccion" type="text" class="form-control" [(ngModel)]="nuevo.direccion" name="direccion" required maxlength="150">
+            <div class="metrica metrica-PENDIENTE">
+              <span class="icono"><i class="bi bi-hourglass-split" aria-hidden="true"></i></span>
+              <div><div class="valor">{{ totalPorEstado['PENDIENTE'] }}</div><div class="etiqueta">Pendientes</div></div>
             </div>
-            <div class="col-md-4">
-              <label class="form-label" for="s-comercializadora">Comercializadora</label>
-              <select id="s-comercializadora" class="form-select" [(ngModel)]="nuevo.companiaContratada" name="companiaContratada">
-                <option value="">Seleccionar...</option>
-                <option *ngFor="let c of comercializadoras" [value]="c.companiaContratada">{{ c.companiaContratada }}</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label" for="s-estado">Estado</label>
-              <select id="s-estado" class="form-select" [(ngModel)]="nuevo.estado" name="estado">
-                <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
-              </select>
-            </div>
-            <div class="col-md-3">
-              <label class="form-label" for="s-potencia">Potencia (kW)</label>
-              <input id="s-potencia" type="number" class="form-control" [(ngModel)]="nuevo.potencia" name="potencia" min="0" step="0.01">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label" for="s-mensaje">Observaciones</label>
-              <input id="s-mensaje" type="text" class="form-control" [(ngModel)]="nuevo.mensaje" name="mensaje" maxlength="255">
+            <div class="metrica metrica-INACTIVO">
+              <span class="icono"><i class="bi bi-x-circle" aria-hidden="true"></i></span>
+              <div><div class="valor">{{ totalPorEstado['INACTIVO'] }}</div><div class="etiqueta">Inactivos / K.O.</div></div>
             </div>
           </div>
-          <div class="mt-3 d-flex gap-2">
-            <button type="submit" class="btn btn-success btn-sm" [disabled]="!sumForm.valid || guardando"><i class="bi bi-save"></i> Guardar</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="cancelarFormulario()">Cancelar</button>
-          </div>
-        </form>
-
-        <div class="table-responsive" *ngIf="cliente.suministros.length; else sinSuministros">
-          <table class="table table-sm align-middle mb-0">
-            <thead>
-              <tr><th>CUPS</th><th>Dirección</th><th>Comercializadora</th><th>Estado</th><th>Potencia</th><th>Observaciones</th><th></th></tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let s of cliente.suministros">
-                <td><code>{{ s.cups }}</code></td>
-                <td>{{ s.direccion }}</td>
-                <td><img *ngIf="s.logo" [src]="s.logo" [alt]="s.companiaContratada" class="logo-comercializadora me-1">{{ s.companiaContratada || '—' }}</td>
-                <td><span class="badge badge-estado-{{ s.estado }}">{{ s.estado }}</span></td>
-                <td>{{ s.potencia != null ? (s.potencia | number:'1.2-2') + ' kW' : '—' }}</td>
-                <td>{{ s.mensaje || '—' }}</td>
-                <td class="text-nowrap">
-                  <button class="btn btn-warning btn-sm me-1" (click)="editarSuministro(s)" title="Editar"><i class="bi bi-pencil-square"></i></button>
-                  <button class="btn btn-danger btn-sm" (click)="eliminarSuministro(s)" title="Eliminar"><i class="bi bi-trash3"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
-        <ng-template #sinSuministros>
-          <p class="text-muted mb-0">Este cliente todavía no tiene puntos de suministro. Añade su primer CUPS.</p>
-        </ng-template>
-      </div>
+      </section>
+
+      <section class="col-12" aria-labelledby="suministros-titulo">
+        <div class="card">
+          <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+            <h2 id="suministros-titulo" class="h5">Puntos de suministro <span class="contador">{{ cliente.suministros.length }}</span></h2>
+            <button class="btn btn-primary btn-sm" (click)="nuevoSuministro()" *ngIf="!mostrarFormulario"><i class="bi bi-plus-lg" aria-hidden="true"></i> Añadir CUPS</button>
+          </div>
+          <div class="card-body p-0">
+            <form *ngIf="mostrarFormulario" (ngSubmit)="guardarSuministro()" #sumForm="ngForm" appEnterNext class="form-suministro">
+              <h3 class="seccion-form mt-0">{{ editandoCups ? 'Editar suministro ' + editandoCups : 'Nuevo suministro' }}</h3>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label" for="s-cups">CUPS <span class="text-danger" aria-hidden="true">*</span></label>
+                  <input id="s-cups" type="text" class="form-control text-uppercase" [(ngModel)]="nuevo.cups" name="cups" required
+                    [pattern]="patronCups" [readonly]="!!editandoCups" placeholder="ES0031408000000000AA0F" #cups="ngModel"
+                    [class.is-invalid]="cups.invalid && cups.touched" aria-describedby="s-cups-ayuda">
+                  <div id="s-cups-ayuda" class="invalid-feedback">Formato: ES + 16 dígitos + 2 letras.</div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="s-direccion">Dirección <span class="text-danger" aria-hidden="true">*</span></label>
+                  <input id="s-direccion" type="text" class="form-control" [(ngModel)]="nuevo.direccion" name="direccion" required maxlength="150">
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label" for="s-comercializadora">Comercializadora</label>
+                  <select id="s-comercializadora" class="form-select" [(ngModel)]="nuevo.companiaContratada" name="companiaContratada">
+                    <option value="">Seleccionar…</option>
+                    <option *ngFor="let c of comercializadoras" [value]="c.companiaContratada">{{ c.companiaContratada }}</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label" for="s-estado">Estado</label>
+                  <select id="s-estado" class="form-select" [(ngModel)]="nuevo.estado" name="estado">
+                    <option *ngFor="let e of estados" [value]="e">{{ estadoLegible(e) }}</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label" for="s-potencia">Potencia (kW)</label>
+                  <input id="s-potencia" type="number" class="form-control" [(ngModel)]="nuevo.potencia" name="potencia" min="0" step="0.01">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="s-mensaje">Observaciones</label>
+                  <input id="s-mensaje" type="text" class="form-control" [(ngModel)]="nuevo.mensaje" name="mensaje" maxlength="255">
+                </div>
+              </div>
+              <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary" [disabled]="!sumForm.valid || guardando">
+                  <span *ngIf="guardando" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <i *ngIf="!guardando" class="bi bi-check-lg" aria-hidden="true"></i> Guardar suministro</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="cancelarFormulario()">Cancelar</button>
+              </div>
+            </form>
+
+            <div class="table-responsive" *ngIf="cliente.suministros.length; else sinSuministros">
+              <table class="table align-middle">
+                <caption class="visually-hidden">Puntos de suministro del cliente</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">CUPS</th><th scope="col">Dirección</th><th scope="col">Comercializadora</th>
+                    <th scope="col">Estado</th><th scope="col" class="text-end">Potencia</th><th scope="col">Observaciones</th>
+                    <th scope="col" class="text-end"><span class="visually-hidden">Acciones</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let s of cliente.suministros">
+                    <td class="cups text-nowrap">{{ s.cups }}</td>
+                    <td>{{ s.direccion }}</td>
+                    <td>
+                      <div class="d-flex align-items-center gap-2">
+                        <img *ngIf="s.logo" [src]="s.logo" alt="" class="logo-comercializadora">
+                        <span>{{ s.companiaContratada || '—' }}</span>
+                      </div>
+                    </td>
+                    <td><span class="badge badge-estado-{{ s.estado }}">{{ estadoLegible(s.estado) }}</span></td>
+                    <td class="text-end text-nowrap">{{ s.potencia != null ? (s.potencia | number:'1.2-2') + ' kW' : '—' }}</td>
+                    <td class="text-secondary">{{ s.mensaje || '—' }}</td>
+                    <td class="text-end text-nowrap">
+                      <button class="btn btn-icon" (click)="editarSuministro(s)" [attr.aria-label]="'Editar suministro ' + s.cups" title="Editar"><i class="bi bi-pencil" aria-hidden="true"></i></button>
+                      <button class="btn btn-icon btn-icon-danger" (click)="eliminarSuministro(s)" [attr.aria-label]="'Eliminar suministro ' + s.cups" title="Eliminar"><i class="bi bi-trash3" aria-hidden="true"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ng-template #sinSuministros>
+              <div class="estado-vacio" *ngIf="!mostrarFormulario">
+                <i class="bi bi-lightning-charge" aria-hidden="true"></i>
+                <p class="mb-3">Este cliente todavía no tiene puntos de suministro.</p>
+                <button class="btn btn-primary" (click)="nuevoSuministro()"><i class="bi bi-plus-lg" aria-hidden="true"></i> Añadir su primer CUPS</button>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </section>
     </div>
   </ng-container>
 </div>

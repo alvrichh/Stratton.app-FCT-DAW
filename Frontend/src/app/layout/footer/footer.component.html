@@ -1,48 +1,48 @@
-<footer>
-  <ul class="wrapper">
-    <li class="ss github">
-      <a href="https://github.com/alvrichh" target="_blank" rel="noopener">
-        <span class="tooltip">GitHub</span>
-        <span><i class="bi bi-github"></i></span>
-      </a>
-    </li>
-    <li class="ss linkedin">
-      <a href="https://www.linkedin.com/in/álvaro-rodriguez-molina-613651202" target="_blank" rel="noopener">
-        <span class="tooltip">LinkedIn</span>
-        <span><i class="bi bi-linkedin"></i></span>
-      </a>
-    </li>
-    <li class="ss whatsapp">
-      <a href="https://wa.link/44bcfa" target="_blank" rel="noopener">
-        <span class="tooltip">WhatsApp</span>
-        <span><i class="bi bi-whatsapp"></i></span>
-      </a>
-    </li>
-  </ul>
-  <section class="info text-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4">
-          <h2>Acerca de nosotros</h2>
-          <abbr title="Seguiremos mejorando. ❤">👨‍👩‍👦‍👦</abbr>
-          <p class="lead">Trabajo de fin de grado, 2º DAW. IES Alixar 2024 <br><em>Autor: Álvaro Rodríguez Molina</em></p>
-        </div>
-        <div class="col-lg-4">
-          <h2>Suscríbete a nuestra newsletter</h2>
-          <form (ngSubmit)="suscribirse()" class="input-group mb-3">
-            <input type="email" class="form-control" placeholder="Tu correo electrónico" name="email"
-              [(ngModel)]="email" aria-label="Tu correo electrónico" required>
-            <button class="btn btn-primary" type="submit">Suscríbete</button>
-          </form>
-          <p class="lead">Deja tu correo para estar al tanto de nuestras actualizaciones.</p>
-        </div>
-        <div class="col-lg-4">
-          <h2>© {{ anio }}</h2>
-          <a href="https://creativecommons.org/public-domain/cc0/" target="_blank" rel="noopener">
-            <img src="assets/images/CC.png" alt="Creative Commons CC0" class="img-fluid">
-          </a>
-        </div>
+<footer class="pie" aria-labelledby="pie-titulo">
+  <div class="container-xl">
+    <div class="row g-4 py-5">
+      <div class="col-lg-5">
+        <img src="assets/images/StrattonAPPlogo2.png" alt="" width="104" height="44" class="mb-3">
+        <h2 id="pie-titulo" class="visually-hidden">Información de StrattonApp</h2>
+        <p class="descripcion">
+          Gestión de clientes, empleados y puntos de suministro para asesorías energéticas.
+          Trabajo de fin de grado de 2º DAW · IES Alixar.
+        </p>
+        <ul class="redes" aria-label="Redes sociales">
+          <li><a href="https://github.com/alvrichh" target="_blank" rel="noopener" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a></li>
+          <li><a href="https://www.linkedin.com/in/álvaro-rodriguez-molina-613651202" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a></li>
+          <li><a href="https://wa.link/44bcfa" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a></li>
+        </ul>
+      </div>
+
+      <nav class="col-6 col-lg-2" aria-label="Enlaces del pie">
+        <h3 class="titulo">Aplicación</h3>
+        <ul class="enlaces">
+          <li><a routerLink="/">Presentación</a></li>
+          <li><a routerLink="/inicio">Comercializadoras</a></li>
+          <li><a routerLink="/clientes">Clientes</a></li>
+          <li><a routerLink="/login">Iniciar sesión</a></li>
+        </ul>
+      </nav>
+
+      <div class="col-lg-5">
+        <h3 class="titulo">Newsletter</h3>
+        <p class="descripcion mb-3">Recibe las novedades de la aplicación y de las tarifas.</p>
+        <form (ngSubmit)="suscribirse()" class="d-flex gap-2" aria-label="Suscripción a la newsletter">
+          <label for="newsletter-email" class="visually-hidden">Correo electrónico</label>
+          <input id="newsletter-email" type="email" class="form-control" placeholder="tu@correo.com" name="email"
+            [(ngModel)]="email" required autocomplete="email">
+          <button class="btn btn-primary flex-none" type="submit">Suscribirme</button>
+        </form>
       </div>
     </div>
-  </section>
+
+    <div class="legal">
+      <span>© {{ anio }} Álvaro Rodríguez Molina</span>
+      <a href="https://creativecommons.org/public-domain/cc0/" target="_blank" rel="noopener" class="cc">
+        <img src="assets/images/CC.png" alt="" height="22">
+        <span>Licencia Creative Commons</span>
+      </a>
+    </div>
+  </div>
 </footer>

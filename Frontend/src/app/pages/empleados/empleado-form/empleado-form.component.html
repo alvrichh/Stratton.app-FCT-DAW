@@ -1,13 +1,14 @@
 <form (ngSubmit)="onSubmit()" #empleadoForm="ngForm" appEnterNext novalidate>
+  <h3 class="seccion-form mt-0">Datos personales</h3>
   <div class="row">
     <div class="col-md-6 mb-3">
-      <label for="nombre" class="form-label">Nombre *</label>
+      <label for="nombre" class="form-label">Nombre <span class="text-danger" aria-hidden="true">*</span></label>
       <input type="text" class="form-control" id="nombre" [(ngModel)]="empleado.nombre" name="nombre" required
         minlength="2" maxlength="60" placeholder="Nombre del empleado" #nombre="ngModel" [class.is-invalid]="nombre.invalid && nombre.touched">
       <div class="invalid-feedback">Escribe el nombre del empleado (mínimo 2 caracteres).</div>
     </div>
     <div class="col-md-6 mb-3">
-      <label for="apellidos" class="form-label">Apellidos *</label>
+      <label for="apellidos" class="form-label">Apellidos <span class="text-danger" aria-hidden="true">*</span></label>
       <input type="text" class="form-control" id="apellidos" [(ngModel)]="empleado.apellidos" name="apellidos" required
         maxlength="80" placeholder="Apellidos del empleado" #apellidos="ngModel" [class.is-invalid]="apellidos.invalid && apellidos.touched">
       <div class="invalid-feedback">Escribe los apellidos del empleado.</div>
@@ -16,24 +17,25 @@
 
   <div class="row">
     <div class="col-md-6 mb-3">
-      <label for="email" class="form-label">Email *</label>
+      <label for="email" class="form-label">Email <span class="text-danger" aria-hidden="true">*</span></label>
       <input type="email" class="form-control" id="email" [(ngModel)]="empleado.email" name="email" required email
         placeholder="empleado@correo.com" #email="ngModel" [class.is-invalid]="email.invalid && email.touched">
       <div class="invalid-feedback">El email debe tener un formato válido.</div>
     </div>
     <div class="col-md-6 mb-3">
-      <label for="usuario" class="form-label">Usuario *</label>
+      <label for="usuario" class="form-label">Usuario <span class="text-danger" aria-hidden="true">*</span></label>
       <input type="text" class="form-control" id="usuario" [(ngModel)]="empleado.username" name="usuario" required
         minlength="3" maxlength="20" placeholder="Nombre de usuario" autocomplete="username" #usuario="ngModel" [class.is-invalid]="usuario.invalid && usuario.touched">
       <div class="invalid-feedback">Entre 3 y 20 caracteres.</div>
     </div>
   </div>
 
+  <h3 class="seccion-form mt-3">Acceso</h3>
   <div class="row">
     <div class="col-md-6 mb-3">
-      <label for="password" class="form-label">Contraseña {{ modoEdicion ? '(dejar vacía para no cambiarla)' : '*' }}</label>
+      <label for="password" class="form-label">Contraseña <span *ngIf="!modoEdicion" class="text-danger" aria-hidden="true">*</span></label>
       <input type="password" class="form-control" id="password" [(ngModel)]="empleado.password" name="password"
-        [required]="!modoEdicion" minlength="6" placeholder="Mínimo 6 caracteres" autocomplete="new-password" #password="ngModel"
+        [required]="!modoEdicion" minlength="6" [placeholder]="modoEdicion ? 'Déjala vacía para no cambiarla' : 'Mínimo 6 caracteres'" autocomplete="new-password" #password="ngModel"
         [class.is-invalid]="password.invalid && password.touched">
       <div class="invalid-feedback">La contraseña debe tener al menos 6 caracteres.</div>
     </div>
@@ -45,16 +47,17 @@
     </div>
   </div>
 
+  <h3 class="seccion-form mt-3">Permisos y asesoría</h3>
   <div class="row">
-    <div class="col-md-6 mb-3">
-      <label class="form-label d-block">Roles *</label>
+    <fieldset class="col-md-6 mb-3">
+      <legend class="form-label">Roles <span class="text-danger" aria-hidden="true">*</span></legend>
       <div class="form-check" *ngFor="let rol of rolesDisponibles">
         <input class="form-check-input" type="checkbox" [id]="'rol-' + rol.valor" [name]="'rol-' + rol.valor"
           [checked]="tieneRol(rol.valor)" (change)="toggleRol(rol.valor, $any($event.target).checked)">
         <label class="form-check-label" [for]="'rol-' + rol.valor">{{ rol.etiqueta }}</label>
       </div>
-      <div class="form-text" *ngIf="!empleado.roles.length">Si no marcas ninguno se asignará el rol USER.</div>
-    </div>
+      <div class="form-text" *ngIf="!empleado.roles.length">Si no marcas ninguno se asignará el rol de asesor.</div>
+    </fieldset>
     <div class="col-md-6 mb-3">
       <label for="asesoria" class="form-label">Asesoría</label>
       <select class="form-select" id="asesoria" [(ngModel)]="empleado.asesoriaId" name="asesoriaId">
@@ -64,10 +67,11 @@
     </div>
   </div>
 
-  <div class="d-flex gap-2">
-    <button type="submit" class="btn btn-success" [disabled]="!empleadoForm.valid || !passwordValida || guardando">
-      <span *ngIf="guardando" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-      <i class="bi bi-save"></i> {{ modoEdicion ? 'Guardar cambios' : 'Crear empleado' }}
+  <p class="form-text mb-0"><span class="text-danger" aria-hidden="true">*</span> Campos obligatorios</p>
+  <div class="form-acciones">
+    <button type="submit" class="btn btn-primary" [disabled]="!empleadoForm.valid || !passwordValida || guardando">
+      <span *ngIf="guardando" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      <i *ngIf="!guardando" class="bi bi-check-lg" aria-hidden="true"></i> {{ modoEdicion ? 'Guardar cambios' : 'Crear empleado' }}
     </button>
     <button type="button" class="btn btn-outline-secondary" (click)="cancelar.emit()">Cancelar</button>
   </div>

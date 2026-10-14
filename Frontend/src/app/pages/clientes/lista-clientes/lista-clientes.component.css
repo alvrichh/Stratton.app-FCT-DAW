@@ -1,1 +1,8 @@
-.search-input { min-width: 200px; }
+.enlace-fila {
+  text-decoration: none;
+}
+
+.enlace-fila:hover {
+  color: var(--st-accent);
+  text-decoration: underline;
+}

@@ -9,6 +9,7 @@ import { Alertas } from '../../../core/alertas';
 import { CatalogoService } from '../../../services/catalogo.service';
 import { Comercializadora } from '../../../services/catalogo.model';
 import { EnterNextDirective } from '../../../core/enter-next.directive';
+import { estadoLegible, iniciales } from '../../../core/formato';
 
 @Component({
   selector: 'app-detalles-cliente',
@@ -24,6 +25,8 @@ export class DetallesClienteComponent implements OnInit {
   comercializadoras: Comercializadora[] = [];
   estados = ESTADOS_SUMINISTRO;
   readonly patronCups = PATRON_CUPS;
+  readonly iniciales = iniciales;
+  readonly estadoLegible = estadoLegible;
 
   mostrarFormulario = false;
   editandoCups: string | null = null;

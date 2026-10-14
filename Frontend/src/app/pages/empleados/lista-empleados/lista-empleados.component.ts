@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../auth.service';
 import { FormsModule } from '@angular/forms';
 import { Alertas } from '../../../core/alertas';
+import { iniciales, rolLegible } from '../../../core/formato';
 
 @Component({
   selector: 'app-lista-empleados',
@@ -21,6 +22,8 @@ export class ListaEmpleadosComponent implements OnInit {
   searchText = '';
   cargando = true;
   error: string | null = null;
+  readonly iniciales = iniciales;
+  readonly rolLegible = rolLegible;
 
   constructor(private empleadoServicio: EmpleadoService, private router: Router, public authService: AuthService) {}
 

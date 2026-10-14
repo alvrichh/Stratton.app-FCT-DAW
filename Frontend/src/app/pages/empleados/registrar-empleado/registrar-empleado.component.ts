@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { EmpleadoRequest, empleadoVacio } from '../empleado';
 import { EmpleadoService } from '../empleado.service';
 import { Alertas } from '../../../core/alertas';
@@ -9,7 +9,7 @@ import { EmpleadoFormComponent } from '../empleado-form/empleado-form.component'
 @Component({
   selector: 'app-registrar-empleado',
   standalone: true,
-  imports: [CommonModule, EmpleadoFormComponent],
+  imports: [CommonModule, RouterLink, EmpleadoFormComponent],
   templateUrl: './registrar-empleado.component.html',
   styleUrl: './registrar-empleado.component.css'
 })

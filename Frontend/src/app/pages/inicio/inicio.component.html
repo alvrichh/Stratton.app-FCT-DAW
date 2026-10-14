@@ -1,72 +1,72 @@
-<div class="container mt-4">
-  <div class="row mb-4 align-items-center">
-    <div class="col-lg-7">
-      <div class="ratio ratio-16x9 rounded overflow-hidden shadow">
+<div class="container-xl">
+  <section class="row g-4 align-items-center py-5" aria-labelledby="inicio-titulo">
+    <div class="col-lg-6 order-lg-2">
+      <div class="ratio ratio-16x9 video">
         <video controls preload="metadata" aria-label="Vídeo de presentación de Stratton Global">
           <source src="assets/images/Stratton_Global_Sin.mp4" type="video/mp4">
           Tu navegador no soporta la reproducción de vídeo.
         </video>
       </div>
     </div>
-    <div class="col-lg-5 mt-4 mt-lg-0">
-      <h1 class="display-6">StrattonApp</h1>
-      <p class="lead">Gestión de clientes, empleados y puntos de suministro para tu asesoría energética.</p>
+    <div class="col-lg-6 order-lg-1">
+      <span class="eyebrow">Stratton Global · Asesoría energética</span>
+      <h1 id="inicio-titulo" class="display-6 fw-bold mt-2">Ahorra en tu factura de la luz con un asesor que te conoce</h1>
+      <p class="lead text-secondary">Comparamos las ofertas de las principales comercializadoras y gestionamos el cambio por ti.</p>
       <ng-container *ngIf="authService.isLoggedIn(); else accesoInvitado">
-        <p>Hola, <strong>{{ authService.getNombre() }}</strong>. ¿Qué quieres hacer?</p>
+        <p class="mb-3">Hola, <strong>{{ authService.getNombre() }}</strong>. ¿Qué quieres hacer?</p>
         <div class="d-flex flex-wrap gap-2">
-          <a routerLink="/clientes" class="btn btn-primary"><i class="bi bi-people"></i> Mis clientes</a>
-          <a routerLink="/registrar-cliente" class="btn btn-success"><i class="bi bi-person-plus"></i> Nuevo cliente</a>
-          <a *ngIf="authService.isAdmin()" routerLink="/empleados" class="btn btn-warning"><i class="bi bi-headset"></i> Empleados</a>
+          <a routerLink="/clientes" class="btn btn-primary btn-lg"><i class="bi bi-people" aria-hidden="true"></i> Mis clientes</a>
+          <a routerLink="/registrar-cliente" class="btn btn-outline-primary btn-lg"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo cliente</a>
         </div>
       </ng-container>
       <ng-template #accesoInvitado>
         <div class="d-flex flex-wrap gap-2">
-          <a routerLink="/login" class="btn btn-primary"><i class="bi bi-box-arrow-in-right"></i> Iniciar sesión</a>
-          <a routerLink="/register" class="btn btn-outline-light"><i class="bi bi-person-plus"></i> Registrarse</a>
+          <a href="https://wa.link/44bcfa" target="_blank" rel="noopener" class="btn btn-primary btn-lg"><i class="bi bi-whatsapp" aria-hidden="true"></i> Habla con un asesor</a>
+          <a routerLink="/login" class="btn btn-outline-primary btn-lg">Acceso empleados</a>
         </div>
       </ng-template>
     </div>
-  </div>
+  </section>
 
-  <h2 class="mt-5">Compañías comercializadoras</h2>
-  <p class="text-white-50">Comparativa de las ofertas con las que trabajamos.</p>
-  <div class="accordion" id="accordionOfertas">
-    <div class="accordion-item" *ngFor="let oferta of ofertas; let i = index">
-      <h2 class="accordion-header" [id]="'heading' + i">
-        <button class="accordion-button" [class.collapsed]="i !== 0" type="button" data-bs-toggle="collapse"
-          [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="i === 0" [attr.aria-controls]="'collapse' + i">
-          <img [src]="oferta.logo" class="img-fluid me-3" style="max-width: 160px;" [alt]="'Logo ' + oferta.nombre">
-          <span class="fw-semibold">{{ oferta.nombre }}</span>
-        </button>
-      </h2>
-      <div [id]="'collapse' + i" class="accordion-collapse collapse" [class.show]="i === 0" data-bs-parent="#accordionOfertas">
-        <div class="accordion-body">
-          <h5>Precio</h5>
-          <p>{{ oferta.precio }}</p>
-          <h5>Descripción</h5>
-          <p>{{ oferta.descripcion }}</p>
-          <h5>Ventajas</h5>
-          <ul><li *ngFor="let v of oferta.ventajas">{{ v }}</li></ul>
-          <h5>Desventajas</h5>
-          <ul class="mb-0"><li *ngFor="let d of oferta.desventajas">{{ d }}</li></ul>
+  <section class="pb-5" aria-labelledby="ofertas-titulo">
+    <div class="mb-4">
+      <h2 id="ofertas-titulo" class="h3 mb-1">Compañías comercializadoras</h2>
+      <p class="text-secondary mb-0">Comparativa de las ofertas con las que trabajamos.</p>
+    </div>
+    <div class="row g-4">
+      <article class="col-md-6 col-lg-4" *ngFor="let oferta of ofertas">
+        <div class="card oferta h-100">
+          <div class="card-body d-flex flex-column">
+            <div class="oferta-logo"><img [src]="oferta.logo" [alt]="oferta.nombre" height="40"></div>
+            <h3 class="h5 mt-3 mb-1">{{ oferta.nombre }}</h3>
+            <p class="precio">{{ oferta.precio }}</p>
+            <p class="text-secondary small">{{ oferta.descripcion }}</p>
+            <ul class="lista lista-pros" aria-label="Ventajas">
+              <li *ngFor="let v of oferta.ventajas"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span>{{ v }}</span></li>
+            </ul>
+            <ul class="lista lista-contras mb-0" aria-label="Desventajas">
+              <li *ngFor="let d of oferta.desventajas"><i class="bi bi-dash-circle-fill" aria-hidden="true"></i><span>{{ d }}</span></li>
+            </ul>
+          </div>
         </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="contacto card mb-5" aria-labelledby="contacto-titulo">
+    <div class="card-body d-flex flex-wrap align-items-center justify-content-between gap-3 p-4">
+      <div>
+        <h2 id="contacto-titulo" class="h4 mb-1">¿Hablamos?</h2>
+        <p class="mb-0 text-secondary"><i class="bi bi-geo-alt" aria-hidden="true"></i> Edificio Pasarela, Mairena del Aljarafe (Sevilla)</p>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-secondary" href="https://www.google.com/maps/search/?api=1&query=Edificio+Pasarela+Mairena+del+Aljarafe" target="_blank" rel="noopener">
+          <i class="bi bi-map" aria-hidden="true"></i> Cómo llegar
+        </a>
+        <a href="https://wa.link/44bcfa" target="_blank" rel="noopener" class="btn btn-success">
+          <i class="bi bi-whatsapp" aria-hidden="true"></i> Escríbenos por WhatsApp
+        </a>
       </div>
     </div>
-  </div>
-
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <h2>Dónde estamos</h2>
-      <p class="mb-1"><i class="bi bi-geo-alt"></i> Edificio Pasarela, Mairena del Aljarafe (Sevilla)</p>
-      <a class="btn btn-outline-light btn-sm" href="https://www.google.com/maps/search/?api=1&query=Edificio+Pasarela+Mairena+del+Aljarafe" target="_blank" rel="noopener">
-        <i class="bi bi-map"></i> Ver en Google Maps
-      </a>
-    </div>
-    <div class="col-md-6 text-md-end mt-4 mt-md-0">
-      <h2>Contacta con tu asesor</h2>
-      <a href="https://wa.link/44bcfa" target="_blank" rel="noopener" class="btn btn-success btn-lg rounded-circle" title="Contacta por WhatsApp">
-        <i class="bi bi-whatsapp" style="font-size: 2rem;"></i>
-      </a>
-    </div>
-  </div>
+  </section>
 </div>

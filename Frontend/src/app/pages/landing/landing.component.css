@@ -101,6 +101,28 @@
   margin-top: 2rem;
 }
 
+/* Aparición al entrar en pantalla (la clase .visible la añade un IntersectionObserver).
+   Se anima "translate" y no "transform" para no interferir con los efectos de hover. */
+.revelar > * {
+  opacity: 0;
+  translate: 0 24px;
+  transition: opacity 0.6s var(--st-ease), translate 0.6s var(--st-ease);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.revelar.visible > * {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revelar > * {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+}
+
 /* Franja de comercializadoras */
 .logos {
   max-width: 1140px;
@@ -128,30 +150,29 @@
   gap: 1rem;
 }
 
+/* Logos sueltos (sin tarjeta), en gris; recuperan su color al pasar el ratón */
 .logos-lista li {
   display: grid;
   place-items: center;
-  height: 96px;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--st-border);
-  border-radius: var(--st-radius);
-  background: var(--st-card);
-  box-shadow: var(--st-shadow-sm);
-  transition: transform 0.2s var(--st-ease), box-shadow 0.2s var(--st-ease), border-color 0.2s var(--st-ease);
-}
-
-.logos-lista li:hover {
-  transform: translateY(-2px);
-  border-color: #cbd5e1;
-  box-shadow: var(--st-shadow);
+  height: 80px;
+  padding: 0.5rem 1rem;
 }
 
 .logos-lista img {
   max-width: 100%;
-  max-height: 48px;
+  max-height: 44px;
   width: auto;
   height: auto;
   object-fit: contain;
+  /* brightness() oscurece los logos claros (Audax, Holaluz) para que en gris se lean como el resto */
+  filter: grayscale(1) brightness(0.7);
+  opacity: 0.7;
+  transition: filter 0.25s var(--st-ease), opacity 0.25s var(--st-ease);
+}
+
+.logos-lista li:hover img {
+  filter: none;
+  opacity: 1;
 }
 
 @media (max-width: 991.98px) {
@@ -166,11 +187,11 @@
     gap: 0.75rem;
   }
   .logos-lista li {
-    height: 80px;
-    padding: 0.75rem 1rem;
+    height: 64px;
+    padding: 0.5rem 0.75rem;
   }
   .logos-lista img {
-    max-height: 40px;
+    max-height: 36px;
   }
   /* Si el número de logos es impar, el último ocupa las dos columnas para quedar centrado */
   .logos-lista li:last-child:nth-child(odd) {

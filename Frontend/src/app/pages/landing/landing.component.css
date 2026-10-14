@@ -5,15 +5,16 @@
 }
 
 /*
- * .hero mide 350vh:
- *   - 150vh de recorrido para el parallax (la escena queda fija con position: sticky),
- *   - 100vh en los que el contenido entra por encima (margin-top: -100vh en .contenido)
- *     mientras el texto sigue quieto en el centro,
+ * .hero mide 300vh:
+ *   - 100vh de recorrido para el parallax (la escena queda fija con position: sticky),
+ *   - el contenido empieza a entrar por encima en el último cuarto del parallax
+ *     (margin-top: -125vh en .contenido) mientras el texto sigue quieto en el centro,
+ *     para que no quede una pantalla en blanco solo con el texto,
  *   - 100vh de la propia escena.
  */
 .hero {
   position: relative;
-  height: 350vh;
+  height: 300vh;
   background: #fff;
 }
 
@@ -47,7 +48,7 @@
 .contenido {
   position: relative;
   z-index: 2;
-  margin-top: -100vh;
+  margin-top: -125vh;
   background: var(--st-bg);
   border-radius: 2rem 2rem 0 0;
   box-shadow: 0 -24px 48px -12px rgba(15, 23, 42, 0.25);

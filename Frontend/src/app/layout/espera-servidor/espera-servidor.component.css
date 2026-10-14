@@ -1,0 +1,226 @@
+.velo {
+  position: fixed;
+  inset: 0;
+  z-index: 1080;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  overflow-y: auto;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(6px);
+  animation: aparecer 0.25s var(--st-ease);
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  width: min(100%, 64rem);
+  border-radius: var(--st-radius);
+  overflow: hidden;
+  background: var(--st-card);
+  box-shadow: var(--st-shadow-lg);
+}
+
+.demo {
+  padding: 1.5rem;
+  background: var(--st-navy);
+}
+
+.ventana {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: #1e293b;
+}
+
+.ventana span {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: #475569;
+}
+
+.ventana small {
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.capturas {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background: var(--st-bg);
+}
+
+.capturas img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.capturas img.activa {
+  opacity: 1;
+}
+
+.pie-captura {
+  min-height: 2.6em;
+  margin: 0.9rem 0 0.5rem;
+  font-size: 0.875rem;
+  color: #cbd5e1;
+}
+
+.puntos {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.puntos button {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: grid;
+  place-items: center;
+}
+
+.puntos button::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #475569;
+  transition: width 0.2s ease, background-color 0.2s ease;
+}
+
+.puntos button.activo::before {
+  width: 1.1rem;
+  background: var(--st-cyan);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1.75rem;
+}
+
+.aviso-gratuito {
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--st-warning);
+  background: var(--st-warning-soft);
+}
+
+.titulo {
+  margin: 0.75rem 0 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.texto {
+  font-size: 0.9rem;
+  color: var(--st-muted);
+}
+
+.cronometro {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.tiempo {
+  font-size: 2.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--st-accent);
+}
+
+.estimado,
+.mensaje {
+  font-size: 0.8rem;
+  color: var(--st-muted);
+}
+
+.progress {
+  height: 0.4rem;
+}
+
+.progress-bar {
+  transition: width 1s linear;
+}
+
+.mensaje {
+  min-height: 2.4em;
+  margin: 0.6rem 0 1.25rem;
+}
+
+.listo-icono {
+  font-size: 2.5rem;
+  color: var(--st-success);
+}
+
+.pildora {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1080;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  background: var(--st-navy);
+  box-shadow: var(--st-shadow-lg);
+  animation: aparecer 0.25s var(--st-ease);
+}
+
+.pildora.lista {
+  background: var(--st-success);
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(0.5rem); }
+}
+
+@media (max-width: 767.98px) {
+  .panel {
+    grid-template-columns: 1fr;
+  }
+
+  .demo {
+    padding: 1rem;
+  }
+
+  .info {
+    padding: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .velo,
+  .pildora,
+  .capturas img,
+  .progress-bar {
+    animation: none;
+    transition: none;
+  }
+}

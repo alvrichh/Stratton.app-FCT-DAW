@@ -1,0 +1,66 @@
+@if (visible()) {
+  @if (!minimizado()) {
+    <div class="velo" (keydown.escape)="minimizado.set(true)">
+      <section class="panel" role="dialog" aria-modal="true" aria-labelledby="espera-titulo" aria-describedby="espera-texto">
+        <div class="demo">
+          <div class="ventana" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <small>strattonapp-front.onrender.com</small>
+          </div>
+          <div class="capturas">
+            @for (c of capturas; track c.src; let i = $index) {
+              <img [src]="c.src" [alt]="c.texto" width="1280" height="800" [class.activa]="i === actual()"
+                [attr.aria-hidden]="i !== actual()">
+            }
+          </div>
+          <p class="pie-captura">{{ capturas[actual()].texto }}</p>
+          <div class="puntos" role="group" aria-label="Capturas de la aplicación">
+            @for (c of capturas; track c.src; let i = $index) {
+              <button type="button" [class.activo]="i === actual()" (click)="irA(i)"
+                [attr.aria-label]="'Ver captura ' + (i + 1) + ': ' + c.texto" [attr.aria-current]="i === actual()"></button>
+            }
+          </div>
+        </div>
+
+        <div class="info">
+          @if (recienListo()) {
+            <i class="bi bi-check-circle-fill listo-icono" aria-hidden="true"></i>
+            <h2 id="espera-titulo" class="titulo">¡Servidor listo!</h2>
+            <p id="espera-texto" class="texto" role="status">Ya puedes usar la aplicación.</p>
+          } @else {
+            <span class="aviso-gratuito"><i class="bi bi-moon-stars" aria-hidden="true"></i> Servidor gratuito</span>
+            <h2 id="espera-titulo" class="titulo">Despertando el servidor…</h2>
+            <p id="espera-texto" class="texto">
+              StrattonApp está alojada en el plan gratuito de Render: tras 15 minutos sin visitas el servidor se duerme
+              y tarda un par de minutos en volver a arrancar. Mientras tanto, echa un vistazo a la aplicación.
+            </p>
+
+            <div class="cronometro">
+              <span class="tiempo" aria-hidden="true">{{ tiempo() }}</span>
+              <span class="estimado">de ~2:00 estimado</span>
+            </div>
+            <div class="progress" role="progressbar" aria-label="Arranque del servidor (estimado)"
+              [attr.aria-valuenow]="progreso()" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" [style.width.%]="progreso()"></div>
+            </div>
+            <p class="mensaje" role="status">{{ mensaje() }}</p>
+
+            <button #botonPrincipal type="button" class="btn btn-primary w-100" (click)="minimizado.set(true)">
+              Explorar la presentación mientras tanto
+            </button>
+          }
+        </div>
+      </section>
+    </div>
+  } @else {
+    <button type="button" class="pildora" [class.lista]="recienListo()" (click)="minimizado.set(false)"
+      [attr.aria-label]="recienListo() ? 'Servidor listo' : 'Servidor despertando, ' + tiempo() + '. Ver detalles'">
+      @if (recienListo()) {
+        <i class="bi bi-check-circle-fill" aria-hidden="true"></i> Servidor listo
+      } @else {
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        Despertando servidor · {{ tiempo() }}
+      }
+    </button>
+  }
+}

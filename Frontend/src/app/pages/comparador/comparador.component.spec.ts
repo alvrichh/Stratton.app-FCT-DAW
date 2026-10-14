@@ -21,16 +21,27 @@ describe('ComparadorComponent', () => {
     http = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
     http.expectOne('/api/v1/comparador/oferta').flush({
-      nombre: 'Tarifa Stratton', precioEnergia: 0.1, precioPotenciaP1: 0.09, precioPotenciaP2: 0.09, lecturaAutomatica: false,
+      nombre: 'Tarifa Stratton', precioEnergia: 0.1, precioPotenciaP1: 0.09, precioPotenciaP2: 0.09,
     });
   });
 
   afterEach(() => http.verify());
 
-  it('empieza en el paso de subir la factura y avisa si no hay lectura automática', () => {
+  it('empieza en el paso de subir la factura y explica que se lee en el navegador', () => {
     fixture.detectChanges();
     expect(component.paso).toBe('subir');
-    expect(fixture.nativeElement.textContent).toContain('La lectura automática no está disponible');
+    expect(fixture.nativeElement.textContent).toContain('no se sube a ningún servidor');
+  });
+
+  it('si faltan datos tras leer la factura avisa y marca los campos', async () => {
+    component['mostrarLeidos']({ dias: 30, potenciaP1Kw: 3.45, potenciaP2Kw: 3.45 });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(component.paso).toBe('revisar');
+    expect(component.aviso).toContain('faltan 8 datos');
+    expect(fixture.nativeElement.querySelector('#c1').classList).toContain('is-invalid');
+    expect(fixture.nativeElement.querySelector('#dias').classList).not.toContain('is-invalid');
   });
 
   it('con precio único copia el precio de punta a llano y valle y calcula', () => {

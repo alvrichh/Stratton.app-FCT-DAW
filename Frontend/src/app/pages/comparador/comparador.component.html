@@ -26,29 +26,32 @@
       @if (leyendo) {
         <div class="leyendo" role="status" aria-live="polite">
           <div class="spinner-border text-primary" aria-hidden="true"></div>
-          <p class="mb-0">Leyendo tu factura… suele tardar unos segundos.</p>
+          @if (fase === 'ocr') {
+            <p class="mb-0">Reconociendo el texto de la imagen… {{ progreso }} %</p>
+            <div class="progress w-75" role="progressbar" aria-label="Progreso del reconocimiento" [attr.aria-valuenow]="progreso" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" [style.width.%]="progreso"></div>
+            </div>
+            <p class="small text-secondary mb-0">La primera vez tarda un poco más: se descarga el reconocedor de texto.</p>
+          } @else {
+            <p class="mb-0">Leyendo tu factura…</p>
+          }
         </div>
       } @else {
-        @if (oferta && !oferta.lecturaAutomatica) {
-          <p class="alert alert-info mb-3">
-            La lectura automática no está disponible ahora mismo. Puedes introducir los datos de tu factura a mano.
-          </p>
-        }
-        <label class="zona" [class.arrastrando]="arrastrando" [class.desactivada]="oferta && !oferta.lecturaAutomatica"
+        <label class="zona" [class.arrastrando]="arrastrando"
           (dragover)="$event.preventDefault(); arrastrando = true" (dragleave)="arrastrando = false" (drop)="alSoltar($event)">
           <input type="file" class="visually-hidden" accept="application/pdf,image/jpeg,image/png,image/webp"
-            (change)="alElegir($event)" [disabled]="!!oferta && !oferta.lecturaAutomatica">
+            (change)="alElegir($event)">
           <i class="bi bi-file-earmark-arrow-up icono" aria-hidden="true"></i>
           <span class="titulo-zona">Arrastra aquí tu factura o pulsa para elegirla</span>
-          <span class="text-secondary small">PDF o foto (JPG, PNG), hasta 10 MB</span>
+          <span class="text-secondary small">PDF de tu compañía o foto (JPG, PNG)</span>
         </label>
         <div class="text-center mt-3">
           <button type="button" class="btn btn-link" (click)="manual()">Prefiero introducir los datos a mano</button>
         </div>
         <p class="privacidad">
           <i class="bi bi-shield-lock" aria-hidden="true"></i>
-          Usamos tu factura solo para leer consumos, potencias y precios; para ello se envía a nuestro proveedor de IA
-          (Anthropic). No la guardamos y no leemos tus datos personales (nombre, DNI, dirección, CUPS ni cuenta bancaria).
+          Tu factura se lee aquí, en tu navegador: no se sube a ningún servidor. Solo usamos los consumos, potencias y
+          precios para calcular; tus datos personales (nombre, DNI, dirección, CUPS, cuenta bancaria) no salen de tu dispositivo.
         </p>
       }
     </div>
@@ -72,23 +75,23 @@
         <div class="row g-3">
           <div class="col-6 col-md-4">
             <label for="dias" class="form-label">Días facturados</label>
-            <input id="dias" name="dias" type="number" class="form-control" min="1" max="400" step="1" required [(ngModel)]="datos.dias">
+            <input id="dias" name="dias" type="number" class="form-control" [class.is-invalid]="aviso && falta('dias')" min="1" max="400" step="1" required [(ngModel)]="datos.dias">
           </div>
           <div class="col-6 col-md-4">
             <label for="p1kw" class="form-label">Potencia punta (kW)</label>
-            <input id="p1kw" name="potenciaP1Kw" type="number" class="form-control" min="0.1" step="any" required [(ngModel)]="datos.potenciaP1Kw">
+            <input id="p1kw" name="potenciaP1Kw" type="number" class="form-control" [class.is-invalid]="aviso && falta('potenciaP1Kw')" min="0.1" step="any" required [(ngModel)]="datos.potenciaP1Kw">
           </div>
           <div class="col-6 col-md-4">
             <label for="p2kw" class="form-label">Potencia valle (kW)</label>
-            <input id="p2kw" name="potenciaP2Kw" type="number" class="form-control" min="0.1" step="any" required [(ngModel)]="datos.potenciaP2Kw">
+            <input id="p2kw" name="potenciaP2Kw" type="number" class="form-control" [class.is-invalid]="aviso && falta('potenciaP2Kw')" min="0.1" step="any" required [(ngModel)]="datos.potenciaP2Kw">
           </div>
           <div class="col-6 col-md-4">
             <label for="pp1" class="form-label">Precio potencia punta (€/kW·día)</label>
-            <input id="pp1" name="precioPotenciaP1" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.precioPotenciaP1">
+            <input id="pp1" name="precioPotenciaP1" type="number" class="form-control" [class.is-invalid]="aviso && falta('precioPotenciaP1')" min="0" step="any" required [(ngModel)]="datos.precioPotenciaP1">
           </div>
           <div class="col-6 col-md-4">
             <label for="pp2" class="form-label">Precio potencia valle (€/kW·día)</label>
-            <input id="pp2" name="precioPotenciaP2" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.precioPotenciaP2">
+            <input id="pp2" name="precioPotenciaP2" type="number" class="form-control" [class.is-invalid]="aviso && falta('precioPotenciaP2')" min="0" step="any" required [(ngModel)]="datos.precioPotenciaP2">
           </div>
         </div>
       </fieldset>
@@ -98,15 +101,15 @@
         <div class="row g-3">
           <div class="col-4">
             <label for="c1" class="form-label">Punta (kWh)</label>
-            <input id="c1" name="consumoP1Kwh" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.consumoP1Kwh">
+            <input id="c1" name="consumoP1Kwh" type="number" class="form-control" [class.is-invalid]="aviso && falta('consumoP1Kwh')" min="0" step="any" required [(ngModel)]="datos.consumoP1Kwh">
           </div>
           <div class="col-4">
             <label for="c2" class="form-label">Llano (kWh)</label>
-            <input id="c2" name="consumoP2Kwh" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.consumoP2Kwh">
+            <input id="c2" name="consumoP2Kwh" type="number" class="form-control" [class.is-invalid]="aviso && falta('consumoP2Kwh')" min="0" step="any" required [(ngModel)]="datos.consumoP2Kwh">
           </div>
           <div class="col-4">
             <label for="c3" class="form-label">Valle (kWh)</label>
-            <input id="c3" name="consumoP3Kwh" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.consumoP3Kwh">
+            <input id="c3" name="consumoP3Kwh" type="number" class="form-control" [class.is-invalid]="aviso && falta('consumoP3Kwh')" min="0" step="any" required [(ngModel)]="datos.consumoP3Kwh">
           </div>
         </div>
       </fieldset>
@@ -120,17 +123,17 @@
         <div class="row g-3">
           <div class="col-4">
             <label for="e1" class="form-label">{{ precioUnico ? 'Precio (€/kWh)' : 'Punta (€/kWh)' }}</label>
-            <input id="e1" name="precioEnergiaP1" type="number" class="form-control" min="0" step="any" required
+            <input id="e1" name="precioEnergiaP1" type="number" class="form-control" [class.is-invalid]="aviso && falta('precioEnergiaP1')" min="0" step="any" required
               [(ngModel)]="datos.precioEnergiaP1" (ngModelChange)="sincronizarPrecio()">
           </div>
           @if (!precioUnico) {
             <div class="col-4">
               <label for="e2" class="form-label">Llano (€/kWh)</label>
-              <input id="e2" name="precioEnergiaP2" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.precioEnergiaP2">
+              <input id="e2" name="precioEnergiaP2" type="number" class="form-control" [class.is-invalid]="aviso && falta('precioEnergiaP2')" min="0" step="any" required [(ngModel)]="datos.precioEnergiaP2">
             </div>
             <div class="col-4">
               <label for="e3" class="form-label">Valle (€/kWh)</label>
-              <input id="e3" name="precioEnergiaP3" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.precioEnergiaP3">
+              <input id="e3" name="precioEnergiaP3" type="number" class="form-control" [class.is-invalid]="aviso && falta('precioEnergiaP3')" min="0" step="any" required [(ngModel)]="datos.precioEnergiaP3">
             </div>
           }
         </div>

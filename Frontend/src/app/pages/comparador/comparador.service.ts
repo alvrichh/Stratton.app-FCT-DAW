@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-/** Oferta propia con la que se compara y si la lectura automática con IA está disponible. */
+/** Oferta propia con la que se compara. */
 export interface OfertaComparador {
   nombre: string;
   precioEnergia: number;
   precioPotenciaP1: number;
   precioPotenciaP2: number;
-  lecturaAutomatica: boolean;
 }
 
 /**
@@ -72,7 +71,10 @@ export function facturaVacia(): DatosFactura {
   };
 }
 
-/** Comparador público de facturas de luz (no necesita sesión). */
+/**
+ * Comparador público de facturas de luz (no necesita sesión). La factura se lee en el navegador
+ * (ver lector-factura.ts); al backend solo llegan los consumos y precios para calcular.
+ */
 @Injectable({ providedIn: 'root' })
 export class ComparadorService {
 
@@ -82,12 +84,6 @@ export class ComparadorService {
 
   oferta(): Observable<OfertaComparador> {
     return this.http.get<OfertaComparador>(`${this.baseURL}/oferta`);
-  }
-
-  extraer(factura: File): Observable<DatosFactura> {
-    const datos = new FormData();
-    datos.append('factura', factura);
-    return this.http.post<DatosFactura>(`${this.baseURL}/extraer`, datos);
   }
 
   calcular(datos: DatosFactura): Observable<ResultadoComparativa> {

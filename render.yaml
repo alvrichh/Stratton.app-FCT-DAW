@@ -47,9 +47,6 @@ services:
       # El plan gratuito tiene 512 MB de RAM
       - key: JAVA_OPTS
         value: "-Xms64m -Xmx300m -XX:+UseSerialGC -Xss512k"
-      # Clave de la API de Anthropic para leer las facturas del comparador (vacía: datos a mano)
-      - key: ANTHROPIC_API_KEY
-        sync: false
 
   # Frontend como sitio estático: no se duerme nunca, así que carga al instante y es la propia
   # aplicación la que muestra la pantalla de espera mientras el backend gratuito despierta.

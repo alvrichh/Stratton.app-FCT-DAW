@@ -1,7 +1,6 @@
 package com.StrattonApp.Backend.comparador;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.within;
 
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ class ComparadorServiceTests {
 
     private static ComparadorService servicio(double iva, double impuestoElectrico) {
         return new ComparadorService(new ComparadorProperties(OFERTA,
-                new ComparadorProperties.Impuestos(iva, impuestoElectrico, 0.001), null, 10, 100));
+                new ComparadorProperties.Impuestos(iva, impuestoElectrico, 0.001)));
     }
 
     @Test
@@ -76,13 +75,5 @@ class ComparadorServiceTests {
         Desglose d = servicio(0.21, 0.0511269632).desglose(30, 1, 1, 0, 0, 1000, 0, 0, 0.001, 0, 0, 0, 0);
         // 5,11 % de 1 € sería 0,05 €; el mínimo es 1 €/MWh × 1 MWh = 1 €
         assertThat(d.impuestoElectrico()).isEqualTo(1.00);
-    }
-
-    @Test
-    void reconoceElTipoRealDelArchivo() {
-        assertThat(ExtractorFacturaService.tipoDeArchivo("%PDF-1.7".getBytes())).isEqualTo("application/pdf");
-        assertThat(ExtractorFacturaService.tipoDeArchivo(new byte[] { (byte) 0xFF, (byte) 0xD8, (byte) 0xFF, 0 })).isEqualTo("image/jpeg");
-        assertThatThrownBy(() -> ExtractorFacturaService.tipoDeArchivo("hola, no soy una factura".getBytes()))
-                .isInstanceOf(IllegalArgumentException.class);
     }
 }

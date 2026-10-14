@@ -7,13 +7,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @param oferta    precios de la oferta propia con la que se compara
  * @param impuestos impuestos vigentes que se aplican a las dos facturas
- * @param ia        acceso a la API de Anthropic para leer las facturas
- * @param maxExtraccionesPorHora        límite de lecturas con IA por IP y hora
- * @param maxExtraccionesTotalesPorHora límite de lecturas con IA de todo el comparador por hora
  */
 @ConfigurationProperties(prefix = "app.comparador")
-public record ComparadorProperties(Oferta oferta, Impuestos impuestos, Ia ia, int maxExtraccionesPorHora,
-        int maxExtraccionesTotalesPorHora) {
+public record ComparadorProperties(Oferta oferta, Impuestos impuestos) {
 
     /**
      * Oferta propia: precio único de la energía para todas las horas y término de potencia.
@@ -31,15 +27,4 @@ public record ComparadorProperties(Oferta oferta, Impuestos impuestos, Ia ia, in
      * @param impuestoElectricoMinimo  mínimo del impuesto eléctrico en €/kWh (1 €/MWh)
      */
     public record Impuestos(double iva, double impuestoElectrico, double impuestoElectricoMinimo) {}
-
-    /**
-     * @param apiKey clave de la API de Anthropic (vacía: la lectura automática queda desactivada)
-     * @param modelo modelo de Claude con visión que lee la factura
-     * @param url    endpoint de la API de mensajes
-     */
-    public record Ia(String apiKey, String modelo, String url) {
-        public boolean configurada() {
-            return apiKey != null && !apiKey.isBlank();
-        }
-    }
 }

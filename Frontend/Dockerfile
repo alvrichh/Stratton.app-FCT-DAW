@@ -12,8 +12,12 @@ RUN npm run build
 # ---------- Etapa de ejecución ----------
 FROM nginx:stable-alpine
 
-# Configuración de nginx con fallback SPA y proxy /api -> backend
+# Configuración de nginx con fallback SPA y proxy /api -> backend.
+# Los .template se procesan con envsubst al arrancar (solo las variables definidas).
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY templates /etc/nginx/templates
+ENV PORT=80 \
+    BACKEND_URL=http://backend:8080
 COPY --from=build /app/dist/strattonapp-front/browser /usr/share/nginx/html
 
 EXPOSE 80

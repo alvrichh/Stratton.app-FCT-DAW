@@ -45,6 +45,11 @@ services:
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
     ports:
       - "${API_PORT:-8080}:8080"
+    # Alias sin guion bajo: Tomcat rechaza "strattonapp_back" como cabecera Host (lo usa nginx)
+    networks:
+      default:
+        aliases:
+          - backend
     depends_on:
       db:
         condition: service_healthy

@@ -1,0 +1,54 @@
+# Blueprint de Render: backend (Spring Boot) y frontend (Angular + nginx) como servicios Docker.
+# La base de datos MySQL va aparte (Render solo ofrece PostgreSQL), por ejemplo en Aiven (gratis).
+# Uso: Render > New > Blueprint > este repositorio. Los valores con "sync: false" se piden al crear.
+services:
+  - type: web
+    name: strattonapp-back
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Backend/Dockerfile
+    dockerContext: ./Backend
+    envVars:
+      - key: APP_PORT
+        value: "8080"
+      - key: PORT
+        value: "8080"
+      # Datos de conexión de la base de datos MySQL (Aiven > servicio > Overview > Connection information)
+      - key: BBDD_HOST
+        sync: false
+      - key: BBDD_PORT
+        sync: false
+      - key: BBDD_NAME
+        value: strattonapp
+      - key: DATABASE_USERNAME
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: BBDD_SSL_MODE
+        value: REQUIRED
+      - key: DDL_AUTO
+        value: update
+      - key: SEED_DATA
+        value: "true"
+      # Clave aleatoria generada por Render: los tokens siguen valiendo tras reiniciar
+      - key: JWT_SECRET
+        generateValue: true
+      - key: REGISTRO_ABIERTO
+        value: "false"
+      # URL pública del frontend (cámbiala si Render le asigna otra)
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://strattonapp-front.onrender.com
+      # El plan gratuito tiene 512 MB de RAM
+      - key: JAVA_OPTS
+        value: "-Xms64m -Xmx300m -XX:+UseSerialGC -Xss512k"
+
+  - type: web
+    name: strattonapp-front
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Frontend/Dockerfile
+    dockerContext: ./Frontend
+    envVars:
+      # URL pública del backend (cámbiala si Render le asigna otra)
+      - key: BACKEND_URL
+        value: https://strattonapp-back.onrender.com

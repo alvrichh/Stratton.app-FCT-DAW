@@ -1,13 +1,10 @@
 <footer class="pie" aria-labelledby="pie-titulo">
   <div class="container-xl">
-    <div class="row g-4 py-5">
-      <div class="col-lg-5">
-        <img src="assets/images/StrattonAPPlogo2.png" alt="" width="104" height="44" class="mb-3">
-        <h2 id="pie-titulo" class="visually-hidden">Información de StrattonApp</h2>
-        <p class="descripcion">
-          Gestión de clientes, empleados y puntos de suministro para asesorías energéticas.
-          Trabajo de fin de grado de 2º DAW · IES Alixar.
-        </p>
+    <h2 id="pie-titulo" class="visually-hidden">Información de StrattonApp</h2>
+
+    <div class="principal">
+      <div class="marca">
+        <img src="assets/images/StrattonAPPlogo2.png" alt="StrattonApp" width="71" height="30">
         <ul class="redes" aria-label="Redes sociales">
           <li><a href="https://github.com/alvrichh" target="_blank" rel="noopener" aria-label="GitHub"><i class="bi bi-github" aria-hidden="true"></i></a></li>
           <li><a href="https://www.linkedin.com/in/álvaro-rodriguez-molina-613651202" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="bi bi-linkedin" aria-hidden="true"></i></a></li>
@@ -15,8 +12,7 @@
         </ul>
       </div>
 
-      <nav class="col-6 col-lg-2" aria-label="Enlaces del pie">
-        <h3 class="titulo">Aplicación</h3>
+      <nav aria-label="Enlaces del pie">
         <ul class="enlaces">
           <li><a routerLink="/">Presentación</a></li>
           <li><a routerLink="/inicio">Comercializadoras</a></li>
@@ -25,22 +21,18 @@
         </ul>
       </nav>
 
-      <div class="col-lg-5">
-        <h3 class="titulo">Newsletter</h3>
-        <p class="descripcion mb-3">Recibe las novedades de la aplicación y de las tarifas.</p>
-        <form (ngSubmit)="suscribirse()" class="d-flex gap-2" aria-label="Suscripción a la newsletter">
-          <label for="newsletter-email" class="visually-hidden">Correo electrónico</label>
-          <input id="newsletter-email" type="email" class="form-control" placeholder="tu@correo.com" name="email"
-            [(ngModel)]="email" required autocomplete="email">
-          <button class="btn btn-primary flex-none" type="submit">Suscribirme</button>
-        </form>
-      </div>
+      <form (ngSubmit)="suscribirse()" class="newsletter" aria-label="Suscripción a la newsletter">
+        <label for="newsletter-email" class="visually-hidden">Correo electrónico para la newsletter</label>
+        <input id="newsletter-email" type="email" class="form-control form-control-sm" placeholder="Newsletter: tu@correo.com"
+          name="email" [(ngModel)]="email" required autocomplete="email">
+        <button class="btn btn-primary btn-sm flex-none" type="submit">Suscribirme</button>
+      </form>
     </div>
 
     <div class="legal">
-      <span>© {{ anio }} Álvaro Rodríguez Molina</span>
+      <span>© {{ anio }} Álvaro Rodríguez Molina · TFG 2º DAW · IES Alixar</span>
       <a href="https://creativecommons.org/public-domain/cc0/" target="_blank" rel="noopener" class="cc">
-        <img src="assets/images/CC.png" alt="" height="22">
+        <img src="assets/images/CC.png" alt="" height="16">
         <span>Licencia Creative Commons</span>
       </a>
     </div>

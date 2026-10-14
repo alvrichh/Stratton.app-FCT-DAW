@@ -1,7 +1,29 @@
+:host {
+  display: contents;
+}
+
 .header {
   background: rgba(15, 23, 42, 0.96);
   backdrop-filter: saturate(160%) blur(8px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background-color 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Sobre la escena de la landing: transparente, con un degradado suave para que se lea */
+:host(.transparente) .header {
+  background: linear-gradient(rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0));
+  backdrop-filter: none;
+  border-bottom: 0;
+  box-shadow: none;
+}
+
+/* Menú desplegado en móvil: siempre con fondo, aunque la cabecera sea transparente */
+:host(.transparente) .navbar-collapse.show,
+:host(.transparente) .navbar-collapse.collapsing {
+  background: rgba(15, 23, 42, 0.96);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .navbar {

@@ -5,4 +5,6 @@
 export const environment = {
   production: true,
   apiUrl: '/api',
+  /** true solo en Render: el backend gratuito se duerme y se muestra la pantalla de espera. */
+  servidorGratuito: false,
 };

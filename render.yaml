@@ -1,5 +1,5 @@
-# Blueprint de Render: PostgreSQL, backend (Spring Boot) y frontend (Angular + nginx) como servicios Docker.
-# En local se sigue usando MySQL (docker compose); en Render el backend se conecta a PostgreSQL
+# Blueprint de Render: PostgreSQL, backend (Spring Boot, Docker) y frontend (Angular, sitio estático).
+# En local se sigue usando MySQL y nginx (docker compose); en Render el backend se conecta a PostgreSQL
 # a través de SPRING_DATASOURCE_URL (el driver se deduce de la URL).
 # Uso: Render > New > Blueprint > este repositorio.
 databases:
@@ -48,13 +48,31 @@ services:
       - key: JAVA_OPTS
         value: "-Xms64m -Xmx300m -XX:+UseSerialGC -Xss512k"
 
+  # Frontend como sitio estático: no se duerme nunca, así que carga al instante y es la propia
+  # aplicación la que muestra la pantalla de espera mientras el backend gratuito despierta.
+  # Llama directamente al backend (ver src/environments/environment.render.ts y CORS_ALLOWED_ORIGINS).
   - type: web
     name: strattonapp-front
-    runtime: docker
-    plan: free
-    dockerfilePath: ./Frontend/Dockerfile
-    dockerContext: ./Frontend
+    runtime: static
+    rootDir: Frontend
+    buildCommand: npm ci --no-audit --no-fund && npm run build:render
+    staticPublishPath: dist/strattonapp-front/browser
     envVars:
-      # URL pública del backend (cámbiala si Render le asigna otra)
-      - key: BACKEND_URL
-        value: https://strattonapp-back.onrender.com
+      - key: NODE_VERSION
+        value: "20"
+    headers:
+      # index.html sin caché: el navegador siempre carga la última versión
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache
+      - path: /
+        name: Cache-Control
+        value: no-cache
+    routes:
+      - type: redirect
+        source: /swagger-ui.html
+        destination: https://strattonapp-back.onrender.com/swagger-ui.html
+      # Fallback SPA: cualquier ruta de Angular devuelve index.html
+      - type: rewrite
+        source: /*
+        destination: /index.html

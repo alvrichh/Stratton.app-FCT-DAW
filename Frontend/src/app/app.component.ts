@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AuthService } from './auth.service';
 import { FooterComponent } from './layout/footer/footer.component';
 import { HeaderComponent } from './layout/header/header.component';
 
@@ -12,4 +13,5 @@ import { HeaderComponent } from './layout/header/header.component';
 })
 export class AppComponent {
   title = 'StrattonApp';
+  readonly authService = inject(AuthService);
 }

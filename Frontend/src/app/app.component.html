@@ -3,4 +3,6 @@
 <main id="contenido-principal" class="contenido-principal" tabindex="-1">
   <router-outlet></router-outlet>
 </main>
-<app-footer></app-footer>
+@if (!authService.isLoggedIn()) {
+  <app-footer></app-footer>
+}

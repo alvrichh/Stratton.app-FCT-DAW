@@ -1,33 +1,19 @@
-import { Injectable } from '@angular/core';
-import { Cliente } from './cliente';
-import { Observable, of } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { ClienteService } from './cliente.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ClienteService {
+describe('ClienteService', () => {
+  let service: ClienteService;
 
-  private clientes: Cliente[] = [];
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()]
+    });
+    service = TestBed.inject(ClienteService);
+  });
 
-  constructor() { }
-
-  registrarCliente(cliente: Cliente): Observable<Cliente> {
-    cliente.idCliente = this.clientes.length + 1; // Generar un ID sencillo
-    this.clientes.push(cliente);
-    return of(cliente);
-  }
-
-  getClientes(): Observable<Cliente[]> {
-    return of(this.clientes);
-  }
-
-  getClienteById(id: number): Observable<Cliente> {
-    const cliente = this.clientes.find(c => c.idCliente === id);
-    return of(cliente!);
-  }
-
-  eliminarCliente(id: number): Observable<any> {
-    this.clientes = this.clientes.filter(cliente => cliente.idCliente !== id);
-    return of({ status: 'success' });
-  }
-}
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});

@@ -1,53 +1,17 @@
-.header{
+.header {
   background-color: #343F4B;
-  
 }
 
-.logo{
-    width: 100px;
-    margin-right: 10px;
-}
-.nav-link{
-    cursor: pointer;
-}
-.navbar-nav {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  list-style-type: none;
-  margin: 0;
+.logo {
+  width: 100px;
+  margin-right: 10px;
 }
 
-  /*
-  .logout-btn .tooltip-text {
-    visibility: hidden;
-    width: 100px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    top: 125%; /* Posición del tooltip arriba del botón 
-    left: 0%;
-    margin-left: -100px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  
-  .logout-btn .tooltip-text::after {
-    content: "";
-    position: absolute;
-    bottom: 100%; /* Posición de la flecha del tooltip 
-    right: 0%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black transparent transparent transparent;
-  }
-  
-  .logout-btn:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-  }*/
+.nav-link {
+  cursor: pointer;
+}
+
+.nav-link.active {
+  font-weight: 600;
+  color: #fff;
+}

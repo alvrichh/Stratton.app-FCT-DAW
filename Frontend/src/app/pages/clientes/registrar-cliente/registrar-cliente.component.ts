@@ -1,77 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
-import { ClienteService } from '../cliente.service';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Cliente } from '../cliente';
-import { AuthService } from '../../../auth.service'; // Asegúrate de importar AuthService
+import { ClienteService } from '../cliente.service';
+import { ClienteRequest, clienteVacio } from '../cliente';
+import { Alertas } from '../../../core/alertas';
+import { ClienteFormComponent } from '../cliente-form/cliente-form.component';
 
 @Component({
   selector: 'app-registrar-cliente',
   standalone: true,
-  imports: [FormsModule, NgIf, CommonModule],
+  imports: [CommonModule, ClienteFormComponent],
   templateUrl: './registrar-cliente.component.html',
   styleUrls: ['./registrar-cliente.component.css']
 })
-export class RegistrarClienteComponent implements OnInit {
+export class RegistrarClienteComponent {
 
-  cliente: Cliente = new Cliente();
-  empleadoId: number; 
-  clienteForm: any;
+  cliente: ClienteRequest = clienteVacio();
+  guardando = false;
 
-  constructor(
-    private clienteService: ClienteService,
-    private router: Router,
-    private authService: AuthService // Inyecta AuthService
-  ) { }
+  constructor(private clienteService: ClienteService, private router: Router) { }
 
-  ngOnInit(): void {
-    console.clear();
-    console.log(this.cliente);
-    
-    this.empleadoId = this.authService.getEmpleadoId(); // Obtén el ID del empleado
-    // this.empleadoId = this.authService.getEmpleadoId();
-  }
-
-  onSubmit(): void {
-    console.log(this.cliente);
-    this.guardarCliente();
-  }
-
-  guardarCliente(): void {
-    // Método para enviar el cliente al servicio y guardar en la base de datos
-    this.clienteService.agregarClienteAEmpleado(this.empleadoId, this.cliente).subscribe(
-      data => {
-        console.log('Cliente guardado correctamente:', data);
-        this.verListaClientes(); // Redirigir a la lista de clientes después de guardar
+  guardarCliente(datos: ClienteRequest): void {
+    this.guardando = true;
+    const peticion = datos.empleadoId
+      ? this.clienteService.agregarClienteAEmpleado(datos.empleadoId, datos)
+      : this.clienteService.registrarCliente(datos);
+    peticion.subscribe({
+      next: (creado) => {
+        this.guardando = false;
+        Alertas.exito('Cliente registrado', `${creado.nombre} ${creado.apellidos} se ha guardado correctamente`);
+        this.router.navigate(['/detalles-cliente', creado.idCliente]);
       },
-      error => {
-        console.error('Error al guardar el cliente:', error);
+      error: (error) => {
+        this.guardando = false;
+        Alertas.error(error, 'No se pudo registrar el cliente');
       }
-    );
+    });
   }
 
-  verListaClientes(): void {
+  volver(): void {
     this.router.navigate(['/clientes']);
   }
-
-  selectComercializadora(): void {
-    console.log('Comercializadora seleccionada:', this.cliente.companiaContratada);
-
-    // Ejemplo: Mostrar imagen asociada a la comercializadora seleccionada
-    switch (this.cliente.companiaContratada) {
-      case 'Endesa':
-        this.cliente.logo = 'assets/images/endesa.png'; // Ruta a la imagen de Endesa
-        break;
-      case 'Iberdrola':
-        this.cliente.logo = 'assets/images/iberdrola.png'; // Ruta a la imagen de Iberdrola
-        break;
-      case 'Naturgy':
-        this.cliente.logo = 'assets/images/naturgy.png'; // Ruta a la imagen de Naturgy
-        break;
-      default:
-        this.cliente.logo = ''; // Si no hay selección o no se reconoce la comercializadora, limpiar la imagen
-        break;
-    }
-  }  
 }

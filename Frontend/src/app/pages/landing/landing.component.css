@@ -150,7 +150,7 @@
   gap: 1rem;
 }
 
-/* Logos sueltos (sin tarjeta), en gris; recuperan su color al pasar el ratón */
+/* Logos sueltos (sin tarjeta), a color; pasan a gris al pasar el ratón */
 .logos-lista li {
   display: grid;
   place-items: center;
@@ -164,15 +164,13 @@
   width: auto;
   height: auto;
   object-fit: contain;
-  /* brightness() oscurece los logos claros (Audax, Holaluz) para que en gris se lean como el resto */
-  filter: grayscale(1) brightness(0.7);
-  opacity: 0.7;
   transition: filter 0.25s var(--st-ease), opacity 0.25s var(--st-ease);
 }
 
+/* brightness() oscurece los logos claros (Audax, Holaluz) para que en gris se lean como el resto */
 .logos-lista li:hover img {
-  filter: none;
-  opacity: 1;
+  filter: grayscale(1) brightness(0.7);
+  opacity: 0.7;
 }
 
 @media (max-width: 991.98px) {

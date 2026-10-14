@@ -1,110 +1,84 @@
-/*
- * Paquete de implementación de los servicios de la aplicación.
- */
 package com.StrattonApp.Backend.service.impl;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.StrattonApp.Backend.DTO.request.SignUpRequest;
+import com.StrattonApp.Backend.DTO.request.SigninRequest;
 import com.StrattonApp.Backend.DTO.response.JwtAuthenticationResponse;
-import com.StrattonApp.Backend.DTO.resquest.SignUpRequest;
-import com.StrattonApp.Backend.DTO.resquest.SigninRequest;
 import com.StrattonApp.Backend.entities.Empleado;
 import com.StrattonApp.Backend.entities.Role;
-import com.StrattonApp.Backend.exceptions.GlobalException;
+import com.StrattonApp.Backend.exceptions.ConflictException;
+import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
 import com.StrattonApp.Backend.repository.EmpleadoRepository;
 import com.StrattonApp.Backend.service.AuthenticationService;
 import com.StrattonApp.Backend.service.JwtService;
 
-import lombok.Builder;
-
 /**
- * Implementación del servicio AuthenticationService para manejar operaciones de autenticación.
+ * Implementación de {@link AuthenticationService}.
  */
-@Builder
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private EmpleadoRepository userRepository; // Repositorio para acceder a los datos de los empleados
-    private final PasswordEncoder passwordEncoder; // Codificador de contraseñas
-    private final JwtService jwtService; // Servicio para generación y validación de tokens JWT
-    private final AuthenticationManager authenticationManager; // Gestor de autenticación
+    private final EmpleadoRepository empleadoRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-    // Constructor para inyección de dependencias
-    public AuthenticationServiceImpl(EmpleadoRepository userRepository,
-                                     PasswordEncoder passwordEncoder,
-                                     JwtService jwtService,
-                                     AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
+    public AuthenticationServiceImpl(EmpleadoRepository empleadoRepository, PasswordEncoder passwordEncoder,
+            JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.empleadoRepository = empleadoRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
 
-    /**
-     * Registra un nuevo usuario en el sistema.
-     *
-     * @param request Detalles de registro del usuario.
-     * @return Respuesta de autenticación con el token JWT.
-     * @throws IllegalArgumentException Si el correo electrónico ya está en uso.
-     */
     @Override
+    @Transactional
     public JwtAuthenticationResponse signup(SignUpRequest request) {
-        // Verifica si el correo electrónico ya está en uso
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already in use.");
+        if (empleadoRepository.existsByUsernameIgnoreCase(request.getUsername())) {
+            throw new ConflictException("El nombre de usuario ya está en uso");
+        }
+        if (empleadoRepository.existsByEmailIgnoreCase(request.getEmail())) {
+            throw new ConflictException("El correo electrónico ya está en uso");
         }
 
-        // Crea un nuevo objeto Empleado y guarda en la base de datos
-        Empleado user = new Empleado();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.getRoles().add(Role.USER); // Asigna un rol por defecto al nuevo usuario
-        userRepository.save(user);
+        Empleado empleado = new Empleado();
+        empleado.setNombre(request.getNombre().trim());
+        empleado.setApellidos(request.getApellidos().trim());
+        empleado.setUsername(request.getUsername().trim());
+        empleado.setEmail(request.getEmail().trim().toLowerCase());
+        empleado.setPassword(passwordEncoder.encode(request.getPassword()));
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.USER);
+        empleado.setRoles(roles);
+        empleado = empleadoRepository.save(empleado);
 
-        // Genera un token JWT para el usuario registrado
-        String jwt = jwtService.generateToken(user);
-        return JwtAuthenticationResponse.builder().token(jwt).build();
+        return buildResponse(empleado);
     }
 
-    /**
-     * Inicia sesión de un usuario existente en el sistema.
-     *
-     * @param request Detalles de inicio de sesión del usuario.
-     * @return Respuesta de autenticación con el token JWT y el rol del usuario.
-     * @throws GlobalException Si el nombre de usuario o la contraseña son inválidos.
-     */
     @Override
     public JwtAuthenticationResponse signin(SigninRequest request) {
-        try {
-            // Autentica al usuario utilizando el AuthenticationManager
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        // Lanza BadCredentialsException (401, ver GlobalExceptionHandler) si las credenciales no son válidas
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-            // Obtiene el usuario autenticado desde la base de datos
-            Empleado user = userRepository.findByUsername(request.getUsername())
-                    .orElseThrow(() -> new GlobalException("Usuario no encontrado"));
-
-            // Obtiene el rol del usuario autenticado
-            String role = user.getRoles().iterator().next().name();
-
-            // Genera un token JWT para el usuario autenticado
-            String jwt = jwtService.generateToken(user);
-            return JwtAuthenticationResponse.builder().token(jwt).role(role).build();
-
-        } catch (Exception e) {
-            // Captura cualquier excepción de autenticación y la maneja como GlobalException
-            throw new GlobalException("Contraseña no válida para usuario: " + request.getUsername());
-        }
+        Empleado empleado = empleadoRepository.findByUsernameIgnoreCase(request.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        return buildResponse(empleado);
     }
 
-    // Getter para el AuthenticationManager (útil para configuración)
-    public AuthenticationManager getAuthenticationManager() {
-        return authenticationManager;
+    private JwtAuthenticationResponse buildResponse(Empleado empleado) {
+        String jwt = jwtService.generateToken(empleado);
+        return new JwtAuthenticationResponse(jwt, empleado.getMainRole(),
+                empleado.getRoles().stream().map(Role::name).sorted().collect(Collectors.toList()),
+                empleado.getId(), empleado.getUsername(), empleado.getNombreCompleto());
     }
-
 }

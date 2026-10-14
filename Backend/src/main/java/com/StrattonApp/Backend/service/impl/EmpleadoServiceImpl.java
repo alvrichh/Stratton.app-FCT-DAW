@@ -1,175 +1,165 @@
 package com.StrattonApp.Backend.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.StrattonApp.Backend.DTO.EmpleadoDTO;
-import com.StrattonApp.Backend.DTO.ClienteDTO;
+import com.StrattonApp.Backend.DTO.SuministroDTO;
+import com.StrattonApp.Backend.DTO.request.EmpleadoRequest;
+import com.StrattonApp.Backend.entities.Asesoria;
 import com.StrattonApp.Backend.entities.Empleado;
-import com.StrattonApp.Backend.entities.Cliente;
+import com.StrattonApp.Backend.entities.Role;
+import com.StrattonApp.Backend.exceptions.ConflictException;
+import com.StrattonApp.Backend.exceptions.GlobalException;
 import com.StrattonApp.Backend.exceptions.ResourceNotFoundException;
-import com.StrattonApp.Backend.repository.EmpleadoRepository;
+import com.StrattonApp.Backend.repository.AsesoriaRepository;
 import com.StrattonApp.Backend.repository.ClienteRepository;
+import com.StrattonApp.Backend.repository.EmpleadoRepository;
+import com.StrattonApp.Backend.repository.SuministroRepository;
+import com.StrattonApp.Backend.security.SecurityUtils;
 import com.StrattonApp.Backend.service.EmpleadoService;
 
 /**
- * Implementación de la interfaz{@link EmpleadoService} para manejar operaciones relacionadas con los empleados.
+ * Implementación de {@link EmpleadoService}.
  */
 @Service
+@Transactional
 public class EmpleadoServiceImpl implements EmpleadoService {
 
-    @Autowired
-    private EmpleadoRepository empleadoRepository;
+    private final EmpleadoRepository empleadoRepository;
+    private final ClienteRepository clienteRepository;
+    private final SuministroRepository suministroRepository;
+    private final AsesoriaRepository asesoriaRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private ClienteRepository clienteRepository;
-
-    /**
-     * Retorna un UserDetailsService que permite cargar los detalles del usuario por nombre de usuario.
-     *
-     * @return UserDetailsService para cargar detalles del usuario
-     */
-    @Override
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsService() {
-            @Override
-            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return empleadoRepository.findByUsername(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            }
-        };
+    public EmpleadoServiceImpl(EmpleadoRepository empleadoRepository, ClienteRepository clienteRepository,
+            SuministroRepository suministroRepository, AsesoriaRepository asesoriaRepository,
+            PasswordEncoder passwordEncoder) {
+        this.empleadoRepository = empleadoRepository;
+        this.clienteRepository = clienteRepository;
+        this.suministroRepository = suministroRepository;
+        this.asesoriaRepository = asesoriaRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Obtiene todos los empleados y los convierte en una lista de EmpleadoDTO.
-     *
-     * @return Lista de todos los empleados convertidos a EmpleadoDTO
-     */
     @Override
-    public List<EmpleadoDTO> getAllUsers() {
-        return empleadoRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    /**
-     * Obtiene los detalles de un empleado por su ID.
-     *
-     * @param userId ID del empleado a buscar
-     * @return Detalles del empleado encontrado convertidos a EmpleadoDTO
-     * @throws ResourceNotFoundException Si no se encuentra el empleado con el ID especificado
-     */
-    @Override
-    public EmpleadoDTO getUserById(Long userId) {
-        Empleado empleado = empleadoRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el id: " + userId));
-        return convertToDTO(empleado);
-    }
-
-    /**
-     * Obtiene los detalles de un cliente por su ID.
-     *
-     * @param clienteId ID del cliente a buscar
-     * @return Detalles del cliente encontrado convertidos a ClienteDTO
-     * @throws IllegalArgumentException Si no se encuentra el cliente con el ID especificado
-     */
-    @Override
-    public ClienteDTO getClienteDetallesById(Long clienteId) {
-        Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado"));
-        return new ClienteDTO(
-                cliente.getIdCliente(),
-                cliente.getCups(),
-                cliente.getCompaniaContratada(),
-                cliente.getFechaSubidaContrato(),
-                cliente.getNombre(),
-                cliente.getApellidos(),
-                cliente.getDni(),
-                cliente.getEmail(),
-                cliente.getTelefono());
-    }
-
-    /**
-     * Convierte un objeto Empleado a EmpleadoDTO, incluyendo los detalles de los clientes asociados.
-     *
-     * @param empleado Empleado a convertir
-     * @return EmpleadoDTO generado a partir del empleado dado
-     */
-    @Override
-    public EmpleadoDTO convertToDTO(Empleado empleado) {
-        List<ClienteDTO> clienteDTOs = empleado.getClientes().stream()
-                .map(cliente -> {
-                    if (cliente.getComercializadora() != null) {
-                        return new ClienteDTO(
-                                cliente.getIdCliente(),
-                                cliente.getCups(),
-                                cliente.getComercializadora().getCompaniaContratada(),
-                                cliente.getFechaSubidaContrato(),
-                                cliente.getNombre(),
-                                cliente.getApellidos(),
-                                cliente.getDni(),
-                                cliente.getEmail(),
-                                cliente.getTelefono(),
-                        		cliente.getDireccion(),
-                        		cliente.getIban());
-                    } else {
-                        // Manejo cuando la comercializadora es null
-                        return new ClienteDTO(
-                                cliente.getIdCliente(),
-                                cliente.getCups(),
-                                cliente.getCompaniaContratada(),
-                                cliente.getFechaSubidaContrato(),
-                                cliente.getNombre(),
-                                cliente.getApellidos(),
-                                cliente.getDni(),
-                                cliente.getEmail(),
-                                cliente.getTelefono(),
-                        		cliente.getDireccion(),
-                        		cliente.getIban());
-
-                    }
-                })
+    @Transactional(readOnly = true)
+    public List<EmpleadoDTO> getAllEmpleados() {
+        return empleadoRepository.findAllByOrderByApellidosAscNombreAsc().stream()
+                .map(e -> EmpleadoDTO.from(e, false))
                 .collect(Collectors.toList());
-
-        return new EmpleadoDTO(
-                empleado.getId(),
-                empleado.getNombre(),
-                empleado.getApellidos(),
-                empleado.getEmail(),
-                empleado.getUsername(),
-                empleado.getMainRole(), // getRoles().toString() SIEMPRE ME VA A COGER USER, NO ENTIENDO DONDE ESTÁ EL ERROR
-                clienteDTOs);
     }
 
     @Override
-    public Cliente agregarClienteAEmpleado(Long id, ClienteDTO clienteDTO) {
-        // Paso 1: Obtener el empleado por su ID
-        Empleado empleado = empleadoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + id));
-
-        // Paso 2: Convertir ClienteDTO a Cliente
-        Cliente cliente = new Cliente();
-        cliente.setNombre(cliente.getNombre());
-        cliente.setApellidos(cliente.getApellidos());
-        cliente.setEmail(cliente.getEmail());
-        cliente.setTelefono(cliente.getTelefono());
-        cliente.setIban(cliente.getIban());
-        cliente.setComercializadora(cliente.getComercializadora());
-        cliente.setDni(cliente.getDni());
-        cliente.setEmpleado(empleado);
-        cliente.setDireccion(cliente.getDireccion());
-        // Paso 3: Guardar el cliente
-        return clienteRepository.save(cliente);
+    @Transactional(readOnly = true)
+    public EmpleadoDTO getEmpleadoById(Long id) {
+        return EmpleadoDTO.from(findEmpleado(id), true);
     }
 
-	@Override //este método no debería estar
-	public Cliente agregarClienteAEmpleado(Long id, Cliente cliente) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public EmpleadoDTO getPerfil() {
+        Empleado actual = SecurityUtils.currentEmpleado();
+        return EmpleadoDTO.from(findEmpleado(actual.getId()), true);
+    }
 
+    @Override
+    public EmpleadoDTO crearEmpleado(EmpleadoRequest request) {
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new GlobalException("La contraseña es obligatoria al crear un empleado");
+        }
+        if (empleadoRepository.existsByUsernameIgnoreCase(request.getUsername())) {
+            throw new ConflictException("El nombre de usuario ya está en uso");
+        }
+        if (empleadoRepository.existsByEmailIgnoreCase(request.getEmail())) {
+            throw new ConflictException("El correo electrónico ya está en uso");
+        }
+        Empleado empleado = new Empleado();
+        aplicar(empleado, request);
+        empleado.setPassword(passwordEncoder.encode(request.getPassword()));
+        return EmpleadoDTO.from(empleadoRepository.save(empleado), false);
+    }
+
+    @Override
+    public EmpleadoDTO actualizarEmpleado(Long id, EmpleadoRequest request) {
+        Empleado empleado = findEmpleado(id);
+
+        empleadoRepository.findByUsernameIgnoreCase(request.getUsername())
+                .filter(otro -> !otro.getId().equals(id))
+                .ifPresent(otro -> { throw new ConflictException("El nombre de usuario ya está en uso"); });
+        empleadoRepository.findByEmailIgnoreCase(request.getEmail())
+                .filter(otro -> !otro.getId().equals(id))
+                .ifPresent(otro -> { throw new ConflictException("El correo electrónico ya está en uso"); });
+
+        // Un administrador no puede quitarse a sí mismo el rol ADMIN
+        Empleado actual = SecurityUtils.currentEmpleado();
+        if (actual.getId().equals(id) && request.getRoles() != null && !request.getRoles().contains(Role.ADMIN)) {
+            throw new GlobalException("No puedes quitarte a ti mismo el rol de administrador");
+        }
+
+        aplicar(empleado, request);
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            empleado.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+        return EmpleadoDTO.from(empleadoRepository.save(empleado), true);
+    }
+
+    @Override
+    public void eliminarEmpleado(Long id) {
+        Empleado empleado = findEmpleado(id);
+        Empleado actual = SecurityUtils.currentEmpleado();
+        if (actual.getId().equals(id)) {
+            throw new GlobalException("No puedes eliminar tu propio usuario");
+        }
+        // Los clientes del empleado se eliminan en cascada (orphanRemoval), y con ellos sus suministros.
+        empleadoRepository.delete(empleado);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long contarClientes(Long empleadoId) {
+        return clienteRepository.countByEmpleado(findEmpleado(empleadoId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SuministroDTO> getSuministrosDeClientes(Long empleadoId) {
+        findEmpleado(empleadoId);
+        return suministroRepository.findByClienteEmpleadoIdOrderByCupsAsc(empleadoId).stream()
+                .map(SuministroDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    // ----- helpers -----------------------------------------------------------
+
+    private Empleado findEmpleado(Long id) {
+        return empleadoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el ID: " + id));
+    }
+
+    private void aplicar(Empleado empleado, EmpleadoRequest request) {
+        empleado.setNombre(request.getNombre().trim());
+        empleado.setApellidos(request.getApellidos().trim());
+        empleado.setUsername(request.getUsername().trim());
+        empleado.setEmail(request.getEmail().trim().toLowerCase());
+        Set<Role> roles = new HashSet<>();
+        if (request.getRoles() != null) {
+            roles.addAll(request.getRoles());
+        }
+        if (roles.isEmpty()) {
+            roles.add(Role.USER);
+        }
+        empleado.setRoles(roles);
+        if (request.getAsesoriaId() != null) {
+            Asesoria asesoria = asesoriaRepository.findById(request.getAsesoriaId())
+                    .orElseThrow(() -> new ResourceNotFoundException("No existe la asesoría con el ID: " + request.getAsesoriaId()));
+            empleado.setAsesoria(asesoria);
+        }
+    }
 }

@@ -1,11 +1,13 @@
 package com.StrattonApp.Backend.entities;
 
-/*
- * Representa si el suministro está dado de alta en la comercializadora
+/**
+ * Estado de un suministro (punto de suministro / contrato) en la comercializadora.
  */
 public enum Estado {
-	ACTIVO,
-	INACTIVO,
-	PENDIENTE
-	
+    /** Contrato activo en la comercializadora. */
+    ACTIVO,
+    /** Contrato dado de baja o rechazado (K.O.). */
+    INACTIVO,
+    /** Contrato enviado y pendiente de activación. */
+    PENDIENTE
 }

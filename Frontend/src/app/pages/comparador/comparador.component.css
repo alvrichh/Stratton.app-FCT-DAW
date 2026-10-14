@@ -1,0 +1,250 @@
+.comparador {
+  max-width: 880px;
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.cabecera {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.cabecera h1 {
+  font-size: clamp(1.8rem, 1.3rem + 2vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0.75rem 0;
+}
+
+.cabecera .lead {
+  color: var(--st-muted);
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: var(--st-accent-soft);
+  color: var(--st-accent-hover);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Indicador de pasos */
+.pasos-comparador {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+  flex-wrap: wrap;
+  color: var(--st-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pasos-comparador li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pasos-comparador .num {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--st-border);
+  font-size: 0.8rem;
+}
+
+.pasos-comparador li.activo {
+  color: var(--st-fg);
+}
+
+.pasos-comparador li.activo .num {
+  border-color: var(--st-accent);
+  background: var(--st-accent);
+  color: #fff;
+}
+
+.pasos-comparador li.hecho .num {
+  border-color: var(--st-accent);
+  color: var(--st-accent);
+}
+
+.tarjeta {
+  background: var(--st-card);
+  border: 1px solid var(--st-border);
+  border-radius: var(--st-radius);
+  box-shadow: var(--st-shadow-sm);
+  padding: 2rem;
+}
+
+/* Zona para soltar la factura */
+.zona {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 3rem 1.5rem;
+  border: 2px dashed var(--st-border);
+  border-radius: var(--st-radius);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s var(--st-ease), background-color 0.2s var(--st-ease);
+}
+
+.zona:hover,
+.zona.arrastrando,
+.zona:focus-within {
+  border-color: var(--st-accent);
+  background: var(--st-accent-soft);
+}
+
+.zona.desactivada {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.zona .icono {
+  font-size: 2.5rem;
+  color: var(--st-accent);
+}
+
+.titulo-zona {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.leyendo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 1rem;
+}
+
+.privacidad {
+  margin: 1.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--st-muted);
+}
+
+/* Formulario de revisión */
+fieldset + fieldset {
+  margin-top: 1.75rem;
+}
+
+legend {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+/* Resultado */
+.ahorro {
+  text-align: center;
+  padding: 1.75rem 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: var(--st-radius);
+  background:
+    radial-gradient(30rem 15rem at 100% 0%, rgba(0, 180, 230, 0.35), transparent 60%),
+    linear-gradient(135deg, var(--st-navy-2), var(--st-navy));
+  color: #e2e8f0;
+}
+
+.ahorro .cifra {
+  font-size: clamp(2.4rem, 1.8rem + 3vw, 3.6rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+}
+
+.ahorro .cifra span {
+  font-size: 0.45em;
+  font-weight: 700;
+  color: #7dd3fc;
+}
+
+.ahorro.neutro {
+  background: var(--st-bg);
+  color: var(--st-fg);
+  border: 1px solid var(--st-border);
+}
+
+.cifra-texto {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.desglose caption {
+  caption-side: top;
+  color: var(--st-muted);
+  font-size: 0.85rem;
+}
+
+.desglose th[scope='row'] {
+  font-weight: 500;
+}
+
+.desglose tfoot th,
+.desglose tfoot td {
+  font-weight: 800;
+  font-size: 1.05rem;
+  border-bottom: 0;
+}
+
+.desglose td:last-child {
+  color: var(--st-accent-hover);
+  font-weight: 600;
+}
+
+.notas {
+  margin: 1rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.8rem;
+  color: var(--st-muted);
+}
+
+@media (max-width: 575.98px) {
+  .tarjeta {
+    padding: 1.25rem;
+  }
+  /* Las tres columnas caben en 390 px: cabeceras en varias líneas e importes sin cortar */
+  .desglose th,
+  .desglose td {
+    padding: 0.5rem 0.35rem;
+    font-size: 0.85rem;
+    white-space: normal;
+  }
+  .desglose thead th {
+    font-size: 0.7rem;
+  }
+  .desglose td {
+    white-space: nowrap;
+  }
+  .acciones .btn {
+    width: 100%;
+  }
+}

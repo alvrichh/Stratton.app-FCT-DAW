@@ -29,6 +29,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  * Configuración de seguridad: API REST sin estado protegida con JWT.
  * <ul>
  *   <li>/api/v1/auth/** : público (login y registro).</li>
+ *   <li>/api/v1/comparador/** : público (comparador de facturas de la landing).</li>
  *   <li>/api/v2/empleados/** : solo ADMIN (excepto /perfil, para cualquier usuario autenticado).</li>
  *   <li>Resto de /api/** : cualquier usuario autenticado; la propiedad de los clientes se comprueba en los servicios.</li>
  * </ul>
@@ -65,7 +66,7 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers("/api/v1/auth/**", "/api/v1/salud").permitAll()
+                .requestMatchers("/api/v1/auth/**", "/api/v1/salud", "/api/v1/comparador/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**", "/error").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v2/empleados/perfil").authenticated()
                 .requestMatchers("/api/v2/empleados/**").hasRole("ADMIN")

@@ -1,0 +1,246 @@
+<section class="comparador container-xl" aria-labelledby="comparador-titulo">
+  <header class="cabecera">
+    <span class="eyebrow">Comparador de facturas</span>
+    <h1 id="comparador-titulo">¿Cuánto pagarías con nosotros?</h1>
+    <p class="lead">
+      Sube tu factura de la luz y la recalculamos con nuestra tarifa, con los mismos impuestos, para que compares
+      euro a euro.
+    </p>
+  </header>
+
+  <ol class="pasos-comparador" aria-label="Pasos del comparador">
+    <li [class.activo]="paso === 'subir'" [class.hecho]="paso !== 'subir'" [attr.aria-current]="paso === 'subir' ? 'step' : null">
+      <span class="num">1</span> Sube tu factura
+    </li>
+    <li [class.activo]="paso === 'revisar'" [class.hecho]="paso === 'resultado'" [attr.aria-current]="paso === 'revisar' ? 'step' : null">
+      <span class="num">2</span> Revisa los datos
+    </li>
+    <li [class.activo]="paso === 'resultado'" [attr.aria-current]="paso === 'resultado' ? 'step' : null">
+      <span class="num">3</span> Tu ahorro
+    </li>
+  </ol>
+
+  <!-- Paso 1: subir la factura -->
+  @if (paso === 'subir') {
+    <div class="tarjeta">
+      @if (leyendo) {
+        <div class="leyendo" role="status" aria-live="polite">
+          <div class="spinner-border text-primary" aria-hidden="true"></div>
+          <p class="mb-0">Leyendo tu factura… suele tardar unos segundos.</p>
+        </div>
+      } @else {
+        @if (oferta && !oferta.lecturaAutomatica) {
+          <p class="alert alert-info mb-3">
+            La lectura automática no está disponible ahora mismo. Puedes introducir los datos de tu factura a mano.
+          </p>
+        }
+        <label class="zona" [class.arrastrando]="arrastrando" [class.desactivada]="oferta && !oferta.lecturaAutomatica"
+          (dragover)="$event.preventDefault(); arrastrando = true" (dragleave)="arrastrando = false" (drop)="alSoltar($event)">
+          <input type="file" class="visually-hidden" accept="application/pdf,image/jpeg,image/png,image/webp"
+            (change)="alElegir($event)" [disabled]="!!oferta && !oferta.lecturaAutomatica">
+          <i class="bi bi-file-earmark-arrow-up icono" aria-hidden="true"></i>
+          <span class="titulo-zona">Arrastra aquí tu factura o pulsa para elegirla</span>
+          <span class="text-secondary small">PDF o foto (JPG, PNG), hasta 10 MB</span>
+        </label>
+        <div class="text-center mt-3">
+          <button type="button" class="btn btn-link" (click)="manual()">Prefiero introducir los datos a mano</button>
+        </div>
+        <p class="privacidad">
+          <i class="bi bi-shield-lock" aria-hidden="true"></i>
+          Usamos tu factura solo para leer consumos, potencias y precios; para ello se envía a nuestro proveedor de IA
+          (Anthropic). No la guardamos y no leemos tus datos personales (nombre, DNI, dirección, CUPS ni cuenta bancaria).
+        </p>
+      }
+    </div>
+  }
+
+  <!-- Paso 2: revisar o introducir los datos -->
+  @if (paso === 'revisar') {
+    <form class="tarjeta" #f="ngForm" (ngSubmit)="calcular()" novalidate>
+      @if (aviso) {
+        <p class="alert alert-warning">{{ aviso }}</p>
+      } @else if (datos.comercializadora) {
+        <p class="alert alert-success">
+          Hemos leído tu factura de <b>{{ datos.comercializadora }}</b>. Comprueba que los datos coinciden antes de calcular.
+        </p>
+      } @else {
+        <p class="text-secondary">Copia los datos de tu factura. Los encontrarás en el detalle de la factura.</p>
+      }
+
+      <fieldset>
+        <legend>Periodo y potencia contratada</legend>
+        <div class="row g-3">
+          <div class="col-6 col-md-4">
+            <label for="dias" class="form-label">Días facturados</label>
+            <input id="dias" name="dias" type="number" class="form-control" min="1" max="400" step="1" required [(ngModel)]="datos.dias">
+          </div>
+          <div class="col-6 col-md-4">
+            <label for="p1kw" class="form-label">Potencia punta (kW)</label>
+            <input id="p1kw" name="potenciaP1Kw" type="number" class="form-control" min="0.1" step="any" required [(ngModel)]="datos.potenciaP1Kw">
+          </div>
+          <div class="col-6 col-md-4">
+            <label for="p2kw" class="form-label">Potencia valle (kW)</label>
+            <input id="p2kw" name="potenciaP2Kw" type="number" class="form-control" min="0.1" step="any" required [(ngModel)]="datos.potenciaP2Kw">
+          </div>
+          <div class="col-6 col-md-4">
+            <label for="pp1" class="form-label">Precio potencia punta (€/kW·día)</label>
+            <input id="pp1" name="precioPotenciaP1" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.precioPotenciaP1">
+          </div>
+          <div class="col-6 col-md-4">
+            <label for="pp2" class="form-label">Precio potencia valle (€/kW·día)</label>
+            <input id="pp2" name="precioPotenciaP2" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.precioPotenciaP2">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Consumo del periodo</legend>
+        <div class="row g-3">
+          <div class="col-4">
+            <label for="c1" class="form-label">Punta (kWh)</label>
+            <input id="c1" name="consumoP1Kwh" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.consumoP1Kwh">
+          </div>
+          <div class="col-4">
+            <label for="c2" class="form-label">Llano (kWh)</label>
+            <input id="c2" name="consumoP2Kwh" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.consumoP2Kwh">
+          </div>
+          <div class="col-4">
+            <label for="c3" class="form-label">Valle (kWh)</label>
+            <input id="c3" name="consumoP3Kwh" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.consumoP3Kwh">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Precio de la energía (sin impuestos)</legend>
+        <div class="form-check mb-3">
+          <input id="unico" name="precioUnico" type="checkbox" class="form-check-input" [(ngModel)]="precioUnico" (ngModelChange)="sincronizarPrecio()">
+          <label for="unico" class="form-check-label">El mismo precio a todas las horas</label>
+        </div>
+        <div class="row g-3">
+          <div class="col-4">
+            <label for="e1" class="form-label">{{ precioUnico ? 'Precio (€/kWh)' : 'Punta (€/kWh)' }}</label>
+            <input id="e1" name="precioEnergiaP1" type="number" class="form-control" min="0" step="any" required
+              [(ngModel)]="datos.precioEnergiaP1" (ngModelChange)="sincronizarPrecio()">
+          </div>
+          @if (!precioUnico) {
+            <div class="col-4">
+              <label for="e2" class="form-label">Llano (€/kWh)</label>
+              <input id="e2" name="precioEnergiaP2" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.precioEnergiaP2">
+            </div>
+            <div class="col-4">
+              <label for="e3" class="form-label">Valle (€/kWh)</label>
+              <input id="e3" name="precioEnergiaP3" type="number" class="form-control" min="0" step="any" required [(ngModel)]="datos.precioEnergiaP3">
+            </div>
+          }
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Otros datos <span class="text-secondary fw-normal">(opcionales)</span></legend>
+        <div class="row g-3">
+          <div class="col-6 col-md-3">
+            <label for="alq" class="form-label">Alquiler contador (€/día)</label>
+            <input id="alq" name="alquilerContadorDia" type="number" class="form-control" min="0" step="any" [(ngModel)]="datos.alquilerContadorDia">
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="bono" class="form-label">Bono social (€/día)</label>
+            <input id="bono" name="bonoSocialDia" type="number" class="form-control" min="0" step="any" [(ngModel)]="datos.bonoSocialDia">
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="total" class="form-label">Total de la factura (€)</label>
+            <input id="total" name="totalFactura" type="number" class="form-control" min="0" step="any" [(ngModel)]="datos.totalFactura">
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="anual" class="form-label">Consumo anual (kWh)</label>
+            <input id="anual" name="consumoAnualKwh" type="number" class="form-control" min="0" step="any" [(ngModel)]="datos.consumoAnualKwh">
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="acciones">
+        <button type="button" class="btn btn-outline-secondary" (click)="empezar()">
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver
+        </button>
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="f.invalid || calculando">
+          @if (calculando) {
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          }
+          Calcular mi ahorro
+        </button>
+      </div>
+    </form>
+  }
+
+  <!-- Paso 3: resultado -->
+  @if (paso === 'resultado' && resultado; as r) {
+    <div class="tarjeta">
+      @if (r.ahorro > 0) {
+        <div class="ahorro" role="status">
+          <p class="mb-1">Con la {{ r.nombreOferta }} te ahorrarías</p>
+          <p class="cifra">{{ eur(r.ahorro) }} <span>({{ num(r.ahorroPorcentaje) }} %)</span></p>
+          <p class="mb-0">en esta factura de {{ r.dias }} días · unos <b>{{ eur(r.ahorroAnual) }} al año</b></p>
+        </div>
+      } @else {
+        <div class="ahorro neutro" role="status">
+          <p class="cifra-texto">Tu tarifa actual ya es competitiva</p>
+          <p class="mb-0">Con estos datos no te saldría más barata la {{ r.nombreOferta }}. Si quieres, un asesor revisa tu caso.</p>
+        </div>
+      }
+
+      <div class="table-responsive">
+        <table class="table desglose">
+          <caption>Tu factura recalculada ({{ num(r.consumoTotalKwh) }} kWh en {{ r.dias }} días)</caption>
+          <thead>
+            <tr>
+              <th scope="col">Concepto</th>
+              <th scope="col" class="text-end">Tu tarifa actual</th>
+              <th scope="col" class="text-end">{{ r.nombreOferta }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (l of lineas; track l.clave) {
+              <tr>
+                <th scope="row">{{ l.nombre }}</th>
+                <td class="text-end">{{ eur(r.actual[l.clave]) }}</td>
+                <td class="text-end">{{ eur(r.oferta[l.clave]) }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row">Total</th>
+              <td class="text-end">{{ eur(r.actual.total) }}</td>
+              <td class="text-end">{{ eur(r.oferta.total) }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <ul class="notas">
+        @if (oferta) {
+          <li>{{ r.nombreOferta }}: energía a {{ precio(oferta.precioEnergia) }} €/kWh a cualquier hora y potencia a
+            {{ precio(oferta.precioPotenciaP1) }} €/kW·día.</li>
+        }
+        <li>Las dos facturas se calculan con los impuestos vigentes (IVA e impuesto eléctrico) y con el mismo alquiler
+          de contador y bono social: la diferencia sale solo de los precios de potencia y energía.</li>
+        @if (r.totalFacturaOriginal) {
+          <li>El total de tu factura original era {{ eur(r.totalFacturaOriginal) }}, con los impuestos de su fecha.</li>
+        }
+        <li>Es una estimación con los consumos de esta factura; el ahorro anual depende de tu consumo real.</li>
+      </ul>
+
+      <div class="acciones">
+        <button type="button" class="btn btn-outline-secondary" (click)="volver()">
+          <i class="bi bi-pencil" aria-hidden="true"></i> Corregir datos
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="empezar()">Comparar otra factura</button>
+        <a class="btn btn-success btn-lg" [href]="enlaceWhatsapp" target="_blank" rel="noopener">
+          <i class="bi bi-whatsapp" aria-hidden="true"></i> {{ r.ahorro > 0 ? 'Quiero esta tarifa' : 'Hablar con un asesor' }}
+        </a>
+      </div>
+    </div>
+  }
+
+  <p class="text-center mt-4"><a routerLink="/">Volver a la página principal</a></p>
+</section>

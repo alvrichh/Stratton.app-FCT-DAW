@@ -123,6 +123,61 @@
   }
 }
 
+/* Acceso al comparador de facturas */
+.comparar {
+  max-width: 1140px;
+  margin: 3rem auto 0;
+  padding: 0 1.25rem;
+}
+
+.comparar-caja {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 1.5rem;
+  padding: 1.75rem 2rem;
+  border-radius: 1.25rem;
+  background: var(--st-card);
+  border: 1px solid var(--st-border);
+  box-shadow: var(--st-shadow-sm);
+}
+
+.comparar-icono {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  flex: none;
+  border-radius: 0.9rem;
+  background: var(--st-accent-soft);
+  color: var(--st-accent);
+  font-size: 1.5rem;
+}
+
+.comparar-texto {
+  flex: 1 1 18rem;
+}
+
+.comparar-texto h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0 0 0.25rem;
+}
+
+.comparar-texto p {
+  margin: 0;
+  color: var(--st-muted);
+}
+
+@media (max-width: 575.98px) {
+  .comparar-caja {
+    padding: 1.5rem;
+  }
+  .comparar-caja .btn {
+    width: 100%;
+  }
+}
+
 /* Franja de comercializadoras */
 .logos {
   max-width: 1140px;

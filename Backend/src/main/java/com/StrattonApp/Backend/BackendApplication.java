@@ -5,10 +5,12 @@ package com.StrattonApp.Backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories
+@ConfigurationPropertiesScan
 public class BackendApplication {
 	/*
 	 * Proyecto TFG desarrollo de aplicaciónes web IES ALIXAR 

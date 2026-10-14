@@ -73,9 +73,26 @@ Al arrancar con la base de datos vacía se cargan datos de ejemplo (2 asesorías
 ### Tests
 
 ```bash
-cd Backend && mvn test          # 21 tests de integración (JUnit + MockMvc sobre H2)
-cd Frontend && npm test         # 28 tests unitarios (Karma/Jasmine en ChromeHeadless)
+cd Backend && mvn test          # 30 tests (JUnit + MockMvc sobre H2)
+cd Frontend && npm test         # 32 tests unitarios (Karma/Jasmine en ChromeHeadless)
 ```
+
+### Comparador de facturas
+
+Página pública `/comparador` (botón *Compara tu factura* en la landing). El cliente sube su factura de luz
+(PDF o foto), Claude lee consumos, potencias y precios (nunca nombre, DNI, dirección, CUPS ni IBAN), el
+cliente revisa los datos y el backend recalcula la factura con la oferta propia. El cálculo no lo hace la IA:
+es aritmético y usa los mismos impuestos vigentes y el mismo contador y bono social en las dos facturas.
+
+| Variable | Por defecto | Qué es |
+|----------|-------------|--------|
+| `ANTHROPIC_API_KEY` | vacía | Clave de la API de Anthropic. Sin ella el cliente introduce los datos a mano |
+| `ANTHROPIC_MODELO` | `claude-sonnet-5-5` | Modelo que lee la factura |
+| `OFERTA_NOMBRE` | `Tarifa Stratton` | Nombre de la oferta propia |
+| `OFERTA_PRECIO_ENERGIA` | `0.10` | €/kWh, igual a todas las horas |
+| `OFERTA_PRECIO_POTENCIA_P1` / `_P2` | `0.09` | €/kW·día en punta y valle |
+| `COMPARADOR_IVA` / `COMPARADOR_IMPUESTO_ELECTRICO` | `0.21` / `0.0511269632` | Impuestos vigentes |
+| `COMPARADOR_MAX_POR_HORA` / `COMPARADOR_MAX_TOTAL_POR_HORA` | `10` / `100` | Lecturas con IA por IP y en total por hora |
 
 ### Publicarlo en internet (Render + MySQL en Aiven, gratis)
 

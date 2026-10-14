@@ -12,12 +12,15 @@ import { ActualizarClienteComponent } from './pages/clientes/actualizar-cliente/
 import { RegisterComponent } from './pages/register/register.component';
 import { InicioComponent } from './pages/inicio/inicio.component';
 import { LandingComponent } from './pages/landing/landing.component';
+import { ComparadorComponent } from './pages/comparador/comparador.component';
 import { adminGuard, authGuard, guestGuard } from './core/auth.guard';
 
 export const routes: Routes = [
   // Landing pública con la escena de parallax; /inicio sigue siendo la portada con las comercializadoras
   { path: '', component: LandingComponent, pathMatch: 'full' },
   { path: 'inicio', component: InicioComponent },
+  // Comparador público de facturas (enlazado desde la landing)
+  { path: 'comparador', component: ComparadorComponent, title: 'Comparador de facturas · StrattonApp' },
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
 

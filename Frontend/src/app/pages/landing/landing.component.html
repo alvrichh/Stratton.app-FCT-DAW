@@ -67,6 +67,20 @@
     </div>
   </section>
 
+  <!-- Acceso al comparador de facturas -->
+  <section class="comparar revelar" aria-labelledby="comparar-titulo">
+    <div class="comparar-caja">
+      <span class="comparar-icono" aria-hidden="true"><i class="bi bi-lightning-charge-fill"></i></span>
+      <div class="comparar-texto">
+        <h2 id="comparar-titulo">¿Cuánto pagarías con nosotros?</h2>
+        <p>Sube tu factura de la luz y en unos segundos la recalculamos con nuestra tarifa.</p>
+      </div>
+      <a routerLink="/comparador" class="btn btn-primary btn-lg">
+        <i class="bi bi-calculator" aria-hidden="true"></i> Compara tu factura
+      </a>
+    </div>
+  </section>
+
   <section class="logos" aria-labelledby="logos-titulo">
     <p id="logos-titulo" class="logos-titulo">Trabajamos con {{ comercializadoras.length }} comercializadoras</p>
     <ul class="logos-lista revelar">

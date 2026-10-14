@@ -126,7 +126,7 @@
                 <configuration>
                     <reportOutputDirectory>${project.basedir}</reportOutputDirectory>
                     <destDir>doc</destDir>
-                    <stylesheetfile>${project.basedir}/../javadoc.css</stylesheetfile>
+                    <stylesheetfile>${project.basedir}/javadoc.css</stylesheetfile>
                     <doclint>none</doclint>
                     <failOnError>false</failOnError>
                     <encoding>UTF-8</encoding>

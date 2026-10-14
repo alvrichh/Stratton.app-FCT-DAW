@@ -325,6 +325,85 @@ class ApiIntegrationTests {
     }
 
     @Test
+    void adminNoPuedeQuitarseElRolAdminNiSiquieraOmitiendoRoles() throws Exception {
+        JsonNode admin = login("admin", "admin");
+        long adminId = admin.get("id").asLong();
+        // Sin "roles" en la petición se conservan los actuales (sigue siendo ADMIN)
+        Map<String, Object> sinRoles = Map.of("nombre", "Admin", "apellidos", "Stratton", "username", "admin",
+                "email", "admin@strattonapp.com");
+        mvc.perform(put("/api/v2/empleados/" + adminId)
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(sinRoles)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.role", is("ADMIN")));
+        // Quitarse ADMIN explícitamente -> 400
+        Map<String, Object> degradar = Map.of("nombre", "Admin", "apellidos", "Stratton", "username", "admin",
+                "email", "admin@strattonapp.com", "roles", java.util.List.of("USER"));
+        mvc.perform(put("/api/v2/empleados/" + adminId)
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(degradar)))
+                .andExpect(status().isBadRequest());
+        mvc.perform(get("/api/v2/empleados").header("Authorization", "Bearer " + adminToken)).andExpect(status().isOk());
+    }
+
+    @Test
+    void actualizarClienteNoPisaLaDireccionDelSuministro() throws Exception {
+        Map<String, Object> body = Map.of("nombre", "Direccion", "apellidos", "Suministro", "dni", "33333333P",
+                "email", "dir@example.com", "telefono", "622222222", "direccion", "Calle Cliente 1",
+                "cups", "ES0031000000000050AA", "companiaContratada", "Endesa");
+        MvcResult res = mvc.perform(post("/api/v2/clientes")
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(body)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.suministros[0].direccion", is("Calle Cliente 1")))
+                .andReturn();
+        long id = json.readTree(res.getResponse().getContentAsString()).get("idCliente").asLong();
+
+        // Se edita la dirección del suministro desde su propio endpoint
+        mvc.perform(put("/api/v2/suministros/ES0031000000000050AA")
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(Map.of("cups", "ES0031000000000050AA", "direccion", "Calle Suministro 9", "estado", "ACTIVO"))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.direccion", is("Calle Suministro 9")));
+
+        // Cambiar el teléfono del cliente no toca la dirección del suministro
+        Map<String, Object> update = new java.util.HashMap<>(body);
+        update.put("telefono", "622222223");
+        mvc.perform(put("/api/v2/clientes/" + id)
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(update)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.direccion", is("Calle Cliente 1")))
+                .andExpect(jsonPath("$.suministros[0].direccion", is("Calle Suministro 9")));
+
+        mvc.perform(delete("/api/v2/clientes/" + id).header("Authorization", "Bearer " + adminToken)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    void erroresDeSpringMvcDevuelven4xxEnJson() throws Exception {
+        mvc.perform(get("/api/v2/clientes/abc").header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(400)));
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch("/api/v2/clientes/1")
+                .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isMethodNotAllowed());
+        mvc.perform(post("/api/v2/clientes").header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.TEXT_PLAIN).content("hola"))
+                .andExpect(status().isUnsupportedMediaType());
+        // username con espacios: se recorta antes de validar -> 400 por tamaño, nunca 500
+        mvc.perform(put("/api/v2/empleados/3").header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json.writeValueAsString(Map.of("nombre", "U", "apellidos", "A", "username", "  ab  ", "email", "usuario@strattonapp.com"))))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors.username", notNullValue()));
+    }
+
+    @Test
     void registroPublicoCreaUsuarioConRolUser() throws Exception {
         Map<String, Object> body = Map.of("nombre", "Auto", "apellidos", "Registrado", "username", "autoreg",
                 "email", "autoreg@example.com", "password", "clave123");

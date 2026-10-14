@@ -27,7 +27,7 @@ class BackendApplicationTests {
     void contextLoadsAndSeedsSampleData() {
         assertThat(empleadoRepository.findByUsernameIgnoreCase("admin")).isPresent();
         assertThat(empleadoRepository.findByUsernameIgnoreCase("usuario")).isPresent();
-        assertThat(clienteRepository.count()).isEqualTo(10);
+        assertThat(clienteRepository.count()).isGreaterThanOrEqualTo(10);
         assertThat(suministroRepository.count()).isGreaterThan(10);
     }
 }

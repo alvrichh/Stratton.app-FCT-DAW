@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Jwts.SIG;
 
 /**
  * Implementación de {@link JwtService} con jjwt 0.12 (HMAC-SHA256).
@@ -28,13 +31,37 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtServiceImpl implements JwtService {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
+
     private final SecretKey signingKey;
     private final long expirationMs;
 
-    public JwtServiceImpl(@Value("${jwt.secret}") String secret,
+    public JwtServiceImpl(@Value("${jwt.secret:}") String secret,
             @Value("${jwt.expiration-ms:36000000}") long expirationMs) {
-        this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        this.signingKey = resolverClave(secret);
         this.expirationMs = expirationMs;
+    }
+
+    /**
+     * Usa la clave configurada (base64, mínimo 32 bytes) o, si no hay ninguna, genera una aleatoria
+     * y avisa: los tokens emitidos dejarán de ser válidos al reiniciar la aplicación.
+     */
+    private static SecretKey resolverClave(String secret) {
+        if (secret == null || secret.isBlank()) {
+            log.warn("JWT_SECRET no definido: se usa una clave aleatoria. Los tokens no sobrevivirán a un reinicio. "
+                    + "Define JWT_SECRET (openssl rand -base64 32) en producción.");
+            return SIG.HS256.key().build();
+        }
+        byte[] keyBytes;
+        try {
+            keyBytes = Decoders.BASE64.decode(secret.trim());
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("JWT_SECRET debe estar codificado en base64 (openssl rand -base64 32)", e);
+        }
+        if (keyBytes.length < 32) {
+            throw new IllegalStateException("JWT_SECRET es demasiado corto: se necesitan al menos 32 bytes (256 bits)");
+        }
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     @Override

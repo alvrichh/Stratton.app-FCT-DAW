@@ -10,7 +10,7 @@ import com.StrattonApp.Backend.entities.Suministro;
 @Repository
 public interface SuministroRepository extends JpaRepository<Suministro, String> {
 
-    List<Suministro> findByClienteIdClienteOrderByCupsAsc(Long idCliente);
+    List<Suministro> findByClienteIdClienteOrderByFechaAltaAscCupsAsc(Long idCliente);
 
-    List<Suministro> findByClienteEmpleadoIdOrderByCupsAsc(Long idEmpleado);
+    List<Suministro> findByClienteEmpleadoIdOrderByFechaAltaAscCupsAsc(Long idEmpleado);
 }

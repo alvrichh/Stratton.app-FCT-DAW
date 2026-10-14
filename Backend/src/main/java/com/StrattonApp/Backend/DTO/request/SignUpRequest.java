@@ -23,6 +23,7 @@ public class SignUpRequest {
 
     @NotBlank(message = "El correo electrónico es obligatorio")
     @Email(message = "El formato del correo electrónico no es válido")
+    @Size(max = 100)
     private String email;
 
     @NotBlank(message = "La contraseña es obligatoria")
@@ -30,13 +31,13 @@ public class SignUpRequest {
     private String password;
 
     public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre == null ? null : nombre.trim(); }
     public String getApellidos() { return apellidos; }
-    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
+    public void setApellidos(String apellidos) { this.apellidos = apellidos == null ? null : apellidos.trim(); }
     public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setUsername(String username) { this.username = username == null ? null : username.trim(); }
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) { this.email = email == null ? null : email.trim().toLowerCase(); }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 }

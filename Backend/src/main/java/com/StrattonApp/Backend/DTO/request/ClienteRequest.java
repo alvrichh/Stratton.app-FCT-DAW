@@ -34,6 +34,7 @@ public class ClienteRequest {
 
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "El formato del email no es válido")
+    @Size(max = 100)
     private String email;
 
     @NotBlank(message = "El teléfono es obligatorio")
@@ -68,15 +69,15 @@ public class ClienteRequest {
     private Long empleadoId;
 
     public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre == null ? null : nombre.trim(); }
     public String getApellidos() { return apellidos; }
-    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
+    public void setApellidos(String apellidos) { this.apellidos = apellidos == null ? null : apellidos.trim(); }
     public String getDni() { return dni; }
-    public void setDni(String dni) { this.dni = dni; }
+    public void setDni(String dni) { this.dni = dni == null ? null : dni.trim().toUpperCase(); }
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) { this.email = email == null ? null : email.trim().toLowerCase(); }
     public String getTelefono() { return telefono; }
-    public void setTelefono(String telefono) { this.telefono = telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono == null ? null : telefono.trim(); }
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
     public String getIban() { return iban; }
@@ -86,7 +87,7 @@ public class ClienteRequest {
     public LocalDate getFechaNacimiento() { return fechaNacimiento; }
     public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
     public String getCups() { return cups; }
-    public void setCups(String cups) { this.cups = cups; }
+    public void setCups(String cups) { this.cups = cups == null ? null : cups.trim().toUpperCase(); }
     public String getCompaniaContratada() { return companiaContratada; }
     public void setCompaniaContratada(String companiaContratada) { this.companiaContratada = companiaContratada; }
     public Long getComercializadoraId() { return comercializadoraId; }

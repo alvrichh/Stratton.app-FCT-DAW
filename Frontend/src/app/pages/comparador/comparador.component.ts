@@ -1,23 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Alertas } from '../../core/alertas';
 import {
   ComparadorService, DatosFactura, Desglose, OfertaComparador, ResultadoComparativa, facturaVacia,
 } from './comparador.service';
+import { leerFactura } from './lector-factura';
+import { FaseLectura, extraerTexto } from './texto-factura';
 
 type Paso = 'subir' | 'revisar' | 'resultado';
 
-/** Tamaño máximo de la factura (igual que en el backend y en nginx). */
-const MAX_BYTES = 10 * 1024 * 1024;
+/** Tamaño máximo de la factura (se lee en el navegador; evita bloquearlo con archivos enormes). */
+const MAX_BYTES = 15 * 1024 * 1024;
+/** Datos sin los que no se puede calcular (los que el cliente tiene que completar si faltan). */
+const OBLIGATORIOS: (keyof DatosFactura)[] = [
+  'dias', 'potenciaP1Kw', 'potenciaP2Kw', 'precioPotenciaP1', 'precioPotenciaP2',
+  'consumoP1Kwh', 'consumoP2Kwh', 'consumoP3Kwh', 'precioEnergiaP1', 'precioEnergiaP2', 'precioEnergiaP3',
+];
 /** WhatsApp de contacto (el mismo de wa.link/44bcfa del pie de página). */
 const WHATSAPP = '34679556404';
 
 /**
  * Comparador público de facturas de luz:
- * 1. el cliente sube su factura (PDF o foto) y la IA lee consumos, potencias y precios,
+ * 1. el cliente sube su factura (PDF o foto) y se lee EN SU NAVEGADOR (texto del PDF u OCR),
+ *    sin enviarla a ningún servidor ni API externa,
  * 2. revisa y corrige los datos (o los introduce a mano),
  * 3. ve su factura recalculada con la oferta propia, con los mismos impuestos en los dos lados.
  */
@@ -36,6 +43,9 @@ export class ComparadorComponent implements OnInit {
   resultado?: ResultadoComparativa;
 
   leyendo = false;
+  /** Fase de la lectura (texto del PDF u OCR) y progreso del OCR en %. */
+  fase: FaseLectura | null = null;
+  progreso = 0;
   calculando = false;
   arrastrando = false;
   /** Aviso cuando la lectura automática falla y hay que completar los datos a mano. */
@@ -57,7 +67,7 @@ export class ComparadorComponent implements OnInit {
   private readonly numero = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2, useGrouping: 'always' } as unknown as Intl.NumberFormatOptions);
   private readonly precios = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 6 });
 
-  constructor(private comparador: ComparadorService) { }
+  constructor(private comparador: ComparadorService, private zone: NgZone) { }
 
   ngOnInit(): void {
     this.comparador.oferta().subscribe({
@@ -99,26 +109,42 @@ export class ComparadorComponent implements OnInit {
     input.value = '';
   }
 
-  leer(archivo: File): void {
+  async leer(archivo: File): Promise<void> {
     if (archivo.size > MAX_BYTES) {
-      Alertas.info('Archivo demasiado grande', 'La factura no puede superar 10 MB.');
+      Alertas.info('Archivo demasiado grande', 'La factura no puede superar 15 MB.');
       return;
     }
     this.leyendo = true;
-    this.comparador.extraer(archivo).subscribe({
-      next: datos => {
-        this.leyendo = false;
-        this.aviso = '';
-        this.datos = { ...facturaVacia(), ...this.sinNulos(datos) };
-        this.precioUnico = this.datos.precioEnergiaP1 === this.datos.precioEnergiaP2
-          && this.datos.precioEnergiaP2 === this.datos.precioEnergiaP3;
-        this.paso = 'revisar';
-      },
-      error: (e: HttpErrorResponse) => {
-        this.leyendo = false;
-        this.manual(Alertas.mensajeDe(e).replace(/<[^>]*>/g, ''));
-      },
-    });
+    this.fase = null;
+    this.progreso = 0;
+    try {
+      const texto = await extraerTexto(archivo, (fase, progreso) => this.zone.run(() => {
+        this.fase = fase;
+        this.progreso = progreso ?? 0;
+      }));
+      const leidos = leerFactura(texto);
+      this.zone.run(() => this.mostrarLeidos(leidos));
+    } catch (e) {
+      console.error('No se pudo leer la factura', e);
+      this.zone.run(() => this.manual('No hemos podido leer este archivo. Introduce los datos de tu factura a mano.'));
+    } finally {
+      this.zone.run(() => this.leyendo = false);
+    }
+  }
+
+  private mostrarLeidos(leidos: Partial<DatosFactura>): void {
+    this.datos = { ...facturaVacia(), ...leidos };
+    this.precioUnico = this.datos.precioEnergiaP1 === this.datos.precioEnergiaP2
+      && this.datos.precioEnergiaP2 === this.datos.precioEnergiaP3;
+    const faltan = OBLIGATORIOS.filter(c => this.datos[c] === null || this.datos[c] === undefined).length;
+    if (faltan === OBLIGATORIOS.length) {
+      this.aviso = 'No hemos encontrado los datos en esta factura. Cópialos del detalle de la factura.';
+    } else if (faltan > 0) {
+      this.aviso = `Hemos leído casi todo, pero faltan ${faltan} dato${faltan > 1 ? 's' : ''}: complétalo${faltan > 1 ? 's' : ''} con tu factura.`;
+    } else {
+      this.aviso = '';
+    }
+    this.paso = 'revisar';
   }
 
   manual(aviso = ''): void {
@@ -178,7 +204,8 @@ export class ComparadorComponent implements OnInit {
     return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(texto)}`;
   }
 
-  private sinNulos(d: DatosFactura): Partial<DatosFactura> {
-    return Object.fromEntries(Object.entries(d ?? {}).filter(([, v]) => v !== null && v !== undefined));
+  /** Campo obligatorio vacío (para resaltarlo tras la lectura). */
+  falta(campo: keyof DatosFactura): boolean {
+    return this.datos[campo] === null || this.datos[campo] === undefined || (this.datos[campo] as unknown) === '';
   }
 }

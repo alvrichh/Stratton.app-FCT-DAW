@@ -66,28 +66,36 @@ public class InicializarDatos implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private static final String LOGOS = "assets/images/comercializadoras/";
+
     /**
      * Comercializadoras con las que trabaja la asesoría: {nombre, plan de referencia, logo}.
-     * Se sincronizan en cada arranque (se añaden las que falten), haya o no datos de ejemplo.
+     * Se sincronizan en cada arranque (se añaden las que falten y se actualiza su logo),
+     * haya o no datos de ejemplo.
      */
     static final String[][] CATALOGO_COMERCIALIZADORAS = {
-        { "Iberdrola", "Plan Estable", "assets/images/iberdrola.png" },
-        { "Endesa", "One Luz", "assets/images/endesa.png" },
-        { "Naturgy", "Tarifa Por Uso Luz", "assets/images/naturgy.png" },
-        { "TotalEnergies", "A Tu Aire Luz", null },
-        { "Repsol", "Tarifa Ahorro Plus", null },
-        { "Plenitude", "Fix Luz", null },
-        { "Niva Energía", "Tarifa Fija", null },
-        { "Gana Energía", "Tarifa Fija 24h", null },
-        { "Fox Energía", "Tarifa Fox", null },
-        { "CHC Energía", "Tarifa Fija", null },
-        { "Holaluz", "Tarifa Justa", null },
-        { "Octopus Energy", "Octopus Relax", null },
-        { "Audax Renovables", "Tarifa Fija", null },
-        { "Factor Energía", "Tarifa Fija", null },
-        { "Aldro Energía", "Tarifa Fija", null },
-        { "Som Energia", "Tarifa 2.0TD", null },
+        { "Iberdrola", "Plan Estable", LOGOS + "iberdrola.png" },
+        { "Endesa", "One Luz", LOGOS + "endesa.png" },
+        { "Naturgy", "Tarifa Por Uso Luz", LOGOS + "naturgy.png" },
+        { "TotalEnergies", "A Tu Aire Luz", LOGOS + "totalenergies.svg" },
+        { "Repsol", "Tarifa Ahorro Plus", LOGOS + "repsol.svg" },
+        { "Plenitude", "Fix Luz", LOGOS + "plenitude.svg" },
+        { "Niba", "Tarifa Niba", LOGOS + "niba.svg" },
+        { "Gana Energía", "Tarifa Fija 24h", LOGOS + "gana-energia.svg" },
+        { "Fox Energía", "Tarifa Fox", LOGOS + "fox-energia.png" },
+        { "CHC Energía", "Tarifa Fija", LOGOS + "chc-energia.svg" },
+        { "Holaluz", "Tarifa Justa", LOGOS + "holaluz.png" },
+        { "Octopus Energy", "Octopus Relax", LOGOS + "octopus-energy.svg" },
+        { "Audax Renovables", "Tarifa Fija", LOGOS + "audax-renovables.svg" },
+        { "Factor Energía", "Tarifa Fija", LOGOS + "factor-energia.svg" },
+        { "Som Energia", "Tarifa 2.0TD", LOGOS + "som-energia.svg" },
     };
+
+    /**
+     * Entradas antiguas del catálogo que se retiran si ningún cliente ni suministro las usa:
+     * "Niva Energía" era un error de nombre (la marca es Niba) y Aldro Energía pasó a ser Plenitude en 2022.
+     */
+    static final List<String> COMERCIALIZADORAS_RETIRADAS = List.of("Niva Energía", "Aldro Energía");
 
     @Override
     @Transactional
@@ -161,17 +169,36 @@ public class InicializarDatos implements CommandLineRunner {
                 empleadoRepository.count(), clienteRepository.count(), suministroRepository.count());
     }
 
-    /** Añade al catálogo las comercializadoras que falten (no modifica las existentes). */
+    /**
+     * Sincroniza el catálogo: añade las comercializadoras que falten, actualiza su logo y retira
+     * las entradas obsoletas que no estén en uso. No toca el plan de las existentes.
+     */
     private void sincronizarComercializadoras() {
         int nuevas = 0;
+        int logos = 0;
+        int retiradas = 0;
         for (String[] c : CATALOGO_COMERCIALIZADORAS) {
-            if (comercializadoraRepository.findByCompaniaContratadaIgnoreCase(c[0]).isEmpty()) {
+            Comercializadora existente = comercializadoraRepository.findByCompaniaContratadaIgnoreCase(c[0]).orElse(null);
+            if (existente == null) {
                 comercializadoraRepository.save(new Comercializadora(c[0], c[1], c[2]));
                 nuevas++;
+            } else if (c[2] != null && !c[2].equals(existente.getLogo())) {
+                existente.setLogo(c[2]);
+                comercializadoraRepository.save(existente);
+                logos++;
             }
         }
-        if (nuevas > 0) {
-            log.info("Catálogo de comercializadoras: {} añadidas ({} en total)", nuevas, comercializadoraRepository.count());
+        for (String nombre : COMERCIALIZADORAS_RETIRADAS) {
+            Comercializadora antigua = comercializadoraRepository.findByCompaniaContratadaIgnoreCase(nombre).orElse(null);
+            if (antigua != null && !clienteRepository.existsByComercializadora(antigua)
+                    && !suministroRepository.existsByComercializadora(antigua)) {
+                comercializadoraRepository.delete(antigua);
+                retiradas++;
+            }
+        }
+        if (nuevas + logos + retiradas > 0) {
+            log.info("Catálogo de comercializadoras: {} añadidas, {} logos actualizados, {} retiradas ({} en total)",
+                    nuevas, logos, retiradas, comercializadoraRepository.count());
         }
     }
 

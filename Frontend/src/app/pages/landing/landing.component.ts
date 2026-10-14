@@ -66,12 +66,27 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     { icono: 'bi-headset', titulo: 'Equipo comercial', texto: 'Alta de empleados, asignación de asesoría y reparto de clientes entre el equipo.' },
   ];
 
-  /** Comercializadoras colaboradoras (mismo catálogo que InicializarDatos en el backend). */
+  /**
+   * Comercializadoras colaboradoras (mismo catálogo que InicializarDatos en el backend).
+   * La landing es pública y el catálogo de la API requiere sesión, por eso se repite aquí.
+   */
   readonly comercializadoras = [
-    'Iberdrola', 'Endesa', 'Naturgy', 'TotalEnergies', 'Repsol', 'Plenitude', 'Niva Energía', 'Gana Energía',
-    'Fox Energía', 'CHC Energía', 'Holaluz', 'Octopus Energy', 'Audax Renovables', 'Factor Energía',
-    'Aldro Energía', 'Som Energia',
-  ];
+    { nombre: 'Iberdrola', logo: 'iberdrola.png' },
+    { nombre: 'Endesa', logo: 'endesa.png' },
+    { nombre: 'Naturgy', logo: 'naturgy.png' },
+    { nombre: 'TotalEnergies', logo: 'totalenergies.svg' },
+    { nombre: 'Repsol', logo: 'repsol.svg' },
+    { nombre: 'Plenitude', logo: 'plenitude.svg' },
+    { nombre: 'Niba', logo: 'niba.svg' },
+    { nombre: 'Gana Energía', logo: 'gana-energia.svg' },
+    { nombre: 'Fox Energía', logo: 'fox-energia.png' },
+    { nombre: 'CHC Energía', logo: 'chc-energia.svg' },
+    { nombre: 'Holaluz', logo: 'holaluz.png' },
+    { nombre: 'Octopus Energy', logo: 'octopus-energy.svg' },
+    { nombre: 'Audax Renovables', logo: 'audax-renovables.svg' },
+    { nombre: 'Factor Energía', logo: 'factor-energia.svg' },
+    { nombre: 'Som Energia', logo: 'som-energia.svg' },
+  ].map(c => ({ ...c, logo: 'assets/images/comercializadoras/' + c.logo }));
 
   constructor(public authService: AuthService, private zone: NgZone) {}
 

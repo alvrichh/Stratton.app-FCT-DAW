@@ -21,7 +21,10 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   private enLanding = false;
   private suscripcion?: Subscription;
   private observador?: ResizeObserver;
-  private readonly alHacerScroll = () => this.actualizarTransparencia();
+  private readonly alHacerScroll = () => {
+    this.actualizarTransparencia();
+    this.seguirContenidoLanding();
+  };
 
   constructor(public authService: AuthService, private router: Router, private zone: NgZone,
               private el: ElementRef<HTMLElement>) {
@@ -30,7 +33,10 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
       .subscribe(e => {
         this.enLanding = e.urlAfterRedirects.split(/[?#]/)[0] === '/';
         // Tras renderizar la nueva página
-        setTimeout(() => this.actualizarTransparencia());
+        setTimeout(() => {
+          this.actualizarTransparencia();
+          this.seguirContenidoLanding();
+        });
       });
   }
 
@@ -55,6 +61,30 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     const valor = this.enLanding && window.scrollY < window.innerHeight * 0.15;
     if (valor !== this.transparente) {
       this.zone.run(() => this.transparente = valor);
+    }
+  }
+
+  /**
+   * En la landing, cuando el contenido llega arriba la cabecera deja de estar fija y sube
+   * pegada a él (como si fuera el borde superior del telón). Al volver arriba reaparece.
+   * Se aplica directamente al estilo, fuera de Angular, para no lanzar detección de cambios en cada scroll.
+   */
+  private seguirContenidoLanding(): void {
+    const cabecera = this.el.nativeElement.querySelector<HTMLElement>('header');
+    if (!cabecera) {
+      return;
+    }
+    let desplazamiento = 0;
+    if (this.enLanding) {
+      const contenido = document.querySelector<HTMLElement>('app-landing .contenido');
+      if (contenido) {
+        const alto = cabecera.offsetHeight;
+        desplazamiento = Math.max(-alto - 16, Math.min(0, contenido.getBoundingClientRect().top - alto));
+      }
+    }
+    const transformacion = desplazamiento ? `translateY(${desplazamiento.toFixed(1)}px)` : '';
+    if (cabecera.style.transform !== transformacion) {
+      cabecera.style.transform = transformacion;
     }
   }
 

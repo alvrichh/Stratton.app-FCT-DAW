@@ -118,77 +118,63 @@
   margin-bottom: 1.25rem;
 }
 
-/* Cinta de comercializadoras en bucle continuo */
-.cinta {
-  position: relative;
-  overflow: hidden;
-  padding: 0.5rem 0;
-  border-radius: var(--st-radius);
-  outline: none;
-  /* Difumina los extremos */
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-
-.cinta:focus-visible {
-  outline: 3px solid rgba(3, 105, 161, 0.55);
-  outline-offset: 2px;
-}
-
-.cinta-pista {
-  display: flex;
-  width: max-content;
-  animation: cinta 45s linear infinite;
-}
-
-.cinta:hover .cinta-pista,
-.cinta:focus-within .cinta-pista {
-  animation-play-state: paused;
-}
-
-.cinta-lista {
+/* Cuadrícula de logotipos: 5 columnas en escritorio, 3 en tableta y 2 en móvil */
+.logos-lista {
   list-style: none;
-  display: flex;
-  gap: 0.75rem;
-  padding: 0 0.375rem;
+  padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-.cinta-lista li {
-  flex: none;
-  padding: 0.6rem 1.25rem;
+.logos-lista li {
+  display: grid;
+  place-items: center;
+  height: 96px;
+  padding: 1rem 1.25rem;
   border: 1px solid var(--st-border);
-  border-radius: 999px;
+  border-radius: var(--st-radius);
   background: var(--st-card);
-  color: var(--st-slate);
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
   box-shadow: var(--st-shadow-sm);
+  transition: transform 0.2s var(--st-ease), box-shadow 0.2s var(--st-ease), border-color 0.2s var(--st-ease);
 }
 
-@keyframes cinta {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.logos-lista li:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: var(--st-shadow);
 }
 
-/* Movimiento reducido: sin animación, todas visibles en varias filas */
-@media (prefers-reduced-motion: reduce) {
-  .cinta {
-    -webkit-mask-image: none;
-    mask-image: none;
+.logos-lista img {
+  max-width: 100%;
+  max-height: 48px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 991.98px) {
+  .logos-lista {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .cinta-pista {
-    animation: none;
-    width: auto;
+}
+
+@media (max-width: 575.98px) {
+  .logos-lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
   }
-  .cinta-lista {
-    flex-wrap: wrap;
-    justify-content: center;
+  .logos-lista li {
+    height: 80px;
+    padding: 0.75rem 1rem;
   }
-  .cinta-lista[aria-hidden='true'] {
-    display: none;
+  .logos-lista img {
+    max-height: 40px;
+  }
+  /* Si el número de logos es impar, el último ocupa las dos columnas para quedar centrado */
+  .logos-lista li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 }
 

@@ -424,8 +424,9 @@ class ApiIntegrationTests {
     void catalogosDisponiblesParaUsuariosAutenticados() throws Exception {
         mvc.perform(get("/api/v2/comercializadoras").header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(16)))
-                .andExpect(jsonPath("$[?(@.companiaContratada == 'Endesa')].logo", org.hamcrest.Matchers.contains("assets/images/endesa.png")))
+                .andExpect(jsonPath("$", hasSize(15)))
+                .andExpect(jsonPath("$[?(@.companiaContratada == 'Endesa')].logo", org.hamcrest.Matchers.contains("assets/images/comercializadoras/endesa.png")))
+                .andExpect(jsonPath("$[?(@.logo == null)]", hasSize(0)))
                 .andExpect(jsonPath("$[?(@.companiaContratada == 'Repsol')]", hasSize(1)));
         mvc.perform(get("/api/v2/asesorias").header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())

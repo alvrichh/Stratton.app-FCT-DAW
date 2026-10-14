@@ -1,49 +1,55 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Empleado } from './empleado';
+import { Empleado, EmpleadoRequest } from './empleado';
+import { Cliente } from '../clientes/cliente';
+import { Suministro } from '../clientes/suministro';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpleadoService {
 
-  //Esta URL obtiene el listado de todos los empleados en el backend
-  private baseURL = "http://localhost:8080/api/v2/empleados";
+  private baseURL = `${environment.apiUrl}/v2/empleados`;
 
-  constructor(private httpClient : HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  //Este método nos sirve para obtener los empleados
-  obtenerListaDeEmpleados():Observable<Empleado[]>{
-
-    return this.httpClient.get<Empleado[]>(`${this.baseURL}`)
+  obtenerListaDeEmpleados(): Observable<Empleado[]> {
+    return this.httpClient.get<Empleado[]>(this.baseURL);
   }
 
-  //Este método nos sirve para registrar un empleado
-  registrarEmpleado(empleado:Empleado) : Observable<Object>{
-    return this.httpClient.post(`${this.baseURL}`, empleado)
-
+  registrarEmpleado(empleado: EmpleadoRequest): Observable<Empleado> {
+    return this.httpClient.post<Empleado>(this.baseURL, empleado);
   }
 
-  actualizarEmpleado(id:number, empleado: Empleado) : Observable<Object>{
-    return this.httpClient.put(`${this.baseURL}/${id}`, empleado);
-
+  actualizarEmpleado(id: number, empleado: EmpleadoRequest): Observable<Empleado> {
+    return this.httpClient.put<Empleado>(`${this.baseURL}/${id}`, empleado);
   }
 
-  obtenerEmpleadoPorId(id:number):Observable<Empleado>{
+  obtenerEmpleadoPorId(id: number): Observable<Empleado> {
     return this.httpClient.get<Empleado>(`${this.baseURL}/${id}`);
-
   }
-  eliminarEmpleado(id:number): Observable<Object>{
-    return this.httpClient.delete(`${this.baseURL}/${id}`);
 
+  eliminarEmpleado(id: number): Observable<{ eliminar: boolean }> {
+    return this.httpClient.delete<{ eliminar: boolean }>(`${this.baseURL}/${id}`);
   }
-  obtenerPerfilEmpleado() {
-    return this.httpClient.get<any>(`${this.baseURL}/perfil`);
+
+  /** Perfil del empleado autenticado, con sus clientes. */
+  obtenerPerfilEmpleado(): Observable<Empleado> {
+    return this.httpClient.get<Empleado>(`${this.baseURL}/perfil`);
   }
 
   getTotalClientesPorEmpleado(id: number): Observable<number> {
-    const url = `${this.baseURL}/${id}/total-clientes`;
-    return this.httpClient.get<number>(url);
+    return this.httpClient.get<number>(`${this.baseURL}/${id}/total-clientes`);
+  }
+
+  obtenerClientesDeEmpleado(id: number): Observable<Cliente[]> {
+    return this.httpClient.get<Cliente[]>(`${this.baseURL}/${id}/clientes`);
+  }
+
+  /** Suministros de todos los clientes del empleado (para los contadores por estado). */
+  obtenerSuministrosDeClientes(id: number): Observable<Suministro[]> {
+    return this.httpClient.get<Suministro[]>(`${this.baseURL}/${id}/suministros-clientes`);
   }
 }

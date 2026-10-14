@@ -1,80 +1,74 @@
-<div class="container mt-5">
-    <h2 class="mb-4 text-center">Detalles del Empleado</h2>
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Detalles del empleado</h2>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div *ngIf="!empleado && !error" class="text-center py-5">
+    <div class="spinner-border text-light" role="status"><span class="visually-hidden">Cargando...</span></div>
+  </div>
+
+  <ng-container *ngIf="empleado">
     <div class="card">
-        <div class="row no-gutters">
-            <!-- Columna 1: Foto del empleado -->
-            <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
-                <img *ngIf="empleado.foto" [src]="empleado.foto" class="card-img img-fluid rounded-circle"
-                    alt="Foto de {{ empleado.nombre }}">
-                <div *ngIf="!empleado.foto" class="alert alert-info text-center">
-                    No hay foto disponible
-                </div>
-            </div>
-
-            <!-- Columna 2: Detalles del empleado -->
-            <div class="col-md-4">
-                <div class="card-body">
-                    <h3 class="card-title">{{ empleado.nombre }} {{ empleado.apellidos }}</h3>
-                    <p class="card-text"><strong>ID:</strong> {{ empleado.id }}</p>
-                    <p class="card-text"><strong>Email:</strong> {{ empleado.email }}</p>
-                    <p class="card-text"><strong>Usuario:</strong> {{ empleado.username }}</p>
-                    <p class="card-text"><strong>Asesoria:</strong> Stratton Global {{ empleado.asesoria }}</p>
-                    <p class="card-text"><strong>Roles:</strong> {{ empleado.role }}</p>
-                </div>
-            </div>
-
-            <!-- Columna 3: Estadísticas de suministros -->
-            <div class="col-md-4 mb-2 mt-2">
-                <div>
-                    <div class="bg-success text-white p-3 rounded">
-                        <h4 class="mb-0">Suministros Activos</h4>
-                        <h2>{{ totalClientes }}</h2>
-                    </div>
-                    <div class="bg-warning text-white p-3 rounded mt-2">
-                        <h4 class="mb-0">Suministros Pendientes</h4>
-                        <h2>{{ totalClientes }}</h2>
-                    </div>
-                    <div class="bg-danger text-white p-3 rounded mt-2">
-                        <h4 class="mb-0">Suministros K.O.</h4>
-                        <h2>{{ totalClientes }}</h2>
-                    </div>
-                </div>
-            </div>
+      <div class="row g-0">
+        <div class="col-md-3 d-flex align-items-center justify-content-center p-3">
+          <img src="assets/images/avatar.svg" class="img-fluid rounded-circle avatar" [alt]="'Foto de ' + empleado.nombre">
         </div>
-    </div>
-
-    <!-- Botones en la parte inferior -->
-    <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#clientesModal">
-            Ver Clientes
+        <div class="col-md-5">
+          <div class="card-body">
+            <h3 class="card-title">{{ empleado.nombre }} {{ empleado.apellidos }}</h3>
+            <p class="card-text mb-1"><strong>ID:</strong> {{ empleado.id }}</p>
+            <p class="card-text mb-1"><strong>Email:</strong> {{ empleado.email }}</p>
+            <p class="card-text mb-1"><strong>Usuario:</strong> {{ empleado.username }}</p>
+            <p class="card-text mb-1"><strong>Asesoría:</strong> {{ empleado.asesoria || 'Sin asignar' }}</p>
+            <p class="card-text mb-1"><strong>Roles:</strong>
+              <span *ngFor="let rol of empleado.roles" class="badge bg-secondary me-1">{{ rol }}</span>
+            </p>
+            <p class="card-text mb-1"><strong>Clientes:</strong> {{ empleado.totalClientes }}</p>
+          </div>
+        </div>
+        <div class="col-md-4 p-3">
+          <div class="bg-success text-white p-2 rounded mb-2"><small>Suministros activos</small><h4 class="mb-0">{{ contar('ACTIVO') }}</h4></div>
+          <div class="bg-warning text-dark p-2 rounded mb-2"><small>Suministros pendientes</small><h4 class="mb-0">{{ contar('PENDIENTE') }}</h4></div>
+          <div class="bg-danger text-white p-2 rounded"><small>Suministros K.O.</small><h4 class="mb-0">{{ contar('INACTIVO') }}</h4></div>
+        </div>
+      </div>
+      <div class="card-footer d-flex flex-wrap gap-2">
+        <a class="btn btn-secondary" routerLink="/empleados"><i class="bi bi-arrow-left"></i> Volver</a>
+        <a class="btn btn-warning" [routerLink]="['/actualizar-empleado', empleado.id]"><i class="bi bi-pencil-square"></i> Editar</a>
+        <button type="button" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#clientesModal">
+          <i class="bi bi-people"></i> Ver clientes ({{ empleado.clientes.length }})
         </button>
-        <button class="btn btn-secondary ml-2" routerLink="/empleados">Regresar</button>
+      </div>
     </div>
-</div>
 
-<!-- Modal para mostrar los clientes -->
-<div class="modal fade" id="clientesModal" tabindex="-1" role="dialog" aria-labelledby="clientesModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="clientesModalLabel">Clientes del Empleado {{ empleado.nombre }} {{
-                    empleado.apellidos }}</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Cerrar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Lista de clientes -->
-                <ul class="list-group">
-                    <li *ngFor="let cliente of empleado.clientes" class="list-group-item">
-                      {{ cliente.nombre }} - {{ cliente.apellidos }}
-                    </li>
-                  </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
+    <!-- Modal con los clientes del empleado -->
+    <div class="modal fade" id="clientesModal" tabindex="-1" aria-labelledby="clientesModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content text-dark">
+          <div class="modal-header">
+            <h5 class="modal-title" id="clientesModalLabel">Clientes de {{ empleado.nombre }} {{ empleado.apellidos }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <p *ngIf="!empleado.clientes.length" class="text-muted mb-0">Este empleado todavía no tiene clientes.</p>
+            <table *ngIf="empleado.clientes.length" class="table table-sm align-middle mb-0">
+              <thead><tr><th>Cliente</th><th>DNI</th><th>Teléfono</th><th>Comercializadora</th><th>CUPS</th><th></th></tr></thead>
+              <tbody>
+                <tr *ngFor="let cliente of empleado.clientes">
+                  <td>{{ cliente.nombre }} {{ cliente.apellidos }}</td>
+                  <td>{{ cliente.dni }}</td>
+                  <td>{{ cliente.telefono }}</td>
+                  <td>{{ cliente.companiaContratada || '—' }}</td>
+                  <td><code>{{ cliente.cups || '—' }}</code></td>
+                  <td><a [routerLink]="['/detalles-cliente', cliente.idCliente]" class="btn btn-info btn-sm" data-bs-dismiss="modal"><i class="bi bi-eye"></i></a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
         </div>
+      </div>
     </div>
+  </ng-container>
 </div>

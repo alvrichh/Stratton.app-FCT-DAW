@@ -1,137 +1,136 @@
 import { Component, OnInit } from '@angular/core';
 import { ClienteService } from '../cliente.service';
 import { Router, RouterLink } from '@angular/router';
-import { Cliente } from '../cliente'; // Importa la clase Cliente
+import { Cliente } from '../cliente';
 import { CommonModule } from '@angular/common';
-import swal from 'sweetalert2';
 import { AuthService } from '../../../auth.service';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { Alertas } from '../../../core/alertas';
+import { CatalogoService } from '../../../services/catalogo.service';
+import { Comercializadora } from '../../../services/catalogo.model';
+
+type ColumnaOrden = 'empleadoNombre' | 'apellidos' | 'dni' | 'telefono' | 'companiaContratada' | 'fechaSubidaContrato';
 
 @Component({
   selector: 'app-lista-clientes',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule], // No necesitas importar Empleado aquí
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './lista-clientes.component.html',
   styleUrl: './lista-clientes.component.css',
 })
 export class ListaClientesComponent implements OnInit {
-  orderBy: string = '';
-  order: string = 'asc'; // 'asc' or 'desc'
-o(arg0: string) {
-throw new Error('Method not implemented.');
-
-}
-sort(column: string): void {
-  if (this.orderBy === column) {
-    this.order = this.order === 'asc' ? 'desc' : 'asc';
-  } else {
-    this.orderBy = column;
-    this.order = 'asc';
-  }
-  // Lógica para ordenar filteredClientes según this.orderBy y this.order
-  this.filteredClientes.sort((a, b) => {
-    // Implementa la lógica de ordenación según el tipo de dato (cadena, número, fecha, etc.)
-    // Ejemplo básico:
-    if (this.order === 'asc') {
-      return a[column] > b[column] ? 1 : -1;
-    } else {
-      return a[column] < b[column] ? 1 : -1;
-    }
-  });
-}
-  clientes: Cliente[];
-  id: number;
+  clientes: Cliente[] = [];
   filteredClientes: Cliente[] = [];
-  isAdmin: boolean = false;
-  searchText: string = '';
-  selectedCompania: string = '';
-  empleados: any;
+  comercializadoras: Comercializadora[] = [];
+  cargando = true;
+  error: string | null = null;
+
+  searchText = '';
+  selectedCompania = '';
+  orderBy: ColumnaOrden = 'apellidos';
+  order: 'asc' | 'desc' = 'asc';
 
   constructor(
     private clienteService: ClienteService,
+    private catalogo: CatalogoService,
     private router: Router,
     public authService: AuthService
   ) {}
 
+  get esJefe(): boolean {
+    return this.authService.isJefe();
+  }
+
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      this.id = this.authService.getEmpleadoId(); // Obtén el ID del empleado logueado
-      this.isAdmin = this.authService.isAdmin(); // Verifica si el usuario es administrador
-      this.obtenerClientes();
-     // console.log(this.authService.getEmpleadoId());
-      this.filteredClientes = [...this.clientes];
-    }
+    this.catalogo.obtenerComercializadoras().subscribe({ next: c => this.comercializadoras = c, error: () => this.comercializadoras = [] });
+    this.obtenerClientes();
   }
 
-  private obtenerClientes() {
-    if (this.isAdmin) {
-      this.clienteService.obtenerListaDeClientes().subscribe((data) => {
+  obtenerClientes(): void {
+    this.cargando = true;
+    this.error = null;
+    this.clienteService.obtenerListaDeClientes().subscribe({
+      next: (data) => {
         this.clientes = data;
-        this.filteredClientes = [...this.clientes]; // Inicialmente muestra todos los clientes
-
-      });
-    } else {
-      this.clienteService.obtenerClientesPorEmpleado(this.id).subscribe((data) => {
-          this.clientes = data;
-          this.filteredClientes = [...this.clientes]; // Inicialmente muestra todos los clientes
-
-        });
-    }
-  }
-
-  verCliente(id: number) {
-    this.router.navigate(['detalles-cliente', id]);
-  }
-
-  actualizarCliente(id: number) {
-    this.router.navigate(['actualizar-cliente', id]);
-  }
-
-  eliminarCliente(id: number) {
-    swal({
-      title: '¿Estas seguro?',
-      text: 'Confirma si deseas eliminar al cliente',
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si , elimínalo',
-      cancelButtonText: 'No, cancelar',
-      confirmButtonClass: 'btn btn-success',
-      cancelButtonClass: 'btn btn-danger',
-      buttonsStyling: true,
-    }).then((result) => {
-      if (result.value) {
-        this.clienteService.eliminarCliente(id).subscribe((dato) => {
-          console.log(dato);
-          this.obtenerClientes();
-          swal(
-            'Cliente eliminado',
-            'El Cliente ha sido eliminado con exito',
-            'success'
-          );
-        });
+        this.cargando = false;
+        this.applyFilter();
+      },
+      error: (err) => {
+        this.cargando = false;
+        this.error = Alertas.mensajeDe(err);
       }
     });
   }
-  /*
-  FILTRO DE BÚSQUEDA (NO FUNCIONA)
-  */
-  applyFilter(): void {
-    const searchText = this.searchText.toLowerCase().trim();
-    this.sort(this.orderBy); // Aplica la ordenación actual después del filtrado
 
-    if (searchText) {
-      this.filteredClientes = this.clientes.filter(cliente =>
-        cliente.nombre.toLowerCase().includes(searchText) ||
-        cliente.apellidos.toLowerCase().includes(searchText) ||
-        cliente.dni.toLowerCase().includes(searchText) ||
-        cliente.companiaContratada.toLowerCase().includes(searchText) ||
-        cliente.fechaSubidaContrato.toLowerCase().includes(searchText)
-      );
-    } else {
-      this.filteredClientes = [...this.clientes]; // Mostrar todos los clientes si no hay texto de búsqueda
-    }
+  /** Normaliza texto para buscar sin tildes ni mayúsculas. */
+  private normalizar(texto: unknown): string {
+    return String(texto ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   }
-  
+
+  applyFilter(): void {
+    const texto = this.normalizar(this.searchText.trim());
+    let resultado = this.clientes;
+    if (this.selectedCompania) {
+      resultado = resultado.filter(c => c.companiaContratada === this.selectedCompania);
+    }
+    if (texto) {
+      resultado = resultado.filter(c =>
+        this.normalizar(`${c.nombre} ${c.apellidos}`).includes(texto) ||
+        this.normalizar(c.dni).includes(texto) ||
+        this.normalizar(c.telefono).includes(texto) ||
+        this.normalizar(c.email).includes(texto) ||
+        this.normalizar(c.cups).includes(texto) ||
+        this.normalizar(c.companiaContratada).includes(texto) ||
+        this.normalizar(c.empleadoNombre).includes(texto)
+      );
+    }
+    this.filteredClientes = this.ordenar([...resultado]);
+  }
+
+  sort(column: ColumnaOrden): void {
+    if (this.orderBy === column) {
+      this.order = this.order === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.orderBy = column;
+      this.order = 'asc';
+    }
+    this.filteredClientes = this.ordenar([...this.filteredClientes]);
+  }
+
+  private ordenar(lista: Cliente[]): Cliente[] {
+    const col = this.orderBy;
+    const dir = this.order === 'asc' ? 1 : -1;
+    return lista.sort((a, b) => {
+      const va = this.normalizar(a[col]);
+      const vb = this.normalizar(b[col]);
+      return va.localeCompare(vb, 'es', { numeric: true }) * dir;
+    });
+  }
+
+  logoDe(cliente: Cliente): string | undefined {
+    return cliente.logo || this.comercializadoras.find(c => c.companiaContratada === cliente.companiaContratada)?.logo;
+  }
+
+  verCliente(id: number): void {
+    this.router.navigate(['/detalles-cliente', id]);
+  }
+
+  actualizarCliente(id: number): void {
+    this.router.navigate(['/actualizar-cliente', id]);
+  }
+
+  async eliminarCliente(cliente: Cliente): Promise<void> {
+    const confirmado = await Alertas.confirmar('¿Eliminar cliente?',
+      `Se eliminará a ${cliente.nombre} ${cliente.apellidos} y sus ${cliente.suministros?.length ?? 0} suministro(s).`, 'Sí, eliminar');
+    if (!confirmado) {
+      return;
+    }
+    this.clienteService.eliminarCliente(cliente.idCliente).subscribe({
+      next: () => {
+        Alertas.exito('Cliente eliminado', 'El cliente se ha eliminado correctamente');
+        this.obtenerClientes();
+      },
+      error: (err) => Alertas.error(err, 'No se pudo eliminar el cliente'),
+    });
+  }
 }

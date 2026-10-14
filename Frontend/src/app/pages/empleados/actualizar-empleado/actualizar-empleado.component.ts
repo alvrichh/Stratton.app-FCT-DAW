@@ -1,55 +1,65 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EmpleadoService } from '../empleado.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Empleado } from '../empleado';
+import { Empleado, EmpleadoRequest, Rol } from '../empleado';
+import { Alertas } from '../../../core/alertas';
+import { EmpleadoFormComponent } from '../empleado-form/empleado-form.component';
 
 @Component({
   selector: 'app-actualizar-empleado',
   standalone: true,
-  imports: [ CommonModule, FormsModule],
+  imports: [CommonModule, RouterLink, EmpleadoFormComponent],
   templateUrl: './actualizar-empleado.component.html',
   styleUrl: './actualizar-empleado.component.css'
 })
-export class ActualizarEmpleadoComponent implements OnInit{
+export class ActualizarEmpleadoComponent implements OnInit {
 
-  id: number;
-  empleado: Empleado = new Empleado();
+  id!: number;
+  empleado?: EmpleadoRequest;
+  original?: Empleado;
+  guardando = false;
 
-  constructor(private empleadoServicio:EmpleadoService, private router:Router, private route: ActivatedRoute){}
+  constructor(private empleadoServicio: EmpleadoService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
-    this.obtenerEmpleado(this.id);
-  }
-
-  obtenerEmpleado(id: number) {
-    this.empleadoServicio.obtenerEmpleadoPorId(id).subscribe(
-      data => {
-        console.log(data);
-        this.empleado = data;
+    this.id = Number(this.route.snapshot.params['id']);
+    this.empleadoServicio.obtenerEmpleadoPorId(this.id).subscribe({
+      next: (e) => {
+        this.original = e;
+        this.empleado = {
+          nombre: e.nombre,
+          apellidos: e.apellidos,
+          username: e.username,
+          email: e.email,
+          password: '',
+          roles: (e.roles ?? []) as Rol[],
+          asesoriaId: e.asesoriaId ?? null,
+        };
       },
-      error => console.log(error)
-    );
+      error: (error) => {
+        Alertas.error(error, 'No se pudo cargar el empleado');
+        this.router.navigate(['/empleados']);
+      }
+    });
   }
 
-  onSubmit(){
-    console.log(this.empleado)
-    this.actualizarEmpleado();
-  }
-
-  actualizarEmpleado(){
-    this.empleadoServicio.actualizarEmpleado(this.id, this.empleado).subscribe(
-      data => {
-        console.log(data);
-        this.verListaEmpleados();
+  actualizarEmpleado(datos: EmpleadoRequest): void {
+    this.guardando = true;
+    this.empleadoServicio.actualizarEmpleado(this.id, datos).subscribe({
+      next: () => {
+        this.guardando = false;
+        Alertas.exito('Empleado actualizado', 'Los cambios se han guardado correctamente');
+        this.router.navigate(['/empleados']);
       },
-      error => console.log(error)
-    );
+      error: (error) => {
+        this.guardando = false;
+        Alertas.error(error, 'No se pudo actualizar el empleado');
+      }
+    });
   }
 
-  verListaEmpleados(){
-    this.router.navigate(["/empleados"]);
+  volver(): void {
+    this.router.navigate(['/empleados']);
   }
 }

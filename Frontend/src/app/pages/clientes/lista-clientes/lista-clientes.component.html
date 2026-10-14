@@ -1,87 +1,85 @@
-<div *ngIf="authService.isLoggedIn(); else notLoggedIn" class="ml-3 mr-3">
-  <h2 class="mt-4">Lista de Clientes</h2>
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <button class="btn btn-warning mr-5" routerLink="/registrar-cliente">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
-        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
-      </svg> Añadir Cliente
-    </button>
-  
-    <div class="form-group mb-0 mr-2">
-      <select class="form-control form-control-sm mr-2" [(ngModel)]="selectedCompania">
-        <option value="">Comercializadora</option>
-        <option value="Endesa">Endesa</option>
-        <option value="Iberdrola">Iberdrola</option>
-        <option value="Naturgy">Naturgy</option>
+<div class="container-fluid px-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 mb-3 gap-2">
+    <h2 class="mb-0"><i class="bi bi-people"></i> {{ esJefe ? 'Todos los clientes' : 'Mis clientes' }}
+      <span class="badge bg-secondary fs-6 align-middle">{{ filteredClientes.length }}</span>
+    </h2>
+    <a class="btn btn-warning" routerLink="/registrar-cliente"><i class="bi bi-person-plus-fill"></i> Añadir cliente</a>
+  </div>
+
+  <div class="row g-2 align-items-center mb-3">
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="selectedCompania" (change)="applyFilter()" aria-label="Filtrar por comercializadora">
+        <option value="">Todas las comercializadoras</option>
+        <option *ngFor="let c of comercializadoras" [value]="c.companiaContratada">{{ c.companiaContratada }}</option>
       </select>
     </div>
-  
-    <input type="text" class="form-control form-control-sm mr-2 search-input" [(ngModel)]="searchText" placeholder="Buscar..." (input)="applyFilter()">
-    <button class="btn btn-primary search-button">
-      <span class="search-icon">🔍</span>
-    </button>
-  </div>
-  
-  <div class="row justify-content-center">
     <div class="col-md-6">
-      <div class="mt-4">
-        <img *ngIf="selectedCompania === 'Endesa'" src="assets/images/endesa.png" alt="Endesa" class="img-thumbnail">
-        <img *ngIf="selectedCompania === 'Iberdrola'" src="assets/images/iberdrola.png" alt="Iberdrola" class="img-thumbnail">
-        <img *ngIf="selectedCompania === 'Naturgy'" src="assets/images/naturgy.png" alt="Naturgy" class="img-thumbnail">
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+        <input type="search" class="form-control search-input" [(ngModel)]="searchText" (input)="applyFilter()"
+          placeholder="Buscar por nombre, DNI, teléfono, email, CUPS o asesor..." aria-label="Buscar clientes">
       </div>
     </div>
+    <div class="col-md-3 text-md-end" *ngIf="selectedCompania">
+      <img *ngFor="let c of comercializadoras" [hidden]="c.companiaContratada !== selectedCompania" [src]="c.logo" [alt]="c.companiaContratada" class="logo-comercializadora" style="max-height: 40px;">
+    </div>
   </div>
-  
 
-  <div class="table-responsive">
-    <table class="table table-striped">
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border text-light" role="status"><span class="visually-hidden">Cargando...</span></div>
+  </div>
+
+  <div class="table-responsive" *ngIf="!cargando && !error">
+    <table class="table table-striped table-hover align-middle">
       <thead class="table-dark">
         <tr>
-          <th *ngIf="isAdmin" (click)="sort('nombre')" scope="col">Asesor <span class="arrow" *ngIf="orderBy === 'nombre'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th (click)="sort('nombre')" scope="col">Nombre Completo <span class="arrow" *ngIf="orderBy === 'nombre'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th (click)="sort('dni')" scope="col">DNI <span class="arrow" *ngIf="orderBy === 'dni'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th (click)="sort('telefono')" scope="col">Telefono <span class="arrow" *ngIf="orderBy === 'telefono'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th (click)="sort('companiaContratada')" scope="col">Comercializadora <span class="arrow" *ngIf="orderBy === 'companiaContratada'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
-          <th (click)="sort('fechaSubidaContrato')" scope="col">Fecha Subida Contrato <span class="arrow" *ngIf="orderBy === 'fechaSubidaContrato'">&nbsp;{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th *ngIf="esJefe" class="sortable" (click)="sort('empleadoNombre')" scope="col">Asesor
+            <span *ngIf="orderBy === 'empleadoNombre'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th class="sortable" (click)="sort('apellidos')" scope="col">Nombre completo
+            <span *ngIf="orderBy === 'apellidos'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th class="sortable" (click)="sort('dni')" scope="col">DNI
+            <span *ngIf="orderBy === 'dni'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th class="sortable" (click)="sort('telefono')" scope="col">Teléfono
+            <span *ngIf="orderBy === 'telefono'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th scope="col">CUPS</th>
+          <th class="sortable" (click)="sort('companiaContratada')" scope="col">Comercializadora
+            <span *ngIf="orderBy === 'companiaContratada'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
+          <th class="sortable" (click)="sort('fechaSubidaContrato')" scope="col">Fecha contrato
+            <span *ngIf="orderBy === 'fechaSubidaContrato'">{{ order === 'asc' ? '▲' : '▼' }}</span></th>
           <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let cliente of filteredClientes">
-          <td *ngIf="isAdmin">alvrich</td>
+          <td *ngIf="esJefe">{{ cliente.empleadoNombre || '—' }}</td>
           <td>{{ cliente.nombre }} {{ cliente.apellidos }}</td>
           <td>{{ cliente.dni }}</td>
           <td>{{ cliente.telefono }}</td>
           <td>
-            {{ cliente.companiaContratada }}
-            <div *ngIf="cliente.logo">
-              <img [src]="cliente.logo" alt="Logo Comercializadora" class="img-thumbnail" width="100">
-            </div>
+            <code *ngIf="cliente.cups; else sinCups">{{ cliente.cups }}</code>
+            <span *ngIf="cliente.suministros?.length > 1" class="badge bg-info ms-1" title="Suministros">+{{ cliente.suministros.length - 1 }}</span>
+            <ng-template #sinCups><span class="text-muted">—</span></ng-template>
           </td>
-          <td>{{ cliente.fechaSubidaContrato }}</td>
-          <td class="d-flex">
-            <button (click)="verCliente(cliente.idCliente)" class="btn btn-info mr-2">
-              <i class="bi bi-eye"></i> Ver
-            </button>
-            <button (click)="actualizarCliente(cliente.idCliente)" class="btn btn-warning mr-2">
-              <i class="bi bi-pencil-square"></i> Editar
-            </button>
-            <button (click)="eliminarCliente(cliente.idCliente)" class="btn btn-danger">
-              <i class="bi bi-trash3"></i> Borrar
-            </button>
+          <td>
+            <img *ngIf="logoDe(cliente)" [src]="logoDe(cliente)" [alt]="cliente.companiaContratada" class="logo-comercializadora me-1">
+            {{ cliente.companiaContratada || '—' }}
+          </td>
+          <td>{{ cliente.fechaSubidaContrato ? (cliente.fechaSubidaContrato | date:'dd/MM/yyyy') : '—' }}</td>
+          <td class="text-nowrap">
+            <button (click)="verCliente(cliente.idCliente)" class="btn btn-info btn-sm me-1" title="Ver detalle"><i class="bi bi-eye"></i> Ver</button>
+            <button (click)="actualizarCliente(cliente.idCliente)" class="btn btn-warning btn-sm me-1" title="Editar"><i class="bi bi-pencil-square"></i> Editar</button>
+            <button (click)="eliminarCliente(cliente)" class="btn btn-danger btn-sm" title="Eliminar"><i class="bi bi-trash3"></i> Borrar</button>
           </td>
         </tr>
         <tr *ngIf="filteredClientes.length === 0">
-          <td colspan="7" class="text-center">No se encontraron resultados</td>
+          <td [attr.colspan]="esJefe ? 8 : 7" class="text-center py-4">
+            <span *ngIf="clientes.length === 0; else sinResultados">Todavía no tienes clientes. <a routerLink="/registrar-cliente">Registra el primero</a>.</span>
+            <ng-template #sinResultados>No se encontraron resultados para la búsqueda.</ng-template>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-
-<ng-template #notLoggedIn>
-  <div class="alert alert-warning mt-4" role="alert">
-    Debes iniciar sesión para ver la lista de clientes.
-  </div>
-</ng-template>

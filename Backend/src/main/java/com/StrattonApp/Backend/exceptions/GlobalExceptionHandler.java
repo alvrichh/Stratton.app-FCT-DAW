@@ -21,6 +21,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,6 +69,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ MethodArgumentTypeMismatchException.class, MissingServletRequestParameterException.class })
     public ResponseEntity<ApiError> handleBadParameter(Exception ex, HttpServletRequest req) {
         return build(HttpStatus.BAD_REQUEST, "Parámetro de la petición no válido", req, null);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiError> handleUploadSize(MaxUploadSizeExceededException ex, HttpServletRequest req) {
+        return build(HttpStatus.PAYLOAD_TOO_LARGE, "El archivo es demasiado grande (máximo 10 MB)", req, null);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

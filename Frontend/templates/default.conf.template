@@ -24,6 +24,8 @@ server {
         proxy_set_header X-Forwarded-Host $host;
         # En planes gratuitos el backend se duerme y tarda en despertar
         proxy_read_timeout 180s;
+        # Facturas del comparador (PDF o foto)
+        client_max_body_size 10m;
     }
 
     # Documentación de la API (Swagger UI)

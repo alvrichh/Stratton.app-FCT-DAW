@@ -102,7 +102,7 @@ public class ClienteServiceImpl implements ClienteService {
         validarMayoriaDeEdad(request.getFechaNacimiento());
 
         Cliente cliente = new Cliente();
-        aplicarDatos(cliente, request);
+        aplicarDatos(cliente, request, true);
         cliente.setEmpleado(empleado);
         cliente.setAsesoria(empleado.getAsesoria());
         if (cliente.getFechaSubidaContrato() == null) {
@@ -125,7 +125,7 @@ public class ClienteServiceImpl implements ClienteService {
         validarUnicidad(request, clienteId);
         validarMayoriaDeEdad(request.getFechaNacimiento());
 
-        aplicarDatos(cliente, request);
+        aplicarDatos(cliente, request, false);
 
         Empleado actual = SecurityUtils.currentEmpleado();
         if (request.getEmpleadoId() != null && actual.isJefe()
@@ -169,7 +169,11 @@ public class ClienteServiceImpl implements ClienteService {
         return cliente;
     }
 
-    private void aplicarDatos(Cliente cliente, ClienteRequest request) {
+    /**
+     * Copia los datos de la petición al cliente. Al crear, la fecha de subida del contrato
+     * es hoy si no se indica; al actualizar se guarda tal cual (nula = sin fecha).
+     */
+    private void aplicarDatos(Cliente cliente, ClienteRequest request, boolean esNuevo) {
         cliente.setNombre(request.getNombre().trim());
         cliente.setApellidos(request.getApellidos().trim());
         cliente.setDni(request.getDni().trim().toUpperCase());
@@ -177,7 +181,7 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setTelefono(request.getTelefono().trim());
         cliente.setDireccion(request.getDireccion() == null ? null : request.getDireccion().trim());
         cliente.setIban(normalizarIban(request.getIban()));
-        if (request.getFechaSubidaContrato() != null) {
+        if (request.getFechaSubidaContrato() != null || !esNuevo) {
             cliente.setFechaSubidaContrato(request.getFechaSubidaContrato());
         }
         cliente.setFechaNacimiento(request.getFechaNacimiento());

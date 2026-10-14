@@ -32,8 +32,8 @@
     <div class="col-md-4 mb-3">
       <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
       <input type="date" class="form-control" id="fechaNacimiento" [(ngModel)]="cliente.fechaNacimiento" name="fechaNacimiento"
-        [max]="fechaMayorEdad" #fechaNacimiento="ngModel" [class.is-invalid]="fechaNacimiento.invalid && fechaNacimiento.touched">
-      <div class="invalid-feedback">El titular debe ser mayor de edad.</div>
+        [max]="fechaMayorEdad" [appMaxDate]="fechaMayorEdad" #fechaNacimiento="ngModel" [class.is-invalid]="fechaNacimiento.invalid && fechaNacimiento.touched">
+      <div class="invalid-feedback">El titular del contrato debe ser mayor de edad (RN-1).</div>
     </div>
   </div>
 
@@ -81,12 +81,15 @@
     </div>
     <div class="col-md-4 mb-3">
       <label for="potencia" class="form-label">Potencia contratada (kW)</label>
-      <input type="number" class="form-control" id="potencia" [(ngModel)]="cliente.potencia" name="potencia" min="0" step="0.01" placeholder="3.45">
+      <input type="number" class="form-control" id="potencia" [(ngModel)]="cliente.potencia" name="potencia" min="0" step="0.01" placeholder="3.45"
+        #potencia="ngModel" [class.is-invalid]="potencia.invalid && potencia.touched">
+      <div class="invalid-feedback">La potencia no puede ser negativa.</div>
     </div>
     <div class="col-md-4 mb-3">
       <label for="fechaSubidaContrato" class="form-label">Fecha de subida del contrato</label>
       <input type="date" class="form-control" id="fechaSubidaContrato" [(ngModel)]="cliente.fechaSubidaContrato"
-        name="fechaSubidaContrato" [max]="hoy">
+        name="fechaSubidaContrato" [max]="hoy" [appMaxDate]="hoy" #fechaContrato="ngModel" [class.is-invalid]="fechaContrato.invalid && fechaContrato.touched">
+      <div class="invalid-feedback">La fecha no puede ser posterior a hoy.</div>
     </div>
   </div>
 
@@ -100,8 +103,8 @@
     <div class="col-md-6 mb-3" *ngIf="authService.isAdmin() && empleados.length">
       <label for="empleadoId" class="form-label">Asesor asignado</label>
       <select class="form-select" id="empleadoId" [(ngModel)]="cliente.empleadoId" name="empleadoId">
-        <option [ngValue]="undefined">Yo ({{ authService.getNombre() }})</option>
-        <option *ngFor="let e of empleados" [ngValue]="e.id">{{ e.nombre }} {{ e.apellidos }} ({{ e.username }})</option>
+        <option [ngValue]="valorYo">Yo ({{ authService.getNombre() }})</option>
+        <option *ngFor="let e of otrosEmpleados" [ngValue]="e.id">{{ e.nombre }} {{ e.apellidos }} ({{ e.username }})</option>
       </select>
     </div>
   </div>

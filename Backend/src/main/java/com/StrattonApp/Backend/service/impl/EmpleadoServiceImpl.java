@@ -156,10 +156,13 @@ public class EmpleadoServiceImpl implements EmpleadoService {
             roles.add(Role.USER);
         }
         empleado.setRoles(roles);
+        // asesoriaId nulo = sin asignar (permite quitar la asesoría al editar)
         if (request.getAsesoriaId() != null) {
             Asesoria asesoria = asesoriaRepository.findById(request.getAsesoriaId())
                     .orElseThrow(() -> new ResourceNotFoundException("No existe la asesoría con el ID: " + request.getAsesoriaId()));
             empleado.setAsesoria(asesoria);
+        } else {
+            empleado.setAsesoria(null);
         }
     }
 }

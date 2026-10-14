@@ -43,6 +43,12 @@ export interface ClienteRequest {
   empleadoId?: number;
 }
 
+/** Fecha en formato yyyy-MM-dd en la zona horaria local (no UTC). */
+export function fechaLocal(d: Date): string {
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
 export function clienteVacio(): ClienteRequest {
   return {
     nombre: '',
@@ -52,7 +58,7 @@ export function clienteVacio(): ClienteRequest {
     telefono: '',
     direccion: '',
     iban: '',
-    fechaSubidaContrato: new Date().toISOString().substring(0, 10),
+    fechaSubidaContrato: fechaLocal(new Date()),
     fechaNacimiento: '',
     cups: '',
     companiaContratada: '',

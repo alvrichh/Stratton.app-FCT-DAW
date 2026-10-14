@@ -25,7 +25,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && esApi && !esLogin) {
         authService.logout();
-        router.navigate(['/login'], { queryParams: { expirada: 1 } });
+        router.navigate(['/login'], { queryParams: { expirada: 1, returnUrl: router.url } });
       }
       return throwError(() => error);
     })

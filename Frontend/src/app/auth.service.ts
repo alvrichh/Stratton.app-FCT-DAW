@@ -31,6 +31,8 @@ const TOKEN_KEY = 'token';
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/v1/auth`;
   private jwtHelper = new JwtHelperService();
+  /** Caché de los claims decodificados del token actual (se decodifica una sola vez por token). */
+  private claimsCache: { token: string; claims: any } | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -57,10 +59,29 @@ export class AuthService {
     if (!token) {
       return null;
     }
+    if (this.claimsCache && this.claimsCache.token === token) {
+      return this.claimsCache.claims;
+    }
+    let claims: any = null;
     try {
-      return this.jwtHelper.decodeToken(token);
+      claims = this.jwtHelper.decodeToken(token);
     } catch {
-      return null;
+      claims = null;
+    }
+    this.claimsCache = { token, claims };
+    return claims;
+  }
+
+  /** true si hay un token guardado pero ya ha caducado. */
+  tokenCaducado(): boolean {
+    const token = this.getToken();
+    if (!token) {
+      return false;
+    }
+    try {
+      return this.jwtHelper.isTokenExpired(token);
+    } catch {
+      return true;
     }
   }
 
@@ -122,6 +143,6 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem('empleadoId');
+    this.claimsCache = null;
   }
 }

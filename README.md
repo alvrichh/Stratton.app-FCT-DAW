@@ -56,7 +56,9 @@ cd Backend && mvn spring-boot:run -Dspring-boot.run.profiles=h2
 cd Frontend && npm install && npm start
 ```
 
-Todas las propiedades del backend se configuran con variables de entorno (`BBDD_HOST`, `BBDD_PORT`, `BBDD_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `DDL_AUTO`, `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `SEED_DATA`, `SEED_RESET`...). Ver `Backend/src/main/resources/application.properties`.
+Todas las propiedades del backend se configuran con variables de entorno (`BBDD_HOST`, `BBDD_PORT`, `BBDD_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `DDL_AUTO`, `JWT_SECRET`, `CORS_ALLOWED_ORIGINS`, `SEED_DATA`, `SEED_RESET`, `REGISTRO_ABIERTO`...). Ver `Backend/src/main/resources/application.properties`.
+
+> **Seguridad:** si `JWT_SECRET` no está definido, el backend genera una clave aleatoria en cada arranque (los usuarios tendrán que volver a iniciar sesión al reiniciar). En producción define siempre una clave propia: `openssl rand -base64 32`. Con `REGISTRO_ABIERTO=false` se desactiva el auto-registro y solo el ADMIN puede crear empleados.
 
 ### Usuarios de ejemplo
 
@@ -71,8 +73,8 @@ Al arrancar con la base de datos vacía se cargan datos de ejemplo (2 asesorías
 ### Tests
 
 ```bash
-cd Backend && mvn test          # 16 tests de integración (JUnit + MockMvc sobre H2)
-cd Frontend && npm test         # Karma/Jasmine en ChromeHeadless
+cd Backend && mvn test          # 21 tests de integración (JUnit + MockMvc sobre H2)
+cd Frontend && npm test         # 25 tests unitarios (Karma/Jasmine en ChromeHeadless)
 ```
 
 

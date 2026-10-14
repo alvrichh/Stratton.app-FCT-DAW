@@ -45,6 +45,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private ctx?: gsap.Context;
   private mm?: gsap.MatchMedia;
+  private observador?: IntersectionObserver;
   private readonly alRedimensionar = () => this.zone.run(() => this.calcularEncuadre(true));
 
   /** Pantalla en vertical (móvil): se encuadra la zona del texto en lugar de toda la escena. */
@@ -124,18 +125,6 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             .fromTo('.mountBg', { y: () => -10 + s() }, { y: -100 }, 0)
             .fromTo('.mountMg', { y: () => -30 + s() }, { y: -250 }, 0)
             .fromTo('.mountFg', { y: () => -50 + s() }, { y: -600 }, 0);
-
-          // Aparición suave del contenido al llegar a cada bloque
-          gsap.utils.toArray<HTMLElement>('.revelar').forEach(el => {
-            gsap.from(el.children, {
-              opacity: 0,
-              y: 24,
-              duration: 0.6,
-              ease: 'power2.out',
-              stagger: 0.08,
-              scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-            });
-          });
         });
 
         // Con movimiento reducido la escena se muestra en su estado inicial, sin parallax
@@ -144,7 +133,33 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
           gsap.set(['.mountBg', '.mountMg', '.mountFg', '.cloud2', '.cloud3'], { y: () => this.desplazamiento });
         });
       }, this.hero.nativeElement.parentElement ?? this.hero.nativeElement);
+
+      this.observarApariciones();
     });
+  }
+
+  /**
+   * Aparición suave de cada bloque .revelar al entrar en pantalla: se añade la clase "visible"
+   * y la transición la hace el CSS (con un pequeño retardo por elemento mediante --i).
+   * Con IntersectionObserver en lugar de ScrollTrigger: no depende del cálculo de posiciones
+   * del parallax y no compite con las transiciones de las tarjetas al pasar el ratón.
+   */
+  private observarApariciones(): void {
+    const bloques = Array.from(this.contenido.nativeElement.querySelectorAll<HTMLElement>('.revelar'));
+    bloques.forEach(b => Array.from(b.children).forEach((hijo, i) => (hijo as HTMLElement).style.setProperty('--i', String(i))));
+    if (!('IntersectionObserver' in window)) {
+      bloques.forEach(b => b.classList.add('visible'));
+      return;
+    }
+    this.observador = new IntersectionObserver(entradas => {
+      for (const e of entradas) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          this.observador?.unobserve(e.target);
+        }
+      }
+    }, { rootMargin: '0px 0px -10% 0px' });
+    bloques.forEach(b => this.observador!.observe(b));
   }
 
   /**
@@ -211,6 +226,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     window.removeEventListener('resize', this.alRedimensionar);
+    this.observador?.disconnect();
     // Elimina los ScrollTrigger al salir de la página (si no, seguirían escuchando el scroll)
     this.mm?.revert();
     this.ctx?.revert();

@@ -1,0 +1,52 @@
+/* Sección que se recorre con el scroll: su altura marca la duración del parallax */
+.hero {
+  position: relative;
+  height: 200vh;
+  background: #fff;
+}
+
+/* La escena ocupa todo el ancho y se queda pegada arriba mientras se recorre la sección */
+.escena {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #fff;
+}
+
+.escena svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.escena text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 99px;
+  text-anchor: start;
+}
+
+.arrow-btn {
+  cursor: pointer;
+  outline: none;
+}
+
+/* Contenido claro tras la escena (el fondo general de la app es oscuro) */
+.contenido {
+  background: #f8f9fa;
+  color: #212529;
+}
+
+.contenido .card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contenido .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1.5rem rgba(22, 42, 67, 0.15) !important;
+}
+
+.contenido h1 {
+  color: #162a43;
+}

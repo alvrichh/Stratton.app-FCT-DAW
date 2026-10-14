@@ -205,27 +205,17 @@ print(ubicacion)
   3. Confirma la eliminación del cliente seleccionado.
   4. El cliente seleccionado es eliminado del sistema junto con todos sus datos asociados.
 
-## Dependencias Springboot:
-- Spring Boot Starter Web:
-Esta dependencia proporciona las funcionalidades básicas para crear aplicaciones web con Spring Boot.
-Incluye el servidor web incorporado (por defecto, Tomcat) y otras utilidades web.
-Agrega automáticamente otras dependencias relacionadas con la web.
-- Spring Boot Starter Security:
-Esta dependencia agrega todas las bibliotecas necesarias para habilitar la seguridad en nuestra aplicación.
-Incluye Spring Security, que nos permite configurar la autenticación y la autorización.
-También proporciona características como protección CSRF, manejo de sesiones, etc.
-- Spring Boot Starter Data JPA (opcional, pero recomendado):
-Si planeas trabajar con una base de datos, esta dependencia simplifica la configuración de JPA (Java Persistence API).
-Te permite interactuar fácilmente con bases de datos relacionales.
-- Spring Boot Starter Thymeleaf (opcional, si planeas usar Thymeleaf como motor de plantillas):
-Thymeleaf es un motor de plantillas que se integra bien con Spring Boot.
-Facilita la creación de vistas HTML dinámicas.
-- Spring Boot Starter OAuth2 Client (para autenticación con Google):
-Esta dependencia nos permite integrar la autenticación con proveedores OAuth2, como Google.
-Simplifica la configuración para conectarse con servicios de autenticación externos.
-- Spring Boot DevTools (opcional, pero útil para desarrollo):
-Proporciona herramientas para reiniciar automáticamente la aplicación durante el desarrollo.
-Facilita la recarga en caliente de cambios en el código.
+## Dependencias Spring Boot:
+Las que usa realmente `Backend/pom.xml` (Spring Boot 3.2.3, Java 17):
+- Spring Boot Starter Web: API REST con Tomcat embebido.
+- Spring Boot Starter Security + JJWT 0.12: autenticación sin estado con tokens JWT y autorización por roles.
+- Spring Boot Starter Data JPA + MySQL Connector/J: persistencia con Hibernate sobre MySQL/MariaDB.
+- Spring Boot Starter Validation: validación de los datos de entrada (DNI, teléfono, IBAN, CUPS, email...).
+- H2 Database (solo en ejecución): perfil `h2` para desarrollar y ejecutar los tests sin MySQL.
+- springdoc-openapi: documentación interactiva de la API (Swagger UI).
+- Lombok y Spring Boot DevTools: utilidades de desarrollo.
+
+Se retiraron Thymeleaf (la interfaz es Angular) y OAuth2 Client (la autenticación con Google nunca llegó a implementarse; queda como mejora futura).
 ![image](https://github.com/alvrichh/Stratton.app-FCT-DAW/assets/81918923/d7f7e791-db1d-44a3-9f43-d87c1953a5a3)
 
 # Definición de la API REST

@@ -31,6 +31,11 @@ export const Alertas = {
     return r.isConfirmed;
   },
 
+  /** Escapa texto para insertarlo en HTML (SweetAlert2 no sanea la opción html). */
+  escapar(texto: unknown): string {
+    return String(texto ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+  },
+
   /** Extrae un mensaje legible de un error HTTP (incluye los errores de validación por campo). */
   mensajeDe(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
@@ -40,15 +45,15 @@ export const Alertas = {
       const body = error.error;
       if (body && typeof body === 'object') {
         const campos = body.errors && typeof body.errors === 'object'
-          ? Object.entries(body.errors as Record<string, string>).map(([k, v]) => `<li><b>${k}</b>: ${v}</li>`).join('')
+          ? Object.entries(body.errors as Record<string, string>).map(([k, v]) => `<li><b>${Alertas.escapar(k)}</b>: ${Alertas.escapar(v)}</li>`).join('')
           : '';
-        const mensaje = body.message ? String(body.message) : `Error ${error.status}`;
+        const mensaje = body.message ? Alertas.escapar(body.message) : `Error ${error.status}`;
         return campos ? `${mensaje}<ul class="text-start">${campos}</ul>` : mensaje;
       }
       return `Error ${error.status}: ${error.statusText}`;
     }
     if (error instanceof Error) {
-      return error.message;
+      return Alertas.escapar(error.message);
     }
     return 'Error desconocido';
   },

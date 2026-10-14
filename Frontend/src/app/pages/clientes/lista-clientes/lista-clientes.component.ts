@@ -64,7 +64,7 @@ export class ListaClientesComponent implements OnInit {
 
   /** Normaliza texto para buscar sin tildes ni mayúsculas. */
   private normalizar(texto: unknown): string {
-    return String(texto ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    return String(texto ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 
   applyFilter(): void {

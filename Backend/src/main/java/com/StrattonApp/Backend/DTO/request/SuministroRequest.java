@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Size;
 public class SuministroRequest {
 
     @NotBlank(message = "El CUPS es obligatorio")
-    @Pattern(regexp = Suministro.CUPS_REGEX, message = "El CUPS no tiene un formato válido (ej. ES0031408000000000AA0F)")
+    @Pattern(regexp = Suministro.CUPS_REGEX_INPUT, message = "El CUPS no tiene un formato válido (ej. ES0031408000000000AA0F)")
     private String cups;
 
     @NotBlank(message = "La dirección del suministro es obligatoria")

@@ -11,6 +11,14 @@
   cursor: pointer;
 }
 
+.logout-btn {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.logout-btn:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .nav-link.active {
   font-weight: 600;
   color: #fff;

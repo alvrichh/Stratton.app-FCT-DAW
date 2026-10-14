@@ -40,7 +40,7 @@
     <div class="col-md-6 mb-3">
       <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
       <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword"
-        placeholder="Repite la contraseña" autocomplete="new-password" #confirm="ngModel" [class.is-invalid]="confirm.touched && !passwordsCoinciden">
+        placeholder="Repite la contraseña" autocomplete="new-password" #confirm="ngModel" [class.is-invalid]="mostrarAvisoPassword">
       <div class="invalid-feedback">Las contraseñas no coinciden.</div>
     </div>
   </div>

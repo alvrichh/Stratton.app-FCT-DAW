@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../auth.service';
-import { CatalogoService } from '../../services/catalogo.service';
-import { Comercializadora } from '../../services/catalogo.model';
 
 interface Oferta {
   nombre: string;
@@ -21,9 +19,7 @@ interface Oferta {
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
-export class InicioComponent implements OnInit {
-
-  comercializadoras: Comercializadora[] = [];
+export class InicioComponent {
 
   /** Comparativa de ofertas que la asesoría muestra a sus clientes. */
   ofertas: Oferta[] = [
@@ -53,14 +49,5 @@ export class InicioComponent implements OnInit {
     },
   ];
 
-  constructor(public authService: AuthService, private catalogo: CatalogoService) { }
-
-  ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      this.catalogo.obtenerComercializadoras().subscribe({
-        next: (c) => this.comercializadoras = c,
-        error: () => this.comercializadoras = [],
-      });
-    }
-  }
+  constructor(public authService: AuthService) { }
 }

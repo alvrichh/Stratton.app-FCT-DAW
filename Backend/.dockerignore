@@ -1,0 +1,8 @@
+target/
+doc/
+.mvn/wrapper/*.jar
+*.iml
+.idea/
+.settings/
+.classpath
+.project

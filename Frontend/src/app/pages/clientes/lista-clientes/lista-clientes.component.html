@@ -70,12 +70,13 @@
               <td class="text-nowrap">{{ cliente.telefono }}</td>
               <td>
                 <div class="d-flex align-items-center gap-2">
-                  <img *ngIf="logoDe(cliente)" [src]="logoDe(cliente)" [alt]="cliente.companiaContratada" class="logo-comercializadora">
+                  <img *ngIf="logoDe(cliente)" [src]="logoDe(cliente)" alt="" class="logo-comercializadora">
                   <div>
-                    <span class="cups" *ngIf="cliente.cups; else sinCups">{{ cliente.cups }}</span>
-                    <ng-template #sinCups><span class="text-secondary">Sin CUPS</span></ng-template>
-                    <span *ngIf="cliente.suministros?.length > 1" class="celda-secundaria">
-                      +{{ cliente.suministros.length - 1 }} suministro{{ cliente.suministros.length > 2 ? 's' : '' }} más
+                    <span class="cups d-block" *ngIf="cliente.cups; else sinCups">{{ cliente.cups }}</span>
+                    <ng-template #sinCups><span class="text-secondary d-block">Sin CUPS</span></ng-template>
+                    <span class="celda-secundaria">
+                      {{ cliente.companiaContratada || 'Sin comercializadora' }}<ng-container *ngIf="cliente.suministros?.length > 1">
+                        · +{{ cliente.suministros.length - 1 }} más</ng-container>
                     </span>
                   </div>
                 </div>
